@@ -1,14 +1,19 @@
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { fetchLessonBySlug } from "../api/lessonsApi";
+import LessonCompletionButton from "../components/LessonCompletionButton";
 import LessonNavigation from "../components/LessonNavigation";
 import LessonSectionRenderer from "../components/LessonSectionRenderer";
 import { getLessonBySlug, getLessonNavigation } from "../data/lessons";
 import { getLessonContentBySlug } from "../data/lessonContent";
-import LessonCompletionButton from "../components/LessonCompletionButton";
+import type { LessonPreview } from "../types/curriculum";
 
 function LessonPage() {
   const { lessonSlug } = useParams();
 
-  const lesson = lessonSlug ? getLessonBySlug(lessonSlug) : undefined;
+  const [lesson, setLesson] = useState<LessonPreview | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const lessonContent = lessonSlug
     ? getLessonContentBySlug(lessonSlug)
@@ -17,6 +22,44 @@ function LessonPage() {
   const { previousLesson, nextLesson } = lessonSlug
     ? getLessonNavigation(lessonSlug)
     : { previousLesson: undefined, nextLesson: undefined };
+
+  useEffect(() => {
+    async function loadLesson() {
+      if (!lessonSlug) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const lessonFromApi = await fetchLessonBySlug(lessonSlug);
+
+        setLesson(lessonFromApi);
+        setErrorMessage("");
+      } catch {
+        const localLesson = getLessonBySlug(lessonSlug);
+
+        setLesson(localLesson);
+        setErrorMessage(
+          "Backend is not available right now. Showing local demo data."
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadLesson();
+  }, [lessonSlug]);
+
+  if (isLoading) {
+    return (
+      <main className="page">
+        <section className="loading-box">
+          <h1>Loading lesson...</h1>
+          <p>Fetching lesson metadata from the backend API.</p>
+        </section>
+      </main>
+    );
+  }
 
   if (!lesson) {
     return (
@@ -42,6 +85,8 @@ function LessonPage() {
 
           <p>{lesson.shortDescription}</p>
 
+          {errorMessage && <p className="api-notice">{errorMessage}</p>}
+
           <p>
             This lesson is visible in the roadmap, but the full content is not
             published yet.
@@ -62,6 +107,9 @@ function LessonPage() {
       <main className="page">
         <section className="coming-soon-box">
           <h1>{lesson.title}</h1>
+
+          {errorMessage && <p className="api-notice">{errorMessage}</p>}
+
           <p>
             This lesson is marked as published, but its full content has not
             been added yet.
@@ -88,8 +136,10 @@ function LessonPage() {
         </p>
 
         <p>{lessonContent.goal}</p>
+
+        {errorMessage && <p className="api-notice">{errorMessage}</p>}
       </section>
-      
+
       {lessonContent.imagePrompts && (
         <section className="lesson-section">
           <h2>Image Prompts</h2>
@@ -107,18 +157,16 @@ function LessonPage() {
       )}
 
       {lessonContent.sections.map((section) => (
-  <LessonSectionRenderer section={section} key={section.id} />
-))}
+        <LessonSectionRenderer section={section} key={section.id} />
+      ))}
 
-<LessonCompletionButton lessonSlug={lesson.slug} />
+      <LessonCompletionButton lessonSlug={lesson.slug} />
 
-<LessonNavigation
-  trackSlug={lesson.trackSlug}
-  previousLesson={previousLesson}
-  nextLesson={nextLesson}
-/>
-
-      
+      <LessonNavigation
+        trackSlug={lesson.trackSlug}
+        previousLesson={previousLesson}
+        nextLesson={nextLesson}
+      />
     </main>
   );
 }

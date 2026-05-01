@@ -42,3 +42,17 @@ export async function fetchLessonsByTrackSlug(
 
   return data.map(mapBackendLesson);
 }
+
+export async function fetchLessonBySlug(
+  lessonSlug: string
+): Promise<LessonPreview> {
+  const response = await fetch(`${API_BASE_URL}/api/lessons/${lessonSlug}`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch lesson");
+  }
+
+  const data = (await response.json()) as BackendLessonPreview;
+
+  return mapBackendLesson(data);
+}

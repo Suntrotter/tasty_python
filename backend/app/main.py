@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.core.config import get_allowed_origins
 from app.routers import lessons, tracks
 
 app = FastAPI(
@@ -9,9 +10,7 @@ app = FastAPI(
     version="0.1.0",
 )
 
-allowed_origins = [
-    "http://localhost:5173",
-]
+allowed_origins = get_allowed_origins()
 
 app.add_middleware(
     CORSMiddleware,

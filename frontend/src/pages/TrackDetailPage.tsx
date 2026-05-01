@@ -1,12 +1,25 @@
 import { Link, useParams } from "react-router-dom";
-import { getTrackBySlug } from "../data/tracks";
+import LessonCard from "../components/LessonCard";
 import { getLessonsByTrackSlug } from "../data/lessons";
+import { getTrackBySlug } from "../data/tracks";
 
 function TrackDetailPage() {
   const { trackSlug } = useParams();
 
   const track = trackSlug ? getTrackBySlug(trackSlug) : undefined;
   const trackLessons = trackSlug ? getLessonsByTrackSlug(trackSlug) : [];
+
+  const publishedLessons = trackLessons.filter(
+    (lesson) => lesson.status === "published"
+  ).length;
+
+  const inProgressLessons = trackLessons.filter(
+    (lesson) => lesson.status === "in_progress"
+  ).length;
+
+  const plannedLessons = trackLessons.filter(
+    (lesson) => lesson.status === "planned"
+  ).length;
 
   if (!track) {
     return (
@@ -28,30 +41,34 @@ function TrackDetailPage() {
         <p>{track.description}</p>
       </section>
 
+      {trackLessons.length > 0 && (
+        <section className="track-summary">
+          <article>
+            <strong>{trackLessons.length}</strong>
+            <span>Total lessons</span>
+          </article>
+
+          <article>
+            <strong>{publishedLessons}</strong>
+            <span>Published</span>
+          </article>
+
+          <article>
+            <strong>{inProgressLessons}</strong>
+            <span>In progress</span>
+          </article>
+
+          <article>
+            <strong>{plannedLessons}</strong>
+            <span>Planned</span>
+          </article>
+        </section>
+      )}
+
       {trackLessons.length > 0 ? (
         <section className="lesson-list">
           {trackLessons.map((lesson) => (
-            <Link
-              to={`/lessons/${lesson.slug}`}
-              className="lesson-card"
-              key={lesson.slug}
-            >
-              <div>
-                <span className={`status status-${lesson.status}`}>
-                  {lesson.status.replace("_", " ")}
-                </span>
-
-                <h2>
-                  {lesson.order}. {lesson.title}
-                </h2>
-
-                <p>{lesson.shortDescription}</p>
-              </div>
-
-              <p className="lesson-meta">
-                {lesson.difficulty} · {lesson.estimatedTime}
-              </p>
-            </Link>
+            <LessonCard lesson={lesson} key={lesson.slug} />
           ))}
         </section>
       ) : (

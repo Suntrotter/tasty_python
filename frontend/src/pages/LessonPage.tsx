@@ -1,10 +1,15 @@
 import { Link, useParams } from "react-router-dom";
+import LessonSectionRenderer from "../components/LessonSectionRenderer";
 import { getLessonBySlug } from "../data/lessons";
+import { getLessonContentBySlug } from "../data/lessonContent";
 
 function LessonPage() {
   const { lessonSlug } = useParams();
 
   const lesson = lessonSlug ? getLessonBySlug(lessonSlug) : undefined;
+  const lessonContent = lessonSlug
+    ? getLessonContentBySlug(lessonSlug)
+    : undefined;
 
   if (!lesson) {
     return (
@@ -35,7 +40,31 @@ function LessonPage() {
             published yet.
           </p>
 
-          <Link to={`/tracks/${lesson.trackSlug}`} className="button button-primary">
+          <Link
+            to={`/tracks/${lesson.trackSlug}`}
+            className="button button-primary"
+          >
+            Back to track
+          </Link>
+        </section>
+      </main>
+    );
+  }
+
+  if (!lessonContent) {
+    return (
+      <main className="page">
+        <section className="coming-soon-box">
+          <h1>{lesson.title}</h1>
+          <p>
+            This lesson is marked as published, but its full content has not
+            been added yet.
+          </p>
+
+          <Link
+            to={`/tracks/${lesson.trackSlug}`}
+            className="button button-primary"
+          >
             Back to track
           </Link>
         </section>
@@ -47,54 +76,34 @@ function LessonPage() {
     <main className="page lesson-page">
       <section className="lesson-hero">
         <p className="eyebrow">Lesson {lesson.order}</p>
-        <h1>{lesson.title}</h1>
+        <h1>{lessonContent.title}</h1>
 
         <p className="lesson-meta">
           {lesson.difficulty} · {lesson.estimatedTime}
         </p>
 
-        <p>{lesson.shortDescription}</p>
+        <p>{lessonContent.goal}</p>
       </section>
 
-      <section className="lesson-section">
-        <h2>Tasty Metaphor</h2>
-        <p>
-          Imagine a kitchen full of jars. Each jar contains something delicious:
-          strawberry jam, honey, cinnamon, or chocolate cream.
-        </p>
-        <p>
-          A variable is like a label on a jar. In Python, a variable is not a
-          box. It is a name tag attached to a value.
-        </p>
-      </section>
+      {lessonContent.imagePrompts && (
+        <section className="lesson-section">
+          <h2>Image Prompts</h2>
+          <p>
+            These prompts are placeholders for future illustrations and visual
+            assets.
+          </p>
 
-      <section className="lesson-section">
-        <h2>Short Theory</h2>
-        <p>
-          A variable is a name that refers to a value. The symbol{" "}
-          <code>=</code> means assignment. It takes the value on the right and
-          assigns it to the name on the left.
-        </p>
+          <ul className="image-prompt-list">
+            {lessonContent.imagePrompts.map((prompt) => (
+              <li key={prompt}>{prompt}</li>
+            ))}
+          </ul>
+        </section>
+      )}
 
-        <pre>
-          <code>{`tea = "green tea"
-cups = 3
-price = 4.5
-is_hot = True`}</code>
-        </pre>
-      </section>
-
-      <section className="lesson-section">
-        <h2>Interview Spot</h2>
-
-        <h3>What is a variable in Python?</h3>
-
-        <p>
-          A variable in Python is a name that refers to an object or value. It
-          does not store the value directly like a physical box; it points to an
-          object in memory.
-        </p>
-      </section>
+      {lessonContent.sections.map((section) => (
+        <LessonSectionRenderer section={section} key={section.id} />
+      ))}
     </main>
   );
 }

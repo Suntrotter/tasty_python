@@ -1,0 +1,152 @@
+import type { Track } from "../types/curriculum";
+
+export const tracks: Track[] = [
+  {
+    slug: "python-core",
+    title: "Python Core",
+    description:
+      "The basics juniors often underestimate: variables, typing, truthiness, slicing, and naming.",
+    status: "in_progress",
+    lessonCount: 14,
+  },
+  {
+    slug: "control-flow",
+    title: "Conditions, Loops, and Control Flow",
+    description:
+      "Learn how to control program logic with conditions, loops, range, enumerate, zip, and loop patterns.",
+    status: "planned",
+    lessonCount: 11,
+  },
+  {
+    slug: "data-structures",
+    title: "Data Structures",
+    description:
+      "Lists, tuples, dictionaries, sets, sorting, copying, and classic interview traps.",
+    status: "planned",
+    lessonCount: 13,
+  },
+  {
+    slug: "functions",
+    title: "Functions",
+    description:
+      "Parameters, arguments, return values, default arguments, *args, **kwargs, lambdas, and recursion.",
+    status: "planned",
+    lessonCount: 14,
+  },
+  {
+    slug: "comprehensions",
+    title: "Comprehensions and Pythonic Code",
+    description:
+      "Readable Python with list, dict, set comprehensions, generator expressions, map, filter, any, and all.",
+    status: "planned",
+    lessonCount: 10,
+  },
+  {
+    slug: "oop",
+    title: "OOP Basics",
+    description:
+      "Classes, objects, self, attributes, methods, dataclasses, inheritance, composition, and polymorphism.",
+    status: "planned",
+    lessonCount: 26,
+  },
+  {
+    slug: "decorators-closures",
+    title: "Decorators, Closures, and Advanced Functions",
+    description:
+      "Closures, inner functions, decorators, decorator arguments, functools.wraps, and built-in decorators.",
+    status: "planned",
+    lessonCount: 9,
+  },
+  {
+    slug: "iterators-generators",
+    title: "Iterators and Generators",
+    description:
+      "Iterable vs iterator, iter(), next(), StopIteration, yield, lazy evaluation, and memory benefits.",
+    status: "planned",
+    lessonCount: 9,
+  },
+  {
+    slug: "exceptions",
+    title: "Exceptions and Error Handling",
+    description:
+      "try, except, else, finally, custom exceptions, broad exceptions, EAFP, and traceback debugging.",
+    status: "planned",
+    lessonCount: 8,
+  },
+  {
+    slug: "files-context-managers",
+    title: "Files, Context Managers, and Data",
+    description:
+      "Reading files, writing files, with open, CSV, JSON, pathlib, encodings, and file tasks.",
+    status: "planned",
+    lessonCount: 9,
+  },
+  {
+    slug: "modules-packages",
+    title: "Modules, Packages, and Project Structure",
+    description:
+      "Imports, packages, __name__ == '__main__', virtual environments, pip, requirements, and project folders.",
+    status: "planned",
+    lessonCount: 11,
+  },
+  {
+    slug: "testing",
+    title: "Testing",
+    description:
+      "pytest basics, test naming, Arrange / Act / Assert, fixtures, mocking, coverage, and test thinking.",
+    status: "planned",
+    lessonCount: 10,
+  },
+  {
+    slug: "algorithms",
+    title: "Algorithms and Coding Interview Tasks",
+    description:
+      "Big O, search, two pointers, sliding window, frequency maps, stacks, queues, recursion, and live coding.",
+    status: "planned",
+    lessonCount: 18,
+  },
+  {
+    slug: "backend-basics",
+    title: "Backend / Web Basics",
+    description:
+      "HTTP, REST APIs, JSON, status codes, authentication, authorization, JWT, FastAPI, and CRUD.",
+    status: "planned",
+    lessonCount: 14,
+  },
+  {
+    slug: "databases",
+    title: "Databases",
+    description:
+      "SQL basics, keys, relationships, SELECT, WHERE, JOIN, GROUP BY, indexes, transactions, ORM, and migrations.",
+    status: "planned",
+    lessonCount: 15,
+  },
+  {
+    slug: "async-concurrency",
+    title: "Async, Concurrency, and Performance",
+    description:
+      "Sync vs async, async/await, coroutines, event loop, threads, processes, GIL, and performance basics.",
+    status: "planned",
+    lessonCount: 9,
+  },
+  {
+    slug: "git-workflow",
+    title: "Git, Terminal, and Developer Workflow",
+    description:
+      "Git basics, commits, branches, pull requests, .gitignore, terminal errors, Linux commands, and debugging workflow.",
+    status: "planned",
+    lessonCount: 10,
+  },
+  {
+    slug: "clean-code",
+    title: "Clean Code and Practical Thinking",
+    description:
+      "Naming, splitting code into functions, avoiding repetition, refactoring, comments, code review, and explanation skills.",
+    status: "planned",
+    lessonCount: 10,
+  },
+];
+
+export function getTrackBySlug(slug: string) {
+  return tracks.find((track) => track.slug === slug);
+}

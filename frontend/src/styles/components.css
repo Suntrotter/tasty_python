@@ -86,3 +86,18 @@
     background: #fce7f3;
     color: #9d174d;
 }
+
+.loading-box,
+.api-notice {
+    background: #ffffff;
+    border: 1px solid #f2d6aa;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 14px 40px rgba(120, 72, 24, 0.08);
+}
+
+.api-notice {
+    margin-top: 20px;
+    color: #92400e;
+    font-weight: 700;
+}

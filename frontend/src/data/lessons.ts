@@ -68,6 +68,109 @@ export const lessons: LessonPreview[] = [
       "Work with print(), input(), and simple user interaction.",
   },
   {
+    slug: "type-conversion",
+    trackSlug: "python-core",
+    order: 7,
+    title: "Type Conversion",
+    status: "planned",
+    difficulty: "beginner",
+    estimatedTime: "10–15 min",
+    shortDescription:
+      "Learn how to convert values with int(), float(), str(), bool(), and avoid common conversion errors.",
+  },
+  {
+    slug: "string-methods",
+    trackSlug: "python-core",
+    order: 8,
+    title: "String Methods",
+    status: "planned",
+    difficulty: "beginner",
+    estimatedTime: "15–20 min",
+    shortDescription:
+      "Practice useful string methods like lower(), upper(), strip(), replace(), split(), and join().",
+  },
+  {
+    slug: "string-formatting",
+    trackSlug: "python-core",
+    order: 9,
+    title: "String Formatting",
+    status: "planned",
+    difficulty: "beginner",
+    estimatedTime: "15 min",
+    shortDescription:
+      "Compare f-strings, .format(), and older % formatting in Python.",
+  },
+  {
+    slug: "slicing-strings-and-lists",
+    trackSlug: "python-core",
+    order: 10,
+    title: "Slicing Strings and Lists",
+    status: "planned",
+    difficulty: "beginner",
+    estimatedTime: "15–20 min",
+    shortDescription:
+      "Understand start, stop, step, negative indexes, and common slicing traps.",
+  },
+  {
+    slug: "off-by-one-mistakes",
+    trackSlug: "python-core",
+    order: 11,
+    title: "Common Off-by-One Mistakes",
+    status: "planned",
+    difficulty: "beginner",
+    estimatedTime: "10–15 min",
+    shortDescription:
+      "Learn why indexes, ranges, and loop boundaries often go wrong by exactly one step.",
+  },
+  {
+    slug: "none-and-proper-checks",
+    trackSlug: "python-core",
+    order: 12,
+    title: "None and How to Check It Properly",
+    status: "planned",
+    difficulty: "beginner",
+    estimatedTime: "10–15 min",
+    shortDescription:
+      "Learn what None means and why Python developers usually check it with is None.",
+  },
+  {
+    slug: "scope-basics",
+    trackSlug: "python-core",
+    order: 13,
+    title: "Scope Basics: Local vs Global Variables",
+    status: "planned",
+    difficulty: "beginner",
+    estimatedTime: "15 min",
+    shortDescription:
+      "Understand where variables live and why some names are visible only inside functions.",
+  },
+  {
+    slug: "naming-conventions-pep8",
+    trackSlug: "python-core",
+    order: 14,
+    title: "Naming Conventions and PEP 8 Basics",
+    status: "planned",
+    difficulty: "beginner",
+    estimatedTime: "10–15 min",
+    shortDescription:
+      "Learn readable Python naming rules and basic PEP 8 style habits.",
+  },
+
+  // Functions preview
+  {
+    slug: "defining-functions",
+    trackSlug: "functions",
+    order: 1,
+    title: "Defining Functions",
+    status: "planned",
+    difficulty: "beginner",
+    estimatedTime: "15 min",
+    shortDescription:
+      "Learn how to create reusable blocks of Python code with def.",
+  },
+
+  // OOP preview
+  {
     slug: "what-is-a-class",
     trackSlug: "oop",
     order: 1,
@@ -89,17 +192,6 @@ export const lessons: LessonPreview[] = [
     shortDescription:
       "Learn how objects combine data and behavior.",
   },
-  {
-    slug: "defining-functions",
-    trackSlug: "functions",
-    order: 1,
-    title: "Defining Functions",
-    status: "planned",
-    difficulty: "beginner",
-    estimatedTime: "15 min",
-    shortDescription:
-      "Learn how to create reusable blocks of Python code with def.",
-  },
 ];
 
 export function getLessonsByTrackSlug(trackSlug: string) {
@@ -111,3 +203,34 @@ export function getLessonsByTrackSlug(trackSlug: string) {
 export function getLessonBySlug(slug: string) {
   return lessons.find((lesson) => lesson.slug === slug);
 }
+
+export function getLessonNavigation(slug: string) {
+  const currentLesson = getLessonBySlug(slug);
+
+  if (!currentLesson) {
+    return {
+      previousLesson: undefined,
+      nextLesson: undefined,
+    };
+  }
+
+  const trackLessons = getLessonsByTrackSlug(currentLesson.trackSlug);
+
+  const navigableLessons = trackLessons.filter(
+    (lesson) => lesson.status !== "planned"
+  );
+
+  const currentIndex = navigableLessons.findIndex(
+    (lesson) => lesson.slug === slug
+  );
+
+  return {
+    previousLesson:
+      currentIndex > 0 ? navigableLessons[currentIndex - 1] : undefined,
+    nextLesson:
+      currentIndex >= 0 && currentIndex < navigableLessons.length - 1
+        ? navigableLessons[currentIndex + 1]
+        : undefined,
+  };
+}
+

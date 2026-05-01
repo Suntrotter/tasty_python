@@ -9,9 +9,10 @@ function Layout() {
         </Link>
 
         <nav className="site-nav">
-          <Link to="/">Home</Link>
-          <Link to="/tracks">Tracks</Link>
-        </nav>
+  <Link to="/">Home</Link>
+  <Link to="/tracks">Tracks</Link>
+  <Link to="/dashboard">Dashboard</Link>
+</nav>
       </header>
 
       <Outlet />

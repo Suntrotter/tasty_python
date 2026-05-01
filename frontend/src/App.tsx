@@ -4,6 +4,7 @@ import HomePage from "./pages/HomePage";
 import LessonPage from "./pages/LessonPage";
 import TrackDetailPage from "./pages/TrackDetailPage";
 import TracksPage from "./pages/TracksPage";
+import DashboardPage from "./pages/DashboardPage";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/tracks" element={<TracksPage />} />
         <Route path="/tracks/:trackSlug" element={<TrackDetailPage />} />
         <Route path="/lessons/:lessonSlug" element={<LessonPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
       </Route>
     </Routes>
   );

@@ -2,9 +2,11 @@ import { Link, useParams } from "react-router-dom";
 import LessonCard from "../components/LessonCard";
 import { getLessonsByTrackSlug } from "../data/lessons";
 import { getTrackBySlug } from "../data/tracks";
+import { useLessonProgress } from "../features/progress/useLessonProgress";
 
 function TrackDetailPage() {
   const { trackSlug } = useParams();
+  const { completedLessonSlugs } = useLessonProgress();
 
   const track = trackSlug ? getTrackBySlug(trackSlug) : undefined;
   const trackLessons = trackSlug ? getLessonsByTrackSlug(trackSlug) : [];
@@ -17,8 +19,8 @@ function TrackDetailPage() {
     (lesson) => lesson.status === "in_progress"
   ).length;
 
-  const plannedLessons = trackLessons.filter(
-    (lesson) => lesson.status === "planned"
+  const completedLessons = trackLessons.filter((lesson) =>
+    completedLessonSlugs.includes(lesson.slug)
   ).length;
 
   if (!track) {
@@ -54,13 +56,13 @@ function TrackDetailPage() {
           </article>
 
           <article>
-            <strong>{inProgressLessons}</strong>
-            <span>In progress</span>
+            <strong>{completedLessons}</strong>
+            <span>Completed</span>
           </article>
 
           <article>
-            <strong>{plannedLessons}</strong>
-            <span>Planned</span>
+            <strong>{inProgressLessons}</strong>
+            <span>In progress</span>
           </article>
         </section>
       )}
@@ -68,7 +70,11 @@ function TrackDetailPage() {
       {trackLessons.length > 0 ? (
         <section className="lesson-list">
           {trackLessons.map((lesson) => (
-            <LessonCard lesson={lesson} key={lesson.slug} />
+            <LessonCard
+              lesson={lesson}
+              isCompleted={completedLessonSlugs.includes(lesson.slug)}
+              key={lesson.slug}
+            />
           ))}
         </section>
       ) : (

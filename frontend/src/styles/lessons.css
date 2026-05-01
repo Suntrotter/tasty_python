@@ -1,0 +1,265 @@
+.lesson-list {
+    display: grid;
+    gap: 18px;
+}
+
+.lesson-card {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.lesson-card-clickable {
+    cursor: pointer;
+}
+
+.lesson-card-static {
+    cursor: default;
+    opacity: 0.78;
+}
+
+.lesson-card-main {
+    flex: 1;
+}
+
+.lesson-card-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.lesson-order,
+.lesson-meta {
+    font-size: 14px;
+    font-weight: 800;
+    color: #7c4a1d;
+}
+
+.lesson-status-icon {
+    display: inline-block;
+    margin-right: 4px;
+}
+
+.lesson-card-footer {
+    min-width: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.lesson-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 0 14px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.lesson-action-published {
+    background: #241f1c;
+    color: #fff8ed;
+}
+
+.lesson-action-in_progress {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.lesson-action-coming_soon {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.lesson-action-planned {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.lesson-action-premium {
+    background: #fce7f3;
+    color: #9d174d;
+}
+
+.lesson-card-published {
+    border-color: #bbf7d0;
+}
+
+.lesson-card-in_progress {
+    border-color: #fde68a;
+}
+
+.lesson-card-coming_soon {
+    border-color: #bfdbfe;
+}
+
+.lesson-card-planned {
+    border-style: dashed;
+}
+
+.lesson-card-premium {
+    border-color: #fbcfe8;
+}
+
+.lesson-card-completed {
+    border-color: #86efac;
+    background: #f0fdf4;
+}
+
+.completed-badge {
+    display: inline-flex;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #dcfce7;
+    color: #166534;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.lesson-action-completed {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.lesson-page {
+    max-width: 900px;
+}
+
+.lesson-hero {
+    margin-bottom: 24px;
+}
+
+.lesson-section {
+    margin-top: 24px;
+}
+
+.lesson-items {
+    display: grid;
+    gap: 18px;
+    margin-top: 20px;
+}
+
+.lesson-item {
+    padding: 20px;
+    border-radius: 18px;
+    background: #fff8ed;
+    border: 1px solid #f2d6aa;
+}
+
+.lesson-item h3 {
+    margin-top: 0;
+}
+
+.lesson-navigation {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 32px;
+}
+
+.lesson-nav-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 110px;
+    padding: 20px;
+    border-radius: 20px;
+    background: #ffffff;
+    border: 1px solid #f2d6aa;
+    box-shadow: 0 14px 40px rgba(120, 72, 24, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lesson-nav-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 48px rgba(120, 72, 24, 0.14);
+}
+
+.lesson-nav-card span {
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 800;
+    color: #b45309;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.lesson-nav-card strong {
+    font-size: 17px;
+    line-height: 1.35;
+}
+
+.lesson-nav-card-disabled {
+    opacity: 0.55;
+}
+
+.lesson-nav-card-disabled:hover {
+    transform: none;
+    box-shadow: 0 14px 40px rgba(120, 72, 24, 0.08);
+}
+
+.coming-soon-box {
+    max-width: 720px;
+}
+
+.output-box {
+    margin-top: 16px;
+}
+
+.output-label {
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 800;
+    color: #b45309;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+.image-prompt-list {
+    display: grid;
+    gap: 12px;
+    padding-left: 20px;
+}
+
+.image-prompt-list li {
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+.completion-box {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    align-items: center;
+    margin-bottom: 24px;
+    background: #ffffff;
+    border: 1px solid #f2d6aa;
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 14px 40px rgba(120, 72, 24, 0.08);
+}
+
+.completion-box h2 {
+    margin-bottom: 8px;
+}
+
+.completion-box p {
+    margin-bottom: 0;
+}
+
+.completion-box-done {
+    border-color: #bbf7d0;
+    background: #f0fdf4;
+}

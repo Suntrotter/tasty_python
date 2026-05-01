@@ -1,73 +1,167 @@
-# React + TypeScript + Vite
+# Tasty Python
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Tasty Python** is an educational platform for junior Python learners preparing for technical interviews.
 
-Currently, two official plugins are available:
+The project is built around short lessons, friendly metaphors, coding drills, common mistake zones, interview-style questions, and progress-oriented learning tracks.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The main idea is to make Python concepts easier to understand, remember, and explain during junior developer interviews.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Project Status
 
-## Expanding the ESLint configuration
+This project is currently in active development.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+The first version focuses on building a scalable frontend structure:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- learning roadmap
+- track pages
+- lesson cards
+- lesson statuses
+- reusable lesson page
+- structured lesson content
+- previous / next lesson navigation
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Only the first lesson is fully published at the moment. Other lessons are visible in the roadmap as planned, in progress, or coming soon.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+This is intentional: the app is designed as a growing curriculum.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Main Features
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Full Python learning roadmap
+- Track-based curriculum structure
+- Lesson status system:
+  - Published
+  - In progress
+  - Coming soon
+  - Planned
+  - Premium
+- Reusable lesson page layout
+- Structured lesson content stored as data
+- Lesson sections:
+  - Tasty metaphor
+  - Short theory
+  - Code example
+  - Interview spot
+  - Trap zone
+  - Practice tasks
+  - Cheat sheet
+  - Answer key
+- Previous / next lesson navigation
+- Responsive layout
+- Portfolio-friendly architecture
+
+---
+
+## Current Learning Tracks
+
+The roadmap is designed to include the following tracks:
+
+1. Python Core
+2. Conditions, Loops, and Control Flow
+3. Data Structures
+4. Functions
+5. Comprehensions and Pythonic Code
+6. OOP Basics
+7. Decorators, Closures, and Advanced Functions
+8. Iterators and Generators
+9. Exceptions and Error Handling
+10. Files, Context Managers, and Data
+11. Modules, Packages, and Project Structure
+12. Testing
+13. Algorithms and Coding Interview Tasks
+14. Backend / Web Basics
+15. Databases
+16. Async, Concurrency, and Performance
+17. Git, Terminal, and Developer Workflow
+18. Clean Code and Practical Thinking
+
+---
+
+## Published Content
+
+### Python Core
+
+Currently published:
+
+- Variables and Assignment
+
+In progress / coming soon:
+
+- Mutable vs Immutable Objects
+- Dynamic Typing in Python
+- is vs ==
+
+Planned:
+
+- Truthy and Falsy Values
+- Basic Input / Output
+- Type Conversion
+- String Methods
+- String Formatting
+- Slicing Strings and Lists
+- Common Off-by-One Mistakes
+- None and How to Check It Properly
+- Scope Basics
+- Naming Conventions and PEP 8 Basics
+
+---
+
+## Tech Stack
+
+### Frontend
+
+- React
+- TypeScript
+- Vite
+- React Router
+- CSS
+
+### Planned Backend
+
+The backend is planned for the next development stage.
+
+Possible stack:
+
+- FastAPI
+- PostgreSQL
+- SQLAlchemy
+- Alembic
+- Firebase Authentication
+
+---
+
+## Project Structure
+
+```text
+tasty_python/
+  frontend/
+    src/
+      components/
+        Layout.tsx
+        LessonCard.tsx
+        LessonNavigation.tsx
+        LessonSectionRenderer.tsx
+        TrackCard.tsx
+      data/
+        lessonContent/
+        lessons.ts
+        tracks.ts
+      pages/
+        HomePage.tsx
+        LessonPage.tsx
+        TrackDetailPage.tsx
+        TracksPage.tsx
+      types/
+        curriculum.ts
+        lesson.ts
+      App.tsx
+      main.tsx
+      index.css
+  README.md
+
+
+
 ```

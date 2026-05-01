@@ -1,15 +1,22 @@
 import { Link, useParams } from "react-router-dom";
+import LessonNavigation from "../components/LessonNavigation";
 import LessonSectionRenderer from "../components/LessonSectionRenderer";
-import { getLessonBySlug } from "../data/lessons";
+import { getLessonBySlug, getLessonNavigation } from "../data/lessons";
 import { getLessonContentBySlug } from "../data/lessonContent";
+import LessonCompletionButton from "../components/LessonCompletionButton";
 
 function LessonPage() {
   const { lessonSlug } = useParams();
 
   const lesson = lessonSlug ? getLessonBySlug(lessonSlug) : undefined;
+
   const lessonContent = lessonSlug
     ? getLessonContentBySlug(lessonSlug)
     : undefined;
+
+  const { previousLesson, nextLesson } = lessonSlug
+    ? getLessonNavigation(lessonSlug)
+    : { previousLesson: undefined, nextLesson: undefined };
 
   if (!lesson) {
     return (
@@ -39,14 +46,13 @@ function LessonPage() {
             This lesson is visible in the roadmap, but the full content is not
             published yet.
           </p>
-
-          <Link
-            to={`/tracks/${lesson.trackSlug}`}
-            className="button button-primary"
-          >
-            Back to track
-          </Link>
         </section>
+
+        <LessonNavigation
+          trackSlug={lesson.trackSlug}
+          previousLesson={previousLesson}
+          nextLesson={nextLesson}
+        />
       </main>
     );
   }
@@ -60,14 +66,13 @@ function LessonPage() {
             This lesson is marked as published, but its full content has not
             been added yet.
           </p>
-
-          <Link
-            to={`/tracks/${lesson.trackSlug}`}
-            className="button button-primary"
-          >
-            Back to track
-          </Link>
         </section>
+
+        <LessonNavigation
+          trackSlug={lesson.trackSlug}
+          previousLesson={previousLesson}
+          nextLesson={nextLesson}
+        />
       </main>
     );
   }
@@ -84,7 +89,7 @@ function LessonPage() {
 
         <p>{lessonContent.goal}</p>
       </section>
-
+      
       {lessonContent.imagePrompts && (
         <section className="lesson-section">
           <h2>Image Prompts</h2>
@@ -102,8 +107,18 @@ function LessonPage() {
       )}
 
       {lessonContent.sections.map((section) => (
-        <LessonSectionRenderer section={section} key={section.id} />
-      ))}
+  <LessonSectionRenderer section={section} key={section.id} />
+))}
+
+<LessonCompletionButton lessonSlug={lesson.slug} />
+
+<LessonNavigation
+  trackSlug={lesson.trackSlug}
+  previousLesson={previousLesson}
+  nextLesson={nextLesson}
+/>
+
+      
     </main>
   );
 }

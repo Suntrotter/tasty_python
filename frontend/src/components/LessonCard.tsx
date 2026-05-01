@@ -3,6 +3,7 @@ import type { LessonPreview, LessonStatus } from "../types/curriculum";
 
 interface LessonCardProps {
   lesson: LessonPreview;
+  isCompleted?: boolean;
 }
 
 const statusLabels: Record<LessonStatus, string> = {
@@ -29,8 +30,10 @@ const actionLabels: Record<LessonStatus, string> = {
   premium: "Locked",
 };
 
-function LessonCard({ lesson }: LessonCardProps) {
+function LessonCard({ lesson, isCompleted = false }: LessonCardProps) {
   const isClickable = lesson.status !== "planned";
+
+  const actionLabel = isCompleted ? "Completed" : actionLabels[lesson.status];
 
   const cardContent = (
     <>
@@ -41,10 +44,14 @@ function LessonCard({ lesson }: LessonCardProps) {
           <span className={`status status-${lesson.status}`}>
             {statusLabels[lesson.status]}
           </span>
+
+          {isCompleted && <span className="completed-badge">Completed</span>}
         </div>
 
         <h2>
-          <span className="lesson-status-icon">{statusIcons[lesson.status]}</span>{" "}
+          <span className="lesson-status-icon">
+            {isCompleted ? "✅" : statusIcons[lesson.status]}
+          </span>{" "}
           {lesson.title}
         </h2>
 
@@ -56,26 +63,33 @@ function LessonCard({ lesson }: LessonCardProps) {
           {lesson.difficulty} · {lesson.estimatedTime}
         </p>
 
-        <span className={`lesson-action lesson-action-${lesson.status}`}>
-          {actionLabels[lesson.status]}
+        <span
+          className={`lesson-action ${
+            isCompleted
+              ? "lesson-action-completed"
+              : `lesson-action-${lesson.status}`
+          }`}
+        >
+          {actionLabel}
         </span>
       </div>
     </>
   );
 
+  const cardClassName = `lesson-card lesson-card-${lesson.status} ${
+    isCompleted ? "lesson-card-completed" : ""
+  }`;
+
   if (!isClickable) {
     return (
-      <article className={`lesson-card lesson-card-${lesson.status} lesson-card-static`}>
+      <article className={`${cardClassName} lesson-card-static`}>
         {cardContent}
       </article>
     );
   }
 
   return (
-    <Link
-      to={`/lessons/${lesson.slug}`}
-      className={`lesson-card lesson-card-${lesson.status} lesson-card-clickable`}
-    >
+    <Link to={`/lessons/${lesson.slug}`} className={`${cardClassName} lesson-card-clickable`}>
       {cardContent}
     </Link>
   );

@@ -1,7 +1,19 @@
-import { Link } from "react-router-dom";
+import TrackCard from "../components/TrackCard";
 import { tracks } from "../data/tracks";
 
 function TracksPage() {
+  const totalTracks = tracks.length;
+  const inProgressTracks = tracks.filter(
+    (track) => track.status === "in_progress"
+  ).length;
+  const plannedTracks = tracks.filter((track) => track.status === "planned")
+    .length;
+
+  const totalLessons = tracks.reduce(
+    (sum, track) => sum + track.lessonCount,
+    0
+  );
+
   return (
     <main className="page">
       <section className="page-intro">
@@ -13,22 +25,31 @@ function TracksPage() {
         </p>
       </section>
 
+      <section className="roadmap-summary">
+        <article>
+          <strong>{totalTracks}</strong>
+          <span>Tracks</span>
+        </article>
+
+        <article>
+          <strong>{totalLessons}</strong>
+          <span>Lessons planned</span>
+        </article>
+
+        <article>
+          <strong>{inProgressTracks}</strong>
+          <span>In progress</span>
+        </article>
+
+        <article>
+          <strong>{plannedTracks}</strong>
+          <span>Planned</span>
+        </article>
+      </section>
+
       <section className="track-grid">
         {tracks.map((track) => (
-          <Link
-            to={`/tracks/${track.slug}`}
-            className="track-card"
-            key={track.slug}
-          >
-            <span className={`status status-${track.status}`}>
-              {track.status.replace("_", " ")}
-            </span>
-
-            <h2>{track.title}</h2>
-            <p>{track.description}</p>
-
-            <p className="lesson-count">{track.lessonCount} lessons</p>
-          </Link>
+          <TrackCard track={track} key={track.slug} />
         ))}
       </section>
     </main>

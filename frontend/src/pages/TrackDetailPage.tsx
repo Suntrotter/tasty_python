@@ -1,15 +1,54 @@
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { fetchLessonsByTrackSlug } from "../api/lessonsApi";
+import { fetchTrackBySlug } from "../api/tracksApi";
 import LessonCard from "../components/LessonCard";
 import { getLessonsByTrackSlug } from "../data/lessons";
 import { getTrackBySlug } from "../data/tracks";
 import { useLessonProgress } from "../features/progress/useLessonProgress";
+import type { LessonPreview, Track } from "../types/curriculum";
 
 function TrackDetailPage() {
   const { trackSlug } = useParams();
   const { completedLessonSlugs } = useLessonProgress();
 
-  const track = trackSlug ? getTrackBySlug(trackSlug) : undefined;
-  const trackLessons = trackSlug ? getLessonsByTrackSlug(trackSlug) : [];
+  const [track, setTrack] = useState<Track | undefined>(undefined);
+  const [trackLessons, setTrackLessons] = useState<LessonPreview[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    async function loadTrackData() {
+      if (!trackSlug) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const [trackFromApi, lessonsFromApi] = await Promise.all([
+          fetchTrackBySlug(trackSlug),
+          fetchLessonsByTrackSlug(trackSlug),
+        ]);
+
+        setTrack(trackFromApi);
+        setTrackLessons(lessonsFromApi);
+        setErrorMessage("");
+      } catch {
+        const localTrack = getTrackBySlug(trackSlug);
+        const localLessons = getLessonsByTrackSlug(trackSlug);
+
+        setTrack(localTrack);
+        setTrackLessons(localLessons);
+        setErrorMessage(
+          "Backend is not available right now. Showing local demo data."
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadTrackData();
+  }, [trackSlug]);
 
   const publishedLessons = trackLessons.filter(
     (lesson) => lesson.status === "published"
@@ -22,6 +61,17 @@ function TrackDetailPage() {
   const completedLessons = trackLessons.filter((lesson) =>
     completedLessonSlugs.includes(lesson.slug)
   ).length;
+
+  if (isLoading) {
+    return (
+      <main className="page">
+        <section className="loading-box">
+          <h1>Loading track...</h1>
+          <p>Fetching track data from the backend API.</p>
+        </section>
+      </main>
+    );
+  }
 
   if (!track) {
     return (
@@ -41,6 +91,8 @@ function TrackDetailPage() {
         <p className="eyebrow">Track</p>
         <h1>{track.title}</h1>
         <p>{track.description}</p>
+
+        {errorMessage && <p className="api-notice">{errorMessage}</p>}
       </section>
 
       {trackLessons.length > 0 && (

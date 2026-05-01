@@ -32,3 +32,15 @@ export async function fetchTracks(): Promise<Track[]> {
 
   return data.map(mapBackendTrack);
 }
+
+export async function fetchTrackBySlug(slug: string): Promise<Track> {
+  const response = await fetch(`${API_BASE_URL}/api/tracks/${slug}`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch track");
+  }
+
+  const data = (await response.json()) as BackendTrack;
+
+  return mapBackendTrack(data);
+}

@@ -5,6 +5,7 @@ import LessonPage from "./pages/LessonPage";
 import TrackDetailPage from "./pages/TrackDetailPage";
 import TracksPage from "./pages/TracksPage";
 import DashboardPage from "./pages/DashboardPage";
+import InterviewModePage from "./pages/InterviewModePage";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/tracks/:trackSlug" element={<TrackDetailPage />} />
         <Route path="/lessons/:lessonSlug" element={<LessonPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/interview-mode" element={<InterviewModePage />} />
       </Route>
     </Routes>
   );

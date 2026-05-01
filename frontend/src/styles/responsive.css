@@ -119,6 +119,14 @@
                     flex-direction: column;
                     align-items: flex-start;
                 }
+
+                                .interview-card-header {
+                                    flex-direction: column;
+                                }
+                
+                                .interview-toggle {
+                                    width: 100%;
+                                }
     }
 
     @media (max-width: 560px) {

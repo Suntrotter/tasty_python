@@ -17,7 +17,7 @@ export const lessons: LessonPreview[] = [
     trackSlug: "python-core",
     order: 2,
     title: "Mutable vs Immutable Objects",
-    status: "in_progress",
+    status: "published",
     difficulty: "beginner",
     estimatedTime: "15–20 min",
     shortDescription:

@@ -12,6 +12,7 @@ function Layout() {
   <Link to="/">Home</Link>
   <Link to="/tracks">Tracks</Link>
   <Link to="/dashboard">Dashboard</Link>
+  <Link to="/interview-mode">Interview Mode</Link>
 </nav>
       </header>
 

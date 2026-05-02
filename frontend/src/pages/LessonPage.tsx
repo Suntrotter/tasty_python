@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { fetchLessonContentBySlug } from "../api/lessonContentApi";
 import { fetchLessonBySlug } from "../api/lessonsApi";
 import LessonCompletionButton from "../components/LessonCompletionButton";
 import LessonNavigation from "../components/LessonNavigation";
@@ -7,17 +8,17 @@ import LessonSectionRenderer from "../components/LessonSectionRenderer";
 import { getLessonBySlug, getLessonNavigation } from "../data/lessons";
 import { getLessonContentBySlug } from "../data/lessonContent";
 import type { LessonPreview } from "../types/curriculum";
+import type { LessonContent } from "../types/lesson";
 
 function LessonPage() {
   const { lessonSlug } = useParams();
 
   const [lesson, setLesson] = useState<LessonPreview | undefined>(undefined);
+  const [lessonContent, setLessonContent] = useState<
+    LessonContent | undefined
+  >(undefined);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
-
-  const lessonContent = lessonSlug
-    ? getLessonContentBySlug(lessonSlug)
-    : undefined;
 
   const { previousLesson, nextLesson } = lessonSlug
     ? getLessonNavigation(lessonSlug)
@@ -31,14 +32,20 @@ function LessonPage() {
       }
 
       try {
-        const lessonFromApi = await fetchLessonBySlug(lessonSlug);
+        const [lessonFromApi, lessonContentFromApi] = await Promise.all([
+          fetchLessonBySlug(lessonSlug),
+          fetchLessonContentBySlug(lessonSlug),
+        ]);
 
         setLesson(lessonFromApi);
+        setLessonContent(lessonContentFromApi);
         setErrorMessage("");
       } catch {
         const localLesson = getLessonBySlug(lessonSlug);
+        const localLessonContent = getLessonContentBySlug(lessonSlug);
 
         setLesson(localLesson);
+        setLessonContent(localLessonContent);
         setErrorMessage(
           "Backend is not available right now. Showing local demo data."
         );
@@ -55,7 +62,7 @@ function LessonPage() {
       <main className="page">
         <section className="loading-box">
           <h1>Loading lesson...</h1>
-          <p>Fetching lesson metadata from the backend API.</p>
+          <p>Fetching lesson data from the backend API.</p>
         </section>
       </main>
     );

@@ -101,3 +101,48 @@
     color: #92400e;
     font-weight: 700;
 }
+
+.api-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 34px;
+    padding: 0 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 800;
+    white-space: nowrap;
+    background: #ffffff;
+    border: 1px solid #f2d6aa;
+}
+
+.api-status-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    background: #9ca3af;
+}
+
+.api-status-checking {
+    color: #7c4a1d;
+}
+
+.api-status-checking .api-status-dot {
+    background: #f59e0b;
+}
+
+.api-status-online {
+    color: #166534;
+}
+
+.api-status-online .api-status-dot {
+    background: #22c55e;
+}
+
+.api-status-offline {
+    color: #92400e;
+}
+
+.api-status-offline .api-status-dot {
+    background: #f97316;
+}

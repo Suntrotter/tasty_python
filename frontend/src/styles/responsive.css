@@ -127,6 +127,10 @@
                                 .interview-toggle {
                                     width: 100%;
                                 }
+
+                                                                .api-status {
+                                                                    margin-top: 4px;
+                                                                }
     }
 
     @media (max-width: 560px) {

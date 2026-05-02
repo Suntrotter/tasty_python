@@ -16,3 +16,7 @@ def get_allowed_origins() -> list[str]:
         for origin in raw_origins.split(",")
         if origin.strip()
     ]
+
+
+def get_database_url() -> str:
+    return os.getenv("DATABASE_URL", "sqlite:///./tasty_python.db")

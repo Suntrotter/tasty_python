@@ -119,49 +119,338 @@ Planned:
 - React Router
 - CSS
 
-### Planned Backend
-
-The backend is planned for the next development stage.
-
-Possible stack:
+### Backend
 
 - FastAPI
-- PostgreSQL
 - SQLAlchemy
 - Alembic
-- Firebase Authentication
+- SQLite for local development
+- Pydantic
+- Python dotenv
 
----
+### Planned Backend Improvements
+
+- PostgreSQL / Neon database
+- Firebase Authentication
+- User progress stored in database
+- Admin content management
 
 ## Project Structure
 
-```text
 tasty_python/
-  frontend/
-    src/
-      components/
-        Layout.tsx
-        LessonCard.tsx
-        LessonNavigation.tsx
-        LessonSectionRenderer.tsx
-        TrackCard.tsx
-      data/
-        lessonContent/
-        lessons.ts
-        tracks.ts
-      pages/
-        HomePage.tsx
-        LessonPage.tsx
-        TrackDetailPage.tsx
-        TracksPage.tsx
-      types/
-        curriculum.ts
-        lesson.ts
-      App.tsx
-      main.tsx
-      index.css
-  README.md
+frontend/
+src/
+api/
+apiConfig.ts
+healthApi.ts
+lessonContentApi.ts
+lessonsApi.ts
+tracksApi.ts
+components/
+ApiStatus.tsx
+Layout.tsx
+LessonCard.tsx
+LessonCompletionButton.tsx
+LessonNavigation.tsx
+LessonSectionRenderer.tsx
+TrackCard.tsx
+data/
+lessonContent/
+interviewQuestions.ts
+lessons.ts
+tracks.ts
+features/
+progress/
+useLessonProgress.ts
+pages/
+DashboardPage.tsx
+HomePage.tsx
+InterviewModePage.tsx
+LessonPage.tsx
+TrackDetailPage.tsx
+TracksPage.tsx
+styles/
+types/
+App.tsx
+main.tsx
 
+backend/
+alembic/
+app/
+core/
+config.py
+data/
+lesson_content.py
+lessons.py
+tracks.py
+db/
+database.py
+models/
+lesson.py
+lesson_content.py
+track.py
+routers/
+lessons.py
+tracks.py
+schemas/
+lesson.py
+lesson_content.py
+track.py
+seed/
+seed_database.py
+main.py
+alembic.ini
+requirements.txt
 
+README.md
 
+## How to Run the Project Locally
+
+The project currently has two parts:
+
+```text
+frontend/   React + TypeScript + Vite application
+backend/    FastAPI backend with SQLite database
 ```
+
+You need two terminals to run the full project locally.
+
+---
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/tasty_python.git
+cd tasty_python
+```
+
+Replace `YOUR_USERNAME` with your GitHub username.
+
+---
+
+### 2. Run the backend
+
+Go to the backend folder:
+
+```bash
+cd backend
+```
+
+Create a virtual environment:
+
+```bash
+python -m venv .venv
+```
+
+Activate it.
+
+On Windows PowerShell:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+On Git Bash:
+
+```bash
+source .venv/Scripts/activate
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Create a local `.env` file from the example:
+
+```bash
+cp .env.example .env
+```
+
+On Windows PowerShell, you can use:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Apply database migrations:
+
+```bash
+alembic upgrade head
+```
+
+Seed the database:
+
+```bash
+python -m app.seed.seed_database
+```
+
+Run the backend:
+
+```bash
+uvicorn app.main:app --reload
+```
+
+### Backend helper scripts
+
+For Windows PowerShell, the backend includes helper scripts.
+
+From the `backend/` folder:
+
+````powershell
+.\scripts\setup-db.ps1
+
+### Backend helper scripts
+
+For Windows PowerShell, the backend includes helper scripts.
+
+From the `backend/` folder:
+
+```powershell
+.\scripts\setup-db.ps1
+
+The backend will be available at:
+
+```text
+http://127.0.0.1:8000
+````
+
+Swagger API documentation:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+Health check:
+
+```text
+http://127.0.0.1:8000/health
+```
+
+---
+
+### 3. Run the frontend
+
+Open a second terminal from the project root.
+
+Go to the frontend folder:
+
+```bash
+cd frontend
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create a local `.env.local` file:
+
+```bash
+cp .env.example .env.local
+```
+
+On Windows PowerShell:
+
+```powershell
+Copy-Item .env.example .env.local
+```
+
+Run the frontend:
+
+```bash
+npm run dev -- --host 127.0.0.1
+```
+
+The frontend will be available at:
+
+```text
+http://127.0.0.1:5173
+```
+
+---
+
+### 4. Local development flow
+
+Recommended startup order:
+
+```text
+1. Start backend
+2. Start frontend
+3. Open the frontend in the browser
+```
+
+The frontend checks the backend health endpoint and shows:
+
+```text
+API online
+```
+
+If the backend is not running, the frontend falls back to local demo data and shows:
+
+```text
+Demo mode
+```
+
+This fallback is intentional and helps keep the frontend usable even when the backend is offline.
+
+---
+
+## Backend API
+
+The FastAPI backend currently provides:
+
+```text
+GET /health
+GET /api/tracks
+GET /api/tracks/{track_slug}
+GET /api/tracks/{track_slug}/lessons
+GET /api/lessons
+GET /api/lessons/{lesson_slug}
+GET /api/lessons/{lesson_slug}/content
+```
+
+The backend uses:
+
+- FastAPI
+- SQLAlchemy
+- Alembic
+- SQLite for local development
+- Seed scripts for initial curriculum data
+
+The database currently stores:
+
+- tracks
+- lessons
+- lesson content
+- lesson sections
+- lesson items
+- lesson tables
+
+---
+
+## Database Commands
+
+Apply migrations:
+
+```bash
+alembic upgrade head
+```
+
+Create a new migration after changing models:
+
+```bash
+alembic revision --autogenerate -m "migration message"
+```
+
+Seed or update the local database:
+
+```bash
+python -m app.seed.seed_database
+```
+
+The seed script is idempotent. It can be run multiple times and will update existing records instead of creating duplicates.
+
+It also removes stale tracks and lessons that no longer exist in the source seed data.

@@ -2,3 +2,5 @@ __pycache__/
 *.py[cod]
 .venv/
 .env
+tasty_python.db
+*.db

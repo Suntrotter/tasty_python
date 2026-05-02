@@ -3,7 +3,12 @@ import { lessons } from "../data/lessons";
 import { useLessonProgress } from "../features/progress/useLessonProgress";
 
 function DashboardPage() {
-  const { completedLessonSlugs, completedLessonsCount } = useLessonProgress();
+  const {
+  completedLessonSlugs,
+  completedLessonsCount,
+  progressSource,
+  isProgressLoading,
+} = useLessonProgress();
 
   const completedLessons = lessons.filter((lesson) =>
     completedLessonSlugs.includes(lesson.slug)
@@ -54,14 +59,16 @@ function DashboardPage() {
         </article>
 
         <article className="dashboard-card">
-          <h2>Completed lessons</h2>
-          <p className="dashboard-number">{completedLessonsCount}</p>
-          <p>
-            {completedLessonsCount === 0
-              ? "No lessons completed yet."
-              : "Your completed lessons are saved in this browser."}
-          </p>
-        </article>
+  <h2>Completed lessons</h2>
+  <p className="dashboard-number">
+    {isProgressLoading ? "..." : completedLessonsCount}
+  </p>
+  <p>
+    {progressSource === "backend"
+      ? "Your completed lessons are saved in the backend database."
+      : "Your completed lessons are saved locally in this browser."}
+  </p>
+</article>
 
         <article className="dashboard-card">
           <h2>Published lessons</h2>

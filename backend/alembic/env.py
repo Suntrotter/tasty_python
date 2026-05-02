@@ -6,9 +6,17 @@ from sqlalchemy import engine_from_config, pool
 from app.core.config import get_database_url
 from app.db.database import Base
 
-# Import future models here so Alembic can detect them.
-# Example:
-# from app.models.track import TrackModel
+from app.core.config import get_database_url
+from app.db.database import Base
+from app.models import (
+    LessonContentModel,
+    LessonItemModel,
+    LessonModel,
+    LessonSectionModel,
+    LessonTableModel,
+    TrackModel,
+    UserProgressModel,
+)
 
 config = context.config
 

@@ -263,3 +263,11 @@
     border-color: #bbf7d0;
     background: #f0fdf4;
 }
+
+.progress-source-label {
+    margin-top: 8px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 800;
+    color: #7c4a1d;
+}

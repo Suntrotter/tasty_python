@@ -4,11 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
+  "dev": "vite",
+  "dev:local": "vite --host 127.0.0.1",
+  "build": "tsc -b && vite build",
+  "check": "tsc -b && vite build",
+  "lint": "eslint .",
+  "preview": "vite preview",
+  "preview:local": "vite preview --host 127.0.0.1"
+},
   "dependencies": {
     "react": "^19.2.5",
     "react-dom": "^19.2.5",

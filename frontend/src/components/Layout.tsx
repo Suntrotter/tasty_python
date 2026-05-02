@@ -14,6 +14,7 @@ function Layout() {
           <Link to="/tracks">Tracks</Link>
           <Link to="/dashboard">Dashboard</Link>
           <Link to="/interview-mode">Interview Mode</Link>
+          <Link to="/admin">Admin</Link>
         </nav>
 
         <ApiStatus />

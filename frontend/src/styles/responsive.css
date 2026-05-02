@@ -115,22 +115,31 @@
             font-size: 48px;
         }
 
-                .completion-box {
-                    flex-direction: column;
-                    align-items: flex-start;
+        .completion-box {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .interview-card-header {
+            flex-direction: column;
+        }
+                
+        .interview-toggle {
+            width: 100%;
+            }
+
+        .api-status {
+            margin-top: 4px;
+                        }
+
+        .admin-grid {
+            grid-template-columns: 1fr;
                 }
 
-                                .interview-card-header {
-                                    flex-direction: column;
-                                }
-                
-                                .interview-toggle {
-                                    width: 100%;
-                                }
-
-                                                                .api-status {
-                                                                    margin-top: 4px;
-                                                                }
+.admin-detail-grid,
+.admin-section-card {
+    grid-template-columns: 1fr;
+}
     }
 
     @media (max-width: 560px) {

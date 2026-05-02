@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from app.db.database import get_db
 from app.models.lesson import LessonModel
@@ -31,6 +31,7 @@ def lesson_to_response(lesson: LessonModel) -> dict:
         "difficulty": lesson.difficulty,
         "estimated_time": lesson.estimated_time,
         "short_description": lesson.short_description,
+        "has_content": lesson.content is not None,
     }
 
 
@@ -65,9 +66,13 @@ def read_track_lessons(track_slug: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Track not found")
 
     lessons = db.scalars(
-        select(LessonModel)
-        .where(LessonModel.track_id == track.id)
-        .order_by(LessonModel.order)
-    ).all()
+    select(LessonModel)
+    .options(
+        joinedload(LessonModel.track),
+        joinedload(LessonModel.content),
+    )
+    .where(LessonModel.track_id == track.id)
+    .order_by(LessonModel.order)
+).all()
 
     return [lesson_to_response(lesson) for lesson in lessons]

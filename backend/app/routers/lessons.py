@@ -24,6 +24,7 @@ def lesson_to_response(lesson: LessonModel) -> dict:
         "difficulty": lesson.difficulty,
         "estimated_time": lesson.estimated_time,
         "short_description": lesson.short_description,
+        "has_content": lesson.content is not None,
     }
 
 
@@ -68,8 +69,10 @@ def lesson_content_to_response(lesson_content: LessonContentModel) -> dict:
 def read_lessons(db: Session = Depends(get_db)):
     lessons = db.scalars(
         select(LessonModel)
-        .options(joinedload(LessonModel.track))
-        .order_by(LessonModel.track_id, LessonModel.order)
+    .options(
+        joinedload(LessonModel.track),
+        joinedload(LessonModel.content),
+    )        .order_by(LessonModel.track_id, LessonModel.order)
     ).all()
 
     return [lesson_to_response(lesson) for lesson in lessons]
@@ -79,7 +82,10 @@ def read_lessons(db: Session = Depends(get_db)):
 def read_lesson(lesson_slug: str, db: Session = Depends(get_db)):
     lesson = db.scalar(
         select(LessonModel)
-        .options(joinedload(LessonModel.track))
+        .options(
+            joinedload(LessonModel.track),
+            joinedload(LessonModel.content),
+        )
         .where(LessonModel.slug == lesson_slug)
     )
 

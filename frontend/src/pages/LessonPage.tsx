@@ -32,26 +32,29 @@ function LessonPage() {
       }
 
       try {
-        const [lessonFromApi, lessonContentFromApi] = await Promise.all([
-          fetchLessonBySlug(lessonSlug),
-          fetchLessonContentBySlug(lessonSlug),
-        ]);
+  const lessonFromApi = await fetchLessonBySlug(lessonSlug);
 
-        setLesson(lessonFromApi);
-        setLessonContent(lessonContentFromApi);
-        setErrorMessage("");
-      } catch {
-        const localLesson = getLessonBySlug(lessonSlug);
-        const localLessonContent = getLessonContentBySlug(lessonSlug);
+  setLesson(lessonFromApi);
+  setErrorMessage("");
 
-        setLesson(localLesson);
-        setLessonContent(localLessonContent);
-        setErrorMessage(
-          "Backend is not available right now. Showing local demo data."
-        );
-      } finally {
-        setIsLoading(false);
-      }
+  if (lessonFromApi.status === "published" && lessonFromApi.hasContent) {
+    const lessonContentFromApi = await fetchLessonContentBySlug(lessonSlug);
+    setLessonContent(lessonContentFromApi);
+  } else {
+    setLessonContent(undefined);
+  }
+} catch {
+  const localLesson = getLessonBySlug(lessonSlug);
+  const localLessonContent = getLessonContentBySlug(lessonSlug);
+
+  setLesson(localLesson);
+  setLessonContent(localLessonContent);
+  setErrorMessage(
+    "Backend is not available right now. Showing local demo data."
+  );
+} finally {
+  setIsLoading(false);
+}
     }
 
     loadLesson();

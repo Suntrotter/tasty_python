@@ -26,4 +26,5 @@ export interface LessonPreview {
   difficulty: LessonDifficulty;
   estimatedTime: string;
   shortDescription: string;
+  hasContent?: boolean;
 }

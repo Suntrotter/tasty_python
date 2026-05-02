@@ -1,36 +1,25 @@
-import { useEffect, useState } from "react";
-import { fetchApiHealth } from "../api/healthApi";
-
-type ApiStatusValue = "checking" | "online" | "offline";
+import { useApiStatus } from "../features/apiStatus/ApiStatusContext";
 
 function ApiStatus() {
-  const [status, setStatus] = useState<ApiStatusValue>("checking");
-
-  useEffect(() => {
-    async function checkApiStatus() {
-      try {
-        await fetchApiHealth();
-        setStatus("online");
-      } catch {
-        setStatus("offline");
-      }
-    }
-
-    checkApiStatus();
-  }, []);
+  const { apiStatus, refreshApiStatus } = useApiStatus();
 
   const label =
-    status === "checking"
+    apiStatus === "checking"
       ? "Checking API..."
-      : status === "online"
+      : apiStatus === "online"
       ? "API online"
       : "Demo mode";
 
   return (
-    <span className={`api-status api-status-${status}`}>
+    <button
+      type="button"
+      className={`api-status api-status-${apiStatus}`}
+      onClick={refreshApiStatus}
+      title="Click to recheck backend API status"
+    >
       <span className="api-status-dot" />
       {label}
-    </span>
+    </button>
   );
 }
 

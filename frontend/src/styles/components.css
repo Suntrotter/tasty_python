@@ -109,11 +109,13 @@
     min-height: 34px;
     padding: 0 12px;
     border-radius: 999px;
+    font: inherit;
     font-size: 13px;
     font-weight: 800;
     white-space: nowrap;
     background: #ffffff;
     border: 1px solid #f2d6aa;
+    cursor: pointer;
 }
 
 .api-status-dot {

@@ -10,6 +10,7 @@ interface BackendLessonPreview {
   difficulty: LessonPreview["difficulty"];
   estimated_time: string;
   short_description: string;
+  has_content?: boolean;
 }
 
 export function mapBackendLesson(lesson: BackendLessonPreview): LessonPreview {
@@ -22,7 +23,20 @@ export function mapBackendLesson(lesson: BackendLessonPreview): LessonPreview {
     difficulty: lesson.difficulty,
     estimatedTime: lesson.estimated_time,
     shortDescription: lesson.short_description,
+    hasContent: lesson.has_content ?? false,
   };
+}
+
+export async function fetchLessons(): Promise<LessonPreview[]> {
+  const response = await fetch(`${API_BASE_URL}/api/lessons`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch lessons");
+  }
+
+  const data = (await response.json()) as BackendLessonPreview[];
+
+  return data.map(mapBackendLesson);
 }
 
 export async function fetchLessonsByTrackSlug(

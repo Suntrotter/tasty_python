@@ -44,6 +44,7 @@ def lesson_content_to_response(lesson_content: LessonContentModel) -> dict:
                 "output": section.output,
                 "items": [
                     {
+                        "id": item.id,
                         "title": item.title,
                         "content": item.content,
                         "code": item.code,

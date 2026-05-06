@@ -4,10 +4,11 @@ import type { LessonPreview, LessonStatus } from "../types/curriculum";
 interface LessonCardProps {
   lesson: LessonPreview;
   isCompleted?: boolean;
+  isNextLesson?: boolean;
 }
 
 const statusLabels: Record<LessonStatus, string> = {
-  published: "Published",
+  published: "Ready",
   in_progress: "In progress",
   coming_soon: "Coming soon",
   planned: "Planned",
@@ -23,17 +24,32 @@ const statusIcons: Record<LessonStatus, string> = {
 };
 
 const actionLabels: Record<LessonStatus, string> = {
-  published: "Start lesson",
+  published: "Open lesson",
   in_progress: "Preview",
   coming_soon: "Coming soon",
   planned: "Roadmap only",
   premium: "Locked",
 };
 
-function LessonCard({ lesson, isCompleted = false }: LessonCardProps) {
-  const isClickable = lesson.status !== "planned";
+function LessonCard({
+  lesson,
+  isCompleted = false,
+  isNextLesson = false,
+}: LessonCardProps) {
+  const isClickable =
+    lesson.status === "published" || lesson.status === "in_progress";
 
-  const actionLabel = isCompleted ? "Completed" : actionLabels[lesson.status];
+  let actionLabel = actionLabels[lesson.status];
+
+  if (isCompleted) {
+    actionLabel = "Review lesson";
+  } else if (isNextLesson && lesson.status === "published") {
+    actionLabel = "Continue here";
+  }
+
+  const cardClassName = `lesson-card lesson-card-${lesson.status} ${
+    isCompleted ? "lesson-card-completed" : ""
+  } ${isNextLesson ? "lesson-card-next" : ""}`;
 
   const cardContent = (
     <>
@@ -44,6 +60,10 @@ function LessonCard({ lesson, isCompleted = false }: LessonCardProps) {
           <span className={`status status-${lesson.status}`}>
             {statusLabels[lesson.status]}
           </span>
+
+          {isNextLesson && !isCompleted && (
+            <span className="next-badge">Next step</span>
+          )}
 
           {isCompleted && <span className="completed-badge">Completed</span>}
         </div>
@@ -67,6 +87,8 @@ function LessonCard({ lesson, isCompleted = false }: LessonCardProps) {
           className={`lesson-action ${
             isCompleted
               ? "lesson-action-completed"
+              : isNextLesson
+              ? "lesson-action-next"
               : `lesson-action-${lesson.status}`
           }`}
         >
@@ -75,10 +97,6 @@ function LessonCard({ lesson, isCompleted = false }: LessonCardProps) {
       </div>
     </>
   );
-
-  const cardClassName = `lesson-card lesson-card-${lesson.status} ${
-    isCompleted ? "lesson-card-completed" : ""
-  }`;
 
   if (!isClickable) {
     return (
@@ -89,7 +107,10 @@ function LessonCard({ lesson, isCompleted = false }: LessonCardProps) {
   }
 
   return (
-    <Link to={`/lessons/${lesson.slug}`} className={`${cardClassName} lesson-card-clickable`}>
+    <Link
+      to={`/lessons/${lesson.slug}`}
+      className={`${cardClassName} lesson-card-clickable`}
+    >
       {cardContent}
     </Link>
   );

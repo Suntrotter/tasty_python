@@ -7,6 +7,7 @@ import type {
 import { API_BASE_URL } from "./apiConfig";
 
 interface BackendLessonTextItem {
+  id?: number | null;
   title?: string | null;
   content: string;
   code?: string | null;
@@ -39,6 +40,7 @@ interface BackendLessonContent {
 
 function mapLessonTextItem(item: BackendLessonTextItem): LessonTextItem {
   return {
+    id: item.id ?? undefined,
     title: item.title ?? undefined,
     content: item.content,
     code: item.code ?? undefined,

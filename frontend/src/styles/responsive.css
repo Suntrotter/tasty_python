@@ -140,6 +140,10 @@
 .admin-section-card {
     grid-template-columns: 1fr;
 }
+
+.admin-form-row {
+    grid-template-columns: 1fr;
+}
     }
 
     @media (max-width: 560px) {

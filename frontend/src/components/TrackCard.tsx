@@ -9,25 +9,30 @@ interface TrackCardProps {
 function TrackCard({ track }: TrackCardProps) {
   const trackLessons = getLessonsByTrackSlug(track.slug);
 
-  const publishedLessons = trackLessons.filter(
+  const readyLessons = trackLessons.filter(
     (lesson) => lesson.status === "published"
   ).length;
 
   const visibleLessonsCount = trackLessons.length || track.lessonCount;
 
-  const progress =
+  const availabilityPercent =
     visibleLessonsCount > 0
-      ? Math.round((publishedLessons / visibleLessonsCount) * 100)
+      ? Math.round((readyLessons / visibleLessonsCount) * 100)
       : 0;
+
+  const hasReadyLessons = readyLessons > 0;
+
+  const statusLabel = hasReadyLessons ? "Start learning" : "Coming soon";
+  const statusClassName = hasReadyLessons ? "status-published" : "status-planned";
 
   return (
     <Link to={`/tracks/${track.slug}`} className="track-card">
       <div className="track-card-header">
-        <span className={`status status-${track.status}`}>
-          {track.status.replace("_", " ")}
-        </span>
+        <span className={`status ${statusClassName}`}>{statusLabel}</span>
 
-        <span className="track-progress-percent">{progress}%</span>
+        <span className="track-progress-percent">
+          {readyLessons}/{visibleLessonsCount} ready
+        </span>
       </div>
 
       <h2>{track.title}</h2>
@@ -36,15 +41,19 @@ function TrackCard({ track }: TrackCardProps) {
 
       <div className="track-progress">
         <div className="track-progress-bar">
-          <span style={{ width: `${progress}%` }} />
+          <span style={{ width: `${availabilityPercent}%` }} />
         </div>
 
         <p>
-          {publishedLessons} of {visibleLessonsCount} lessons published
+          {hasReadyLessons
+            ? `${readyLessons} lesson${readyLessons === 1 ? "" : "s"} available now`
+            : "This path is planned for a future update"}
         </p>
       </div>
 
-      <p className="lesson-count">{track.lessonCount} lessons planned</p>
+      <p className="lesson-count">
+        {hasReadyLessons ? "Open track →" : `${track.lessonCount} lessons planned`}
+      </p>
     </Link>
   );
 }

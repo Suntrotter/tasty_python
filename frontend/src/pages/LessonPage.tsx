@@ -32,29 +32,31 @@ function LessonPage() {
       }
 
       try {
-  const lessonFromApi = await fetchLessonBySlug(lessonSlug);
+        const lessonFromApi = await fetchLessonBySlug(lessonSlug);
 
-  setLesson(lessonFromApi);
-  setErrorMessage("");
+        setLesson(lessonFromApi);
+        setErrorMessage("");
 
-  if (lessonFromApi.status === "published" && lessonFromApi.hasContent) {
-    const lessonContentFromApi = await fetchLessonContentBySlug(lessonSlug);
-    setLessonContent(lessonContentFromApi);
-  } else {
-    setLessonContent(undefined);
-  }
-} catch {
-  const localLesson = getLessonBySlug(lessonSlug);
-  const localLessonContent = getLessonContentBySlug(lessonSlug);
+        if (lessonFromApi.status === "published" && lessonFromApi.hasContent) {
+          const lessonContentFromApi = await fetchLessonContentBySlug(
+            lessonSlug
+          );
+          setLessonContent(lessonContentFromApi);
+        } else {
+          setLessonContent(undefined);
+        }
+      } catch {
+        const localLesson = getLessonBySlug(lessonSlug);
+        const localLessonContent = getLessonContentBySlug(lessonSlug);
 
-  setLesson(localLesson);
-  setLessonContent(localLessonContent);
-  setErrorMessage(
-    "Backend is not available right now. Showing local demo data."
-  );
-} finally {
-  setIsLoading(false);
-}
+        setLesson(localLesson);
+        setLessonContent(localLessonContent);
+        setErrorMessage(
+          "Backend is not available right now. Showing local demo data."
+        );
+      } finally {
+        setIsLoading(false);
+      }
     }
 
     loadLesson();
@@ -150,31 +152,17 @@ function LessonPage() {
         {errorMessage && <p className="api-notice">{errorMessage}</p>}
       </section>
 
-      {lessonContent.imagePrompts && (
-        <section className="lesson-section">
-          <h2>Image Prompts</h2>
-          <p>
-            These prompts are placeholders for future illustrations and visual
-            assets.
-          </p>
-
-          <ul className="image-prompt-list">
-            {lessonContent.imagePrompts.map((prompt) => (
-              <li key={prompt}>{prompt}</li>
-            ))}
-          </ul>
-        </section>
-      )}
-
       {lessonContent.sections.map((section) => (
-        <LessonSectionRenderer section={section} key={section.id} />
+        <LessonSectionRenderer
+          section={section}
+          lessonSlug={lesson.slug}
+          key={section.id}
+        />
       ))}
 
-      <LessonCompletionButton lessonSlug={lesson.slug} />
-
-      <LessonNavigation
+      <LessonCompletionButton
+        lessonSlug={lesson.slug}
         trackSlug={lesson.trackSlug}
-        previousLesson={previousLesson}
         nextLesson={nextLesson}
       />
     </main>

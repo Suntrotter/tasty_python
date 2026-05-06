@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import TrackCard from "../components/TrackCard";
 import { fetchTracks } from "../api/tracksApi";
 import { tracks as localTracks } from "../data/tracks";
+import { getLessonsByTrackSlug } from "../data/lessons";
 import type { Track } from "../types/curriculum";
 
 function TracksPage() {
@@ -31,27 +32,36 @@ function TracksPage() {
 
   const totalTracks = tracks.length;
 
-  const inProgressTracks = tracks.filter(
-    (track) => track.status === "in_progress"
-  ).length;
+  const readyLessons = tracks.reduce((sum, track) => {
+    const lessons = getLessonsByTrackSlug(track.slug);
+    const publishedLessons = lessons.filter(
+      (lesson) => lesson.status === "published"
+    );
 
-  const plannedTracks = tracks.filter(
-    (track) => track.status === "planned"
-  ).length;
+    return sum + publishedLessons.length;
+  }, 0);
 
   const totalLessons = tracks.reduce(
     (sum, track) => sum + track.lessonCount,
     0
   );
 
+  const availableTracks = tracks.filter((track) => {
+    const lessons = getLessonsByTrackSlug(track.slug);
+
+    return lessons.some((lesson) => lesson.status === "published");
+  }).length;
+
   return (
     <main className="page">
       <section className="page-intro">
-        <p className="eyebrow">Learning roadmap</p>
+        <p className="eyebrow">Choose your path</p>
         <h1>Python tracks</h1>
+
         <p>
-          The full curriculum is visible from the start. Some tracks are already
-          in progress, while others are planned for future development.
+          Learn Python step by step. Start with the basics, practice small
+          concepts, return to tricky topics, and build confidence for real
+          coding tasks and junior interviews.
         </p>
 
         {errorMessage && <p className="api-notice">{errorMessage}</p>}
@@ -60,29 +70,29 @@ function TracksPage() {
       {isLoading ? (
         <section className="loading-box">
           <h2>Loading tracks...</h2>
-          <p>Fetching the learning roadmap from the backend API.</p>
+          <p>Preparing your Python learning paths.</p>
         </section>
       ) : (
         <>
           <section className="roadmap-summary">
             <article>
               <strong>{totalTracks}</strong>
-              <span>Tracks</span>
+              <span>Learning paths</span>
+            </article>
+
+            <article>
+              <strong>{readyLessons}</strong>
+              <span>Lessons ready</span>
+            </article>
+
+            <article>
+              <strong>{availableTracks}</strong>
+              <span>Open now</span>
             </article>
 
             <article>
               <strong>{totalLessons}</strong>
-              <span>Lessons planned</span>
-            </article>
-
-            <article>
-              <strong>{inProgressTracks}</strong>
-              <span>In progress</span>
-            </article>
-
-            <article>
-              <strong>{plannedTracks}</strong>
-              <span>Planned</span>
+              <span>Total planned</span>
             </article>
           </section>
 

@@ -1,17 +1,21 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useLessonProgress } from "../features/progress/useLessonProgress";
+import type { LessonPreview } from "../types/curriculum";
 
 interface LessonCompletionButtonProps {
   lessonSlug: string;
+  trackSlug: string;
+  nextLesson?: LessonPreview;
 }
 
-function LessonCompletionButton({ lessonSlug }: LessonCompletionButtonProps) {
-  const {
-    isLessonCompleted,
-    isProgressLoading,
-    progressSource,
-    toggleLessonCompletion,
-  } = useLessonProgress();
+function LessonCompletionButton({
+  lessonSlug,
+  trackSlug,
+  nextLesson,
+}: LessonCompletionButtonProps) {
+  const { isLessonCompleted, isProgressLoading, toggleLessonCompletion } =
+    useLessonProgress();
 
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -27,40 +31,64 @@ function LessonCompletionButton({ lessonSlug }: LessonCompletionButtonProps) {
     }
   }
 
-  const sourceLabel =
-    progressSource === "backend"
-      ? "Saved to backend"
-      : progressSource === "local"
-      ? "Saved locally"
-      : "Checking progress";
-
   return (
-    <div className={`completion-box ${completed ? "completion-box-done" : ""}`}>
-      <div>
-        <h2>{completed ? "Lesson completed" : "Ready to finish?"}</h2>
-
-        <p>
-          {completed
-            ? "Nice work. This lesson is saved as completed."
-            : "Mark this lesson as completed when you feel you can explain the idea in your own words."}
-        </p>
-
-        <p className="progress-source-label">{sourceLabel}</p>
+    <section
+      className={`completion-box completion-celebration ${
+        completed ? "completion-box-done" : ""
+      }`}
+    >
+      <div className="completion-image-wrap">
+        <img
+          src="/lesson-images/lesson1_completion.png"
+          alt="Cozy celebration scene for completing a Python lesson."
+        />
       </div>
 
-      <button
-        type="button"
-        className="button button-primary"
-        disabled={isProgressLoading || isUpdating}
-        onClick={handleToggleCompletion}
-      >
-        {isUpdating
-          ? "Saving..."
-          : completed
-          ? "Mark as not completed"
-          : "Mark as completed"}
-      </button>
-    </div>
+      <div className="completion-content">
+        <p className="completion-kicker">Lesson complete</p>
+
+        <h2>Delicious progress. Lesson 1 completed.</h2>
+
+        <p>
+          You’ve cooked your first Python concept successfully. Variables,
+          assignment, reassignment — all plated and ready.
+        </p>
+
+        <p>
+          If this lesson feels clear, you’re in a very good place. Ready for the
+          next bite?
+        </p>
+
+        <div className="completion-actions">
+          <button
+            type="button"
+            className="button button-primary"
+            disabled={isProgressLoading || isUpdating}
+            onClick={handleToggleCompletion}
+          >
+            {isUpdating
+              ? "Saving..."
+              : completed
+              ? "Completed ✓"
+              : "Mark as completed"}
+          </button>
+
+          {nextLesson ? (
+            <Link to={`/lessons/${nextLesson.slug}`} className="button">
+              Continue to next lesson
+            </Link>
+          ) : (
+            <Link to={`/tracks/${trackSlug}`} className="button">
+              Back to track
+            </Link>
+          )}
+
+          <Link to={`/tracks/${trackSlug}`} className="completion-small-link">
+            Back to track
+          </Link>
+        </div>
+      </div>
+    </section>
   );
 }
 

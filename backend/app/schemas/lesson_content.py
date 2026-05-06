@@ -16,6 +16,7 @@ LessonSectionType = Literal[
 
 
 class LessonTextItem(BaseModel):
+    id: int | None = None
     title: str | None = None
     content: str
     code: str | None = None

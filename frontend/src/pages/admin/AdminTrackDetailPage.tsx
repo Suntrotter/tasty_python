@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { Link, useParams } from "react-router-dom";
+import { updateTrackMetadata } from "../../api/adminApi";
 import { fetchLessonsByTrackSlug } from "../../api/lessonsApi";
 import { fetchTrackBySlug } from "../../api/tracksApi";
 import { getLessonsByTrackSlug } from "../../data/lessons";
 import { getTrackBySlug } from "../../data/tracks";
-import type { LessonPreview, Track } from "../../types/curriculum";
+import type { LessonPreview, Track, TrackStatus } from "../../types/curriculum";
 
 function AdminTrackDetailPage() {
   const { trackSlug } = useParams();
@@ -13,6 +14,16 @@ function AdminTrackDetailPage() {
   const [trackLessons, setTrackLessons] = useState<LessonPreview[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const [metadataMessage, setMetadataMessage] = useState("");
+  const [isUpdatingMetadata, setIsUpdatingMetadata] = useState(false);
+
+  const [metadataForm, setMetadataForm] = useState({
+    title: "",
+    description: "",
+    status: "planned" as TrackStatus,
+    lessonCount: 0,
+  });
 
   useEffect(() => {
     async function loadTrackData() {
@@ -42,6 +53,19 @@ function AdminTrackDetailPage() {
     loadTrackData();
   }, [trackSlug]);
 
+  useEffect(() => {
+    if (!track) {
+      return;
+    }
+
+    setMetadataForm({
+      title: track.title,
+      description: track.description,
+      status: track.status,
+      lessonCount: track.lessonCount,
+    });
+  }, [track]);
+
   const publishedLessons = trackLessons.filter(
     (lesson) => lesson.status === "published"
   ).length;
@@ -57,6 +81,42 @@ function AdminTrackDetailPage() {
   const inProgressLessons = trackLessons.filter(
     (lesson) => lesson.status === "in_progress"
   ).length;
+
+  function handleMetadataInputChange(
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) {
+    const { name, value } = event.target;
+
+    setMetadataForm((currentForm) => ({
+      ...currentForm,
+      [name]: name === "lessonCount" ? Number(value) : value,
+    }));
+  }
+
+  async function handleMetadataSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!track) {
+      return;
+    }
+
+    setIsUpdatingMetadata(true);
+    setMetadataMessage("");
+
+    try {
+      const updatedTrack = await updateTrackMetadata(track.slug, metadataForm);
+
+      setTrack(updatedTrack);
+      setMetadataMessage("Track metadata updated successfully.");
+      setErrorMessage("");
+    } catch {
+      setMetadataMessage(
+        "Could not update track metadata through the backend. Make sure the API is running."
+      );
+    } finally {
+      setIsUpdatingMetadata(false);
+    }
+  }
 
   if (isLoading) {
     return (
@@ -158,6 +218,69 @@ function AdminTrackDetailPage() {
             </div>
           </dl>
         </article>
+      </section>
+
+      <section className="admin-edit-panel">
+        <h2>Edit track metadata</h2>
+
+        <form className="admin-form" onSubmit={handleMetadataSubmit}>
+          <label>
+            Title
+            <input
+              name="title"
+              value={metadataForm.title}
+              onChange={handleMetadataInputChange}
+            />
+          </label>
+
+          <label>
+            Description
+            <textarea
+              name="description"
+              value={metadataForm.description}
+              onChange={handleMetadataInputChange}
+              rows={4}
+            />
+          </label>
+
+          <div className="admin-form-row">
+            <label>
+              Status
+              <select
+                name="status"
+                value={metadataForm.status}
+                onChange={handleMetadataInputChange}
+              >
+                <option value="planned">planned</option>
+                <option value="in_progress">in_progress</option>
+                <option value="published">published</option>
+              </select>
+            </label>
+
+            <label>
+              Lesson count
+              <input
+                name="lessonCount"
+                type="number"
+                min="0"
+                value={metadataForm.lessonCount}
+                onChange={handleMetadataInputChange}
+              />
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            className="button button-primary"
+            disabled={isUpdatingMetadata}
+          >
+            {isUpdatingMetadata ? "Saving..." : "Save track metadata"}
+          </button>
+
+          {metadataMessage && (
+            <p className="admin-status-message">{metadataMessage}</p>
+          )}
+        </form>
       </section>
 
       <section className="admin-table-wrapper">

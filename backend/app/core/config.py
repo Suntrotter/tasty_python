@@ -20,3 +20,7 @@ def get_allowed_origins() -> list[str]:
 
 def get_database_url() -> str:
     return os.getenv("DATABASE_URL", "sqlite:///./tasty_python.db")
+
+
+def get_admin_api_token() -> str:
+    return os.getenv("ADMIN_API_TOKEN", "tasty-python-admin")

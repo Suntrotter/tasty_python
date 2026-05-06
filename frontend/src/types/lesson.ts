@@ -9,6 +9,7 @@ export type LessonSectionType =
   | "answer_key";
 
 export interface LessonTextItem {
+  id?: number;
   title?: string;
   content: string;
   code?: string;

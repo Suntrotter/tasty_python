@@ -1,0 +1,1783 @@
+{
+  "version": 1,
+  "tracks": [
+    {
+      "slug": "python-core",
+      "title": "Python Core",
+      "description": "The basics juniors often underestimate: variables, typing, truthiness, slicing, and naming.",
+      "status": "in_progress",
+      "lesson_count": 14,
+      "lessons": [
+        {
+          "slug": "variables-and-assignment",
+          "order": 1,
+          "title": "Variables and Assignment",
+          "status": "published",
+          "difficulty": "beginner",
+          "estimated_time": "10–15 min",
+          "short_description": "Understand what variables are, how assignment works, and what reassignment means.",
+          "content": {
+            "title": "Variables and Assignment",
+            "goal": "By the end of this lesson, you should understand what variables are in Python, how assignment works, what reassignment means, and how to explain this clearly in a junior interview.",
+            "image_prompts": [
+              "A cozy kitchen shelf with jars of jam. Each jar has a paper label: flavor, price, cups. One label is being moved from one jar to another.",
+              "Two drink cups. First cup has label drink → latte, then the label is moved to another cup: drink → cappuccino.",
+              "A café receipt showing: drink, cups, price per cup, total. Use labels like Python variable names."
+            ],
+            "hero_visual": null,
+            "completion_image_url": null,
+            "completion_image_alt": null,
+            "completion_kicker": null,
+            "completion_title": null,
+            "completion_body": null,
+            "sections": [
+              {
+                "section_key": "tasty-metaphor",
+                "type": "metaphor",
+                "title": "Tasty Metaphor",
+                "order": 1,
+                "paragraphs": [
+                  "Imagine a kitchen full of jars.",
+                  "Each jar contains something: strawberry jam, honey, cinnamon, chocolate cream.",
+                  "A variable is like a label on a jar.",
+                  "This means: put the label flavor on the value \"strawberry\".",
+                  "In Python, a variable is not exactly a box. It is more like a name tag attached to an object.",
+                  "If we write flavor = \"strawberry\" and then flavor = \"chocolate\", the label flavor moves.",
+                  "Now it points to \"chocolate\".",
+                  "The old strawberry jam is not inside the variable. The label simply no longer points to it."
+                ],
+                "code": null,
+                "output": null,
+                "image_url": null,
+                "image_alt": null,
+                "image_position": null,
+                "items": [
+                  {
+                    "order": 1,
+                    "title": "Memory hook",
+                    "content": "variable = name\nassignment = attaching a name to a value\nreassignment = moving the name to another value",
+                    "code": null,
+                    "output": null,
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  }
+                ],
+                "table": null,
+                "blocks": []
+              },
+              {
+                "section_key": "short-theory",
+                "type": "theory",
+                "title": "Short Theory",
+                "order": 2,
+                "paragraphs": [
+                  "A variable is a name that refers to a value.",
+                  "Here, tea refers to a string, cups refers to an integer, price refers to a float, and is_hot refers to a boolean.",
+                  "The symbol = means assignment.",
+                  "It does not mean “equals” like in math. It means: take the value on the right and assign it to the name on the left.",
+                  "Read dessert = \"cake\" as: dessert now refers to \"cake\".",
+                  "Not: dessert is mathematically equal to cake.",
+                  "Python is not doing algebra here. It is doing label management. A tiny kitchen manager with strong opinions."
+                ],
+                "code": "tea = \"green tea\"\ncups = 3\nprice = 4.5\nis_hot = True\n\ndessert = \"cake\" ",
+                "output": null,
+                "image_url": null,
+                "image_alt": null,
+                "image_position": null,
+                "items": [],
+                "table": null,
+                "blocks": []
+              },
+              {
+                "section_key": "main-code-example",
+                "type": "code_example",
+                "title": "Main Code Example",
+                "order": 3,
+                "paragraphs": [
+                  "First, drink refers to \"latte\" and price refers to 5.",
+                  "Then both variables are reassigned.",
+                  "So Python prints the newest values."
+                ],
+                "code": "drink = \"latte\"\nprice = 5\n\nprint(drink)\nprint(price)\n\ndrink = \"cappuccino\"\nprice = 6\n\nprint(drink)\nprint(price)",
+                "output": "latte\n5\ncappuccino\n6",
+                "image_url": null,
+                "image_alt": null,
+                "image_position": null,
+                "items": [],
+                "table": null,
+                "blocks": []
+              },
+              {
+                "section_key": "interview-spot",
+                "type": "interview",
+                "title": "Interview Spot",
+                "order": 4,
+                "paragraphs": [
+                  "These are the kinds of questions a junior developer may hear in an interview.",
+                  "Try to answer clearly and simply. The goal is not to sound fancy. The goal is to show that you understand what Python is actually doing."
+                ],
+                "code": null,
+                "output": null,
+                "image_url": null,
+                "image_alt": null,
+                "image_position": null,
+                "items": [
+                  {
+                    "order": 1,
+                    "title": "Question 1: What is a variable in Python?",
+                    "content": "A variable in Python is a name that refers to an object or value. It does not store the value directly like a physical box; it points to an object in memory.",
+                    "code": null,
+                    "output": null,
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 2,
+                    "title": "Question 2: What does assignment mean?",
+                    "content": "Assignment means binding a name to a value. In x = 5, the name x now refers to the integer object 5.",
+                    "code": null,
+                    "output": null,
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 3,
+                    "title": "Question 3: What happens when you reassign a variable?",
+                    "content": "The variable name starts referring to a new value. The old value is not changed by reassignment; the name simply points somewhere else.",
+                    "code": null,
+                    "output": null,
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 4,
+                    "title": "Question 4: Can one value have several variable names?",
+                    "content": "Yes. Several names can refer to the same object.",
+                    "code": "first_dessert = \"cake\"\nsecond_dessert = first_dessert\n\nprint(first_dessert)\nprint(second_dessert)",
+                    "output": "cake\ncake",
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  }
+                ],
+                "table": null,
+                "blocks": []
+              },
+              {
+                "section_key": "trap-zone",
+                "type": "trap_zone",
+                "title": "Trap Zone",
+                "order": 5,
+                "paragraphs": [
+                  "These are common beginner mistakes.",
+                  "They look small, but they show whether you really understand assignment. So yes, tiny traps, big consequences. Python is polite, but it will still throw an error."
+                ],
+                "code": null,
+                "output": null,
+                "image_url": null,
+                "image_alt": null,
+                "image_position": null,
+                "items": [
+                  {
+                    "order": 1,
+                    "title": "Trap 1: Reading assignment backwards",
+                    "content": "The variable name must be on the left. The value must be on the right.",
+                    "code": "10 = cookies",
+                    "output": "SyntaxError",
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 2,
+                    "title": "Correct version",
+                    "content": "This is the correct order: the name cookies receives the value 10.",
+                    "code": "cookies = 10",
+                    "output": null,
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 3,
+                    "title": "Trap 2: Using a variable before assignment",
+                    "content": "Python reads code from top to bottom. At the moment of print(smoothie), the name smoothie does not exist yet.",
+                    "code": "print(smoothie)\nsmoothie = \"mango\" ",
+                    "output": "NameError: name 'smoothie' is not defined",
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 4,
+                    "title": "Correct version",
+                    "content": "Create the variable first, then use it.",
+                    "code": "smoothie = \"mango\"\nprint(smoothie)",
+                    "output": "mango",
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 5,
+                    "title": "Trap 3: Thinking reassignment changes the old value",
+                    "content": "favorite got the value \"pie\" before dessert was reassigned. Later, dessert moved to \"cake\", but favorite still refers to \"pie\".",
+                    "code": "dessert = \"pie\"\nfavorite = dessert\n\ndessert = \"cake\"\n\nprint(favorite)",
+                    "output": "pie",
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  }
+                ],
+                "table": null,
+                "blocks": []
+              },
+              {
+                "section_key": "practice",
+                "type": "practice",
+                "title": "Practice",
+                "order": 6,
+                "paragraphs": [
+                  "Now check whether the idea really landed.",
+                  "Try to answer first. No peeking. The Python snake sees everything."
+                ],
+                "code": null,
+                "output": null,
+                "image_url": null,
+                "image_alt": null,
+                "image_position": null,
+                "items": [
+                  {
+                    "order": 1,
+                    "title": "1. Choose the Correct Explanation",
+                    "content": "What does this code mean?\n\nA) Python checks if tea and \"mint\" are equal\nB) Python assigns the value \"mint\" to the name tea\nC) Python creates a function called tea\nD) Python prints \"mint\" ",
+                    "code": "tea = \"mint\" ",
+                    "output": "B",
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 2,
+                    "title": "2. Reassignment",
+                    "content": "What happens here?\n\nA) snack contains both values\nB) snack now refers to \"muffin\"\nC) Python gives an error\nD) \"cookie\" becomes \"muffin\" ",
+                    "code": "snack = \"cookie\"\nsnack = \"muffin\" ",
+                    "output": "B",
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 3,
+                    "title": "3. Predict the Output",
+                    "content": "What is printed?\n\nA) vanilla, then caramel\nB) caramel, then caramel\nC) vanilla, then vanilla\nD) Error",
+                    "code": "flavor = \"vanilla\"\nprint(flavor)\n\nflavor = \"caramel\"\nprint(flavor)",
+                    "output": "A",
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 4,
+                    "title": "4. Copying a Value",
+                    "content": "What is printed?\n\nA) 2\nB) 5\nC) cups\nD) Error",
+                    "code": "cups = 2\nextra_cups = cups\n\ncups = 5\n\nprint(extra_cups)",
+                    "output": "A",
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 5,
+                    "title": "5. Updating a Variable",
+                    "content": "What is printed?\n\nA) 10\nB) 3\nC) 13\nD) Error",
+                    "code": "price = 10\nprice = price + 3\n\nprint(price)",
+                    "output": "C",
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 6,
+                    "title": "6. Find the Mistake",
+                    "content": "What is the problem?\n\nA) cake is used before assignment\nB) Strings cannot be printed\nC) Variable names cannot contain the letter c\nD) The code is correct",
+                    "code": "print(cake)\ncake = \"chocolate\" ",
+                    "output": "A",
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 7,
+                    "title": "7. Assignment Direction",
+                    "content": "What is the problem?\n\nA) Numbers cannot exist in Python\nB) The assignment is backwards\nC) apples must be uppercase\nD) There is no problem",
+                    "code": "5 = apples",
+                    "output": "B",
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 8,
+                    "title": "8. Better Variable Name",
+                    "content": "Which name is better for storing the number of coffee cups?\n\nA) x\nB) coffee_cups\nC) thing\nD) data",
+                    "code": null,
+                    "output": "B",
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 9,
+                    "title": "9. Boolean Variable Name",
+                    "content": "Which name is better for storing whether a user is active?\n\nA) active_user_status_now_yes\nB) is_active\nC) a\nD) something",
+                    "code": null,
+                    "output": "B",
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 10,
+                    "title": "10. Coding Task",
+                    "content": "Create variables for a small café order. Create drink with the value \"green tea\", cups with the value 2, price_per_cup with the value 3, create total_price, and print: Order: green tea, cups: 2, total: 6",
+                    "code": "drink = \"green tea\"\ncups = 2\nprice_per_cup = 3\n\n# create total_price here\n\n# print the result here",
+                    "output": "Order: green tea, cups: 2, total: 6",
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  }
+                ],
+                "table": null,
+                "blocks": []
+              },
+              {
+                "section_key": "say-it-like-interview",
+                "type": "interview",
+                "title": "Say It Like in an Interview",
+                "order": 7,
+                "paragraphs": [
+                  "Try to explain this aloud before revealing the answer."
+                ],
+                "code": null,
+                "output": null,
+                "image_url": null,
+                "image_alt": null,
+                "image_position": null,
+                "items": [
+                  {
+                    "order": 1,
+                    "title": "What is a variable in Python, and what happens during assignment?",
+                    "content": "A variable in Python is a name that refers to a value or object. Assignment binds a name to a value. For example, in x = 10, the name x refers to the integer 10. If we later write x = 20, the name x is reassigned and now refers to 20.",
+                    "code": null,
+                    "output": null,
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  }
+                ],
+                "table": null,
+                "blocks": []
+              },
+              {
+                "section_key": "final-cheat-sheet",
+                "type": "cheat_sheet",
+                "title": "Final Cheat Sheet",
+                "order": 8,
+                "paragraphs": null,
+                "code": null,
+                "output": null,
+                "image_url": null,
+                "image_alt": null,
+                "image_position": null,
+                "items": [],
+                "table": {
+                  "headers": [
+                    "Concept",
+                    "Meaning"
+                  ],
+                  "rows": [
+                    [
+                      "Variable",
+                      "A name that refers to a value"
+                    ],
+                    [
+                      "Assignment",
+                      "Binding a name to a value"
+                    ],
+                    [
+                      "Reassignment",
+                      "Making the name refer to a new value"
+                    ],
+                    [
+                      "=",
+                      "Assignment operator"
+                    ],
+                    [
+                      "Left side of =",
+                      "Variable name"
+                    ],
+                    [
+                      "Right side of =",
+                      "Value or expression"
+                    ],
+                    [
+                      "Good variable name",
+                      "Clear and descriptive"
+                    ]
+                  ]
+                },
+                "blocks": []
+              }
+            ]
+          }
+        },
+        {
+          "slug": "mutable-vs-immutable-objects",
+          "order": 2,
+          "title": "Mutable vs Immutable Objects",
+          "status": "published",
+          "difficulty": "beginner",
+          "estimated_time": "15–20 min",
+          "short_description": "Learn why some Python objects can change and others cannot.",
+          "content": {
+            "title": "Mutable vs Immutable Objects",
+            "goal": "By the end of this lesson, you should understand the difference between mutable and immutable objects in Python, recognize common examples, and explain why this topic matters in junior interviews.",
+            "image_prompts": [
+              "A kitchen table with a reusable recipe notebook and a sealed printed recipe card.",
+              "Two baskets: one with fruits that can be rearranged, labeled list, and one sealed jar labeled tuple."
+            ],
+            "hero_visual": {
+              "variant": "terminal-card",
+              "tone": "berry",
+              "kicker": "Kitchen logic",
+              "title": "Mutable basket",
+              "lines": [
+                "snacks = [\"apple\"]",
+                "snacks.append(\"cake\")"
+              ],
+              "chips": [
+                "mutable",
+                "list",
+                "in-place change"
+              ]
+            },
+            "completion_image_url": "/lesson-images/lesson2_3.png",
+            "completion_image_alt": "tuple-list",
+            "completion_kicker": "Lesson complete",
+            "completion_title": "Delicious progress. Lesson completed.",
+            "completion_body": "You’ve sorted the soft salad bowls from the fixed recipe cards.\n\nMutable and immutable objects are no longer mysterious little kitchen goblins.\n\nTake a breath, save your progress, and get ready for the next Python bite.",
+            "sections": [
+              {
+                "section_key": "tasty-metaphor",
+                "type": "metaphor",
+                "title": "A bowl you can change, a card you cannot",
+                "order": 1,
+                "paragraphs": [
+                  "Imagine a kitchen.",
+                  "Some foods can be changed after you prepare them.",
+                  "A salad is flexible. You can add tomatoes, remove onions, or mix in cheese.",
+                  "That is like a mutable object.",
+                  "Other foods are fixed once they are made.",
+                  "A printed cookie recipe card cannot be changed directly. If you want a different version, you create a new recipe card.",
+                  "That is like an immutable object.",
+                  "In Python, some objects can be changed in place.",
+                  "Other objects cannot be changed in place. When you “change” them, Python actually creates a new object and moves the variable name to it."
+                ],
+                "code": "toppings = [\"cheese\", \"tomato\"]\ntoppings.append(\"basil\")",
+                "output": "toppings = [\"cheese\", \"tomato\", \"basil\"]",
+                "image_url": "/lesson-images/lesson2_1.png",
+                "image_alt": "tuple-list",
+                "image_position": "top",
+                "items": [
+                  {
+                    "order": 1,
+                    "title": "Memory hook",
+                    "content": "Mutable = same bowl, ingredients can change.\n\nImmutable = new recipe card, old one stays the same.",
+                    "code": null,
+                    "output": null,
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  }
+                ],
+                "table": null,
+                "blocks": []
+              },
+              {
+                "section_key": "short-theory",
+                "type": "theory",
+                "title": "Short Theory",
+                "order": 2,
+                "paragraphs": [
+                  "In Python, every value is an object.",
+                  "Some objects are mutable. This means their contents can be changed after the object is created.",
+                  "Examples of mutable objects:",
+                  "list",
+                  "dict",
+                  "set",
+                  "Some objects are immutable. This means their contents cannot be changed after the object is created.",
+                  "Examples of immutable objects:",
+                  "int",
+                  "float",
+                  "str",
+                  "bool",
+                  "tuple",
+                  "The important thing is this:",
+                  "Reassignment is not the same as mutation.",
+                  "When you reassign a variable, the name starts pointing to another object.",
+                  "When you mutate an object, the object itself changes.",
+                  "This difference is very important when several variables refer to the same object."
+                ],
+                "code": "dessert = \"cake\"\ndessert = \"pie\"\n\nsnacks = [\"cookies\", \"muffins\"]\nsnacks.append(\"brownies\")",
+                "output": null,
+                "image_url": null,
+                "image_alt": null,
+                "image_position": null,
+                "items": [
+                  {
+                    "order": 1,
+                    "title": null,
+                    "content": "In the first example, the string \"cake\" is not changed into \"pie\". The name dessert simply starts pointing to a new string.\n\nIn the second example, the list itself is changed. The same list now contains one more item.",
+                    "code": null,
+                    "output": null,
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 2,
+                    "title": null,
+                    "content": "Examples of mutable objects:\n•\tList\n•\tDict\n•\tset\n",
+                    "code": null,
+                    "output": null,
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  }
+                ],
+                "table": null,
+                "blocks": [
+                  {
+                    "block_key": "rich_text-1",
+                    "type": "rich_text",
+                    "order": 1,
+                    "data": {
+                      "markdown": "In Python, every value is an object.\n\nSome objects are **mutable**. This means their contents can be changed after the object is created.\n\n*Examples of mutable objects:*\n\n- list\n- dict\n- set\n\nSome objects are **immutable**. This means their contents **cannot be changed** after the object is created.\n\n*Examples of immutable objects:*\n\n- int\n- float\n- str\n- bool\n- tuple\n\nThe important thing is this:\n**Reassignment is not the same as mutation.**\n\n- When you **reassign** a variable, the name starts pointing to another object.\n\n- When you **mutate** an object, the object itself changes.\n\nThis difference is very important when several variables refer to the same object."
+                    }
+                  },
+                  {
+                    "block_key": "rich_text-2",
+                    "type": "code",
+                    "order": 2,
+                    "data": {
+                      "language": "python",
+                      "title": "Python",
+                      "code": "dessert = \"cake\"\ndessert = \"pie\"\n\nsnacks = [\"cookies\", \"muffins\"]\nsnacks.append(\"brownies\")"
+                    }
+                  },
+                  {
+                    "block_key": "rich_text-3",
+                    "type": "rich_text",
+                    "order": 3,
+                    "data": {
+                      "markdown": "In the first example, the string **`\"cake\"`** is not changed into **`\"pie\"`**. The name `dessert` simply starts pointing to a new string.\n\nIn the second example, the list itself is changed. The same list now contains one more item."
+                    }
+                  }
+                ]
+              },
+              {
+                "section_key": "main-code-example",
+                "type": "code_example",
+                "title": "Main Code Example",
+                "order": 3,
+                "paragraphs": [],
+                "code": "dessert = \"cake\"\nprint(dessert)\n\ndessert = dessert + \" with cream\"\nprint(dessert)\n\ntoppings = [\"cheese\", \"tomato\"]\nprint(toppings)\n\ntoppings.append(\"basil\")\nprint(toppings)",
+                "output": "cake\ncake with cream\n['cheese', 'tomato']\n['cheese', 'tomato', 'basil']",
+                "image_url": null,
+                "image_alt": null,
+                "image_position": null,
+                "items": [
+                  {
+                    "order": 1,
+                    "title": null,
+                    "content": "What happened here?\n\nThe string \"cake\" was not edited inside. Python created a new string: \"cake with cream\".\n\nBut the list toppings was edited in place. The same list received a new ingredient: \"basil\".\n\nSo, strings behave like fixed recipe cards.\n\nLists behave like salad bowls. You can throw in more basil and pretend it was your plan all along.",
+                    "code": null,
+                    "output": null,
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  }
+                ],
+                "table": null,
+                "blocks": [
+                  {
+                    "block_key": "rich_text-1",
+                    "type": "callout",
+                    "order": 1,
+                    "data": {
+                      "tone": "info",
+                      "title": "Your mission:",
+                      "markdown": "Watch the difference between **reassigning a string** and **mutating a list**."
+                    }
+                  },
+                  {
+                    "block_key": "rich_text-2",
+                    "type": "code",
+                    "order": 2,
+                    "data": {
+                      "language": "python",
+                      "title": "Python",
+                      "code": "dessert = \"cake\"\nprint(dessert)\n\ndessert = dessert + \" with cream\"\nprint(dessert)\n\ntoppings = [\"cheese\", \"tomato\"]\nprint(toppings)\n\ntoppings.append(\"basil\")\nprint(toppings)"
+                    }
+                  },
+                  {
+                    "block_key": "rich_text-3",
+                    "type": "code",
+                    "order": 3,
+                    "data": {
+                      "language": "plaintext",
+                      "title": "Output",
+                      "code": "cake\ncake with cream\n['cheese', 'tomato']\n['cheese', 'tomato', 'basil']"
+                    }
+                  },
+                  {
+                    "block_key": "rich_text-4",
+                    "type": "rich_text",
+                    "order": 4,
+                    "data": {
+                      "markdown": "**What happened here?**\n\nThe string **`\"cake\"`** was not edited inside. Python created a new string: **`\"cake with cream\".`**\n\nBut the list `toppings` was edited in place. The same list received a new ingredient: **`\"basil\"`**.\n\nSo, strings behave like fixed recipe cards.\n\nLists behave like salad bowls. You can throw in more basil and pretend it was your plan all along."
+                    }
+                  },
+                  {
+                    "block_key": "rich_text-5",
+                    "type": "callout",
+                    "order": 5,
+                    "data": {
+                      "tone": "info",
+                      "title": "Visual recap",
+                      "markdown": "The jam jar is like a **string**: when the value changes, Python gives the name a new object. \nThe lunchbox is like a **list**: the same container can receive another item."
+                    }
+                  },
+                  {
+                    "block_key": "rich_text-6",
+                    "type": "image",
+                    "order": 6,
+                    "data": {
+                      "imageUrl": "/lesson-images/lesson2_2.png",
+                      "imageAlt": "",
+                      "caption": ""
+                    }
+                  },
+                  {
+                    "block_key": "rich_text-7",
+                    "type": "callout",
+                    "order": 7,
+                    "data": {
+                      "tone": "warning",
+                      "title": "Memory hook",
+                      "markdown": "**Reassignment** moves the name.\n\n**Mutation** changes the object."
+                    }
+                  }
+                ]
+              },
+              {
+                "section_key": "interview-spot",
+                "type": "interview",
+                "title": "Interview Spot",
+                "order": 4,
+                "paragraphs": [
+                  "In interviews, this topic often appears in simple-looking questions.",
+                  "But the interviewer is not only checking whether you know the words “mutable” and “immutable”.",
+                  "They want to see whether you understand what happens to objects in memory."
+                ],
+                "code": null,
+                "output": null,
+                "image_url": null,
+                "image_alt": null,
+                "image_position": null,
+                "items": [
+                  {
+                    "order": 4,
+                    "title": "Question 1: What is a mutable object in Python?",
+                    "content": "A mutable object is an object that can be changed after it is created. For example, a list can be changed by adding, removing, or replacing elements.",
+                    "code": null,
+                    "output": null,
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 5,
+                    "title": "Question 2: What is an immutable object in Python?",
+                    "content": "An immutable object is an object that cannot be changed after it is created. For example, strings, integers, floats, booleans, and tuples are immutable.",
+                    "code": null,
+                    "output": null,
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 6,
+                    "title": "Question 3: What is the difference between mutation and reassignment?",
+                    "content": "Mutation changes the object itself.\n\nReassignment changes what the variable name points to.",
+                    "code": null,
+                    "output": null,
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 7,
+                    "title": "Question 4: Why can mutable objects be tricky?",
+                    "content": "Mutable objects can be tricky because two variables can point to the same object.\n\nIf one variable changes the object, the other variable will see the change too.",
+                    "code": null,
+                    "output": null,
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  }
+                ],
+                "table": null,
+                "blocks": []
+              },
+              {
+                "section_key": "trap_zone-5",
+                "type": "trap_zone",
+                "title": "Trap Zone",
+                "order": 5,
+                "paragraphs": [
+                  "Mutable and immutable objects are not difficult, but they are sneaky.",
+                  "Like a jar of pickles at the back of the fridge: you think nothing is happening, and then suddenly everything smells like dill."
+                ],
+                "code": null,
+                "output": null,
+                "image_url": null,
+                "image_alt": null,
+                "image_position": null,
+                "items": [
+                  {
+                    "order": 1,
+                    "title": "Trap 1: Thinking strings can be changed in place",
+                    "content": "Wrong mental model:",
+                    "code": "word = \"cake\"\nword[0] = \"b\"",
+                    "output": null,
+                    "after_text": "This will cause an error because strings are immutable.\n\nYou cannot change one character inside a string.",
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 2,
+                    "title": "Correct mental model",
+                    "content": "Create a new string:",
+                    "code": "word = \"cake\"\nword = \"b\" + word[1:]\n\nprint(word)",
+                    "output": "bake",
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 3,
+                    "title": "Trap 2: Thinking reassignment changes the original object",
+                    "content": "Wrong mental model:",
+                    "code": "dessert = \"cake\"\ndessert = \"pie\"",
+                    "output": null,
+                    "after_text": "This does not turn \"cake\" into \"pie\".\n\nIt only moves the name dessert to a new object.",
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 4,
+                    "title": "Correct mental model",
+                    "content": "Think of reassignment as moving a label.",
+                    "code": "dessert = \"cake\"\ndessert = \"pie\"",
+                    "output": null,
+                    "after_text": "Now dessert points to \"pie\".\n\nThe old string \"cake\" was not edited.",
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 5,
+                    "title": "Trap 3: Copying a list by assignment",
+                    "content": "This looks innocent:",
+                    "code": "menu_a = [\"soup\", \"salad\"]\nmenu_b = menu_a\n\nmenu_b.append(\"pasta\")\n\nprint(menu_a)",
+                    "output": "['soup', 'salad', 'pasta']",
+                    "after_text": "This happens because menu_a and menu_b point to the same list.",
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 6,
+                    "title": "Correct mental model",
+                    "content": "Create a real copy:",
+                    "code": "menu_a = [\"soup\", \"salad\"]\nmenu_b = menu_a.copy()\n\nmenu_b.append(\"pasta\")\n\nprint(menu_a)\nprint(menu_b)",
+                    "output": "['soup', 'salad']\n['soup', 'salad', 'pasta']",
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 7,
+                    "title": "Trap 4: Thinking tuples are always fully unchangeable inside",
+                    "content": "A tuple itself is immutable.\n\nBut if a tuple contains a mutable object, that inner object can still be changed.",
+                    "code": "meal = (\"tea\", [\"cake\", \"cookies\"])\n\nmeal[1].append(\"muffin\")\n\nprint(meal)",
+                    "output": "('tea', ['cake', 'cookies', 'muffin'])",
+                    "after_text": "The tuple did not change its structure.\n\nBut the list inside the tuple was mutated.\n\nTiny Python gremlin moment. Legal, but suspicious.",
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 8,
+                    "title": "Trap takeaway",
+                    "content": "If the object is immutable, Python creates a new object.\nIf the object is mutable, Python may change the same object in place.",
+                    "code": null,
+                    "output": null,
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  }
+                ],
+                "table": null,
+                "blocks": [
+                  {
+                    "block_key": "rich_text-1",
+                    "type": "rich_text",
+                    "order": 1,
+                    "data": {
+                      "markdown": "Mutable and immutable objects are not difficult, but they are sneaky.\n\nLike a jar of pickles at the back of the fridge: you think nothing is happening, and then suddenly everything smells like dill."
+                    }
+                  },
+                  {
+                    "block_key": "rich_text-2",
+                    "type": "callout",
+                    "order": 2,
+                    "data": {
+                      "tone": "danger",
+                      "title": "Trap 1: Thinking strings can be changed in place",
+                      "markdown": "Wrong mental model:",
+                      "codeLanguage": "python",
+                      "codeTitle": "Python",
+                      "code": "word = \"cake\"\nword[0] = \"b\"",
+                      "afterMarkdown": "This will cause an error because strings are immutable.\n\nYou cannot change one character inside a string."
+                    }
+                  },
+                  {
+                    "block_key": "rich_text-3",
+                    "type": "callout",
+                    "order": 3,
+                    "data": {
+                      "tone": "success",
+                      "title": "Correct mental model",
+                      "markdown": "Create a new string:",
+                      "codeLanguage": "python",
+                      "codeTitle": "Python",
+                      "code": "word = \"cake\"\nword = \"b\" + word[1:]\n\nprint(word) ",
+                      "afterMarkdown": ""
+                    }
+                  },
+                  {
+                    "block_key": "rich_text-4",
+                    "type": "callout",
+                    "order": 4,
+                    "data": {
+                      "tone": "danger",
+                      "title": "Trap 2: Thinking reassignment changes the original object",
+                      "markdown": "Wrong mental model:",
+                      "codeLanguage": "python",
+                      "codeTitle": "Python",
+                      "code": "dessert = \"cake\"\ndessert = \"pie\"",
+                      "afterMarkdown": "This does not turn `\"cake\"` into `\"pie\"`.\n\nIt only moves the name `dessert` to a new object."
+                    }
+                  },
+                  {
+                    "block_key": "rich_text-5",
+                    "type": "callout",
+                    "order": 5,
+                    "data": {
+                      "tone": "success",
+                      "title": "Correct mental model",
+                      "markdown": "Think of reassignment as moving a label.",
+                      "codeLanguage": "python",
+                      "codeTitle": "Python",
+                      "code": "dessert = \"cake\"\ndessert = \"pie\"",
+                      "afterMarkdown": "Now `dessert` points to `\"pie\"`.\n\nThe old string `\"cake\"` was not edited."
+                    }
+                  },
+                  {
+                    "block_key": "rich_text-6",
+                    "type": "callout",
+                    "order": 6,
+                    "data": {
+                      "tone": "danger",
+                      "title": "Trap 3: Copying a list by assignment",
+                      "markdown": "This looks innocent:",
+                      "codeLanguage": "python",
+                      "codeTitle": "Python",
+                      "code": "menu_a = [\"soup\", \"salad\"]\nmenu_b = menu_a\n\nmenu_b.append(\"pasta\")\n\nprint(menu_a)\n\n# Output: ['soup', 'salad', 'pasta']",
+                      "afterMarkdown": "This happens because` menu_a` and `menu_b` point to the same list."
+                    }
+                  },
+                  {
+                    "block_key": "rich_text-7",
+                    "type": "callout",
+                    "order": 7,
+                    "data": {
+                      "tone": "success",
+                      "title": "Correct mental model",
+                      "markdown": "Create a real copy:",
+                      "codeLanguage": "python",
+                      "codeTitle": "Python",
+                      "code": "menu_a = [\"soup\", \"salad\"]\nmenu_b = menu_a.copy()\n\nmenu_b.append(\"pasta\")\n\nprint(menu_a)\nprint(menu_b)\n\n# Output\n# ['soup', 'salad']\n# ['soup', 'salad', 'pasta']",
+                      "afterMarkdown": ""
+                    }
+                  },
+                  {
+                    "block_key": "rich_text-8",
+                    "type": "callout",
+                    "order": 8,
+                    "data": {
+                      "tone": "danger",
+                      "title": "Trap 4: Thinking tuples are always fully unchangeable inside",
+                      "markdown": "A tuple itself is immutable.\n\nBut if a tuple contains a mutable object, that inner object can still be changed.",
+                      "codeLanguage": "python",
+                      "codeTitle": "Python",
+                      "code": "meal = (\"tea\", [\"cake\", \"cookies\"])\n\nmeal[1].append(\"muffin\")\n\nprint(meal)\n\n# Output:\n\n# ('tea', ['cake', 'cookies', 'muffin'])",
+                      "afterMarkdown": "The tuple did not change its structure.\n\nBut the list inside the tuple was mutated.\n\nTiny Python gremlin moment. Legal, but suspicious."
+                    }
+                  },
+                  {
+                    "block_key": "rich_text-9",
+                    "type": "callout",
+                    "order": 9,
+                    "data": {
+                      "tone": "warning",
+                      "title": "Trap takeaway",
+                      "markdown": "- If the object is **immutable**, Python creates a new object.\n- If the object is **mutable**, Python may change the same object in place.",
+                      "codeLanguage": "python",
+                      "codeTitle": "Python",
+                      "code": "",
+                      "afterMarkdown": ""
+                    }
+                  }
+                ]
+              },
+              {
+                "section_key": "practice-6",
+                "type": "practice",
+                "title": "Practice",
+                "order": 6,
+                "paragraphs": [
+                  "Try to answer.",
+                  "The goal is not to memorize. The goal is to predict what Python will do."
+                ],
+                "code": null,
+                "output": null,
+                "image_url": "/lesson-images/lesson2_4.png",
+                "image_alt": null,
+                "image_position": "bottom",
+                "items": [
+                  {
+                    "order": 1,
+                    "title": "1. Choose the Correct Explanation",
+                    "content": "What does “mutable” mean?\n\nA. The object can be changed after creation.\nB. The object cannot be used in a variable.\nC. The object is always a number.\nD. The object disappears after printing.",
+                    "code": null,
+                    "output": "A. The object can be changed after creation.",
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 2,
+                    "title": "2. Mutable or Immutable?",
+                    "content": "Choose mutable items:\n\nA. list\nB. str\nC. int\nD. dict\nE. tuple\nF. set\nG. bool",
+                    "code": null,
+                    "output": "A,D,F",
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 3,
+                    "title": "3. Predict the Output",
+                    "content": "What will be printed?\n\nA. drink\nB. DRINK",
+                    "code": "drink = \"tea\"\ndrink.upper()\n\nprint(drink)",
+                    "output": "A",
+                    "after_text": "drink.upper() creates a new string, but the result is not saved anywhere.",
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 4,
+                    "title": "6. Find the Mistake",
+                    "content": "Is this code correct?\n\nA. Yes\nB. No",
+                    "code": "cake = \"lemon\"\ncake[0] = \"m\"\n\nprint(cake)",
+                    "output": "B",
+                    "after_text": "The mistake is that the code tries to change one character inside a string.\n\nStrings are immutable, so this causes an error.",
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 5,
+                    "title": "7. Assignment Direction",
+                    "content": "Which explanation is correct?\n\nA. Put the name toppings on the list [\"cheese\", \"tomato\"].\nB. Put the list inside the word toppings.\nC. Change \"cheese\" into \"tomato\".\nD. Compare toppings with the list.",
+                    "code": "toppings = [\"cheese\", \"tomato\"]",
+                    "output": "A",
+                    "after_text": "Assignment works from right to left.\n\nPython first creates the list:\n\n[\"cheese\", \"tomato\"]\n\nThen it binds the name toppings to that list.",
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 6,
+                    "title": "8. Better Variable Name",
+                    "content": "Choose the best replacement for x.\n\nA. menu_items\nB. number\nC. is_ready\nD. cake",
+                    "code": "x = [\"soup\", \"salad\", \"pasta\"]",
+                    "output": "A",
+                    "after_text": "menu_items clearly tells us that the variable stores several items from a menu.\n\nGood variable names should explain the meaning of the value.",
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 7,
+                    "title": "9. Boolean Variable Name",
+                    "content": "Choose the best improved version.\n\nA. is_available\nB. available_list\nC. food\nD. availability_name",
+                    "code": "available = True",
+                    "output": "A",
+                    "after_text": "Boolean variables usually sound good with names like:\n\nis_available\nhas_discount\ncan_order\nis_empty\n\nThe name should sound like a yes/no question.",
+                    "image_url": null,
+                    "image_alt": null
+                  },
+                  {
+                    "order": 8,
+                    "title": "10. Coding Task",
+                    "content": "Create a list called pizza_toppings.\n\nIt should contain two toppings.\n\nThen add one more topping using .append().\n\nPrint the final list.",
+                    "code": null,
+                    "output": null,
+                    "after_text": null,
+                    "image_url": "/lesson-images/lesson2_4.png",
+                    "image_alt": "code illustration"
+                  }
+                ],
+                "table": null,
+                "blocks": [
+                  {
+                    "block_key": "practice_single-1",
+                    "type": "practice_single",
+                    "order": 1,
+                    "data": {
+                      "question": "## 1. Choose the Correct Explanation\n\nWhat does **mutable** mean?",
+                      "code": "",
+                      "options": [
+                        {
+                          "key": "A",
+                          "text": "The object can be changed after creation."
+                        },
+                        {
+                          "key": "B",
+                          "text": "The object cannot be used in a variable."
+                        },
+                        {
+                          "key": "C",
+                          "text": "The object is always a number."
+                        },
+                        {
+                          "key": "D",
+                          "text": "The object disappears after printing."
+                        }
+                      ],
+                      "correctAnswer": "A",
+                      "explanation": "A mutable object can be changed after it is created. Examples include `list`, `dict`, and `set`."
+                    }
+                  },
+                  {
+                    "block_key": "practice_multi-2",
+                    "type": "practice_multi",
+                    "order": 2,
+                    "data": {
+                      "question": "## 2. Mutable or Immutable?\n\nTick **mutable** objects",
+                      "code": "",
+                      "options": [
+                        {
+                          "key": "A",
+                          "text": "list"
+                        },
+                        {
+                          "key": "B",
+                          "text": "str"
+                        },
+                        {
+                          "key": "C",
+                          "text": "int"
+                        },
+                        {
+                          "key": "D",
+                          "text": "dict"
+                        },
+                        {
+                          "key": "E",
+                          "text": "tuple"
+                        },
+                        {
+                          "key": "F",
+                          "text": "set"
+                        },
+                        {
+                          "key": "G",
+                          "text": "bool"
+                        }
+                      ],
+                      "correctAnswers": [
+                        "A",
+                        "D",
+                        "F"
+                      ],
+                      "explanation": "`list`, `dict`, and `set` are mutable."
+                    }
+                  },
+                  {
+                    "block_key": "practice_multi-3",
+                    "type": "practice_single",
+                    "order": 3,
+                    "data": {
+                      "question": "## 3. Reassignment\n\nWhat happens here?",
+                      "code": "dessert = \"cake\"\ndessert = \"pie\"",
+                      "options": [
+                        {
+                          "key": "A",
+                          "text": "The string \"cake\" changes into \"pie\"."
+                        },
+                        {
+                          "key": "B",
+                          "text": "The variable name dessert starts pointing to a new string."
+                        },
+                        {
+                          "key": "C",
+                          "text": "Python adds \"pie\" inside \"cake\"."
+                        },
+                        {
+                          "key": "D",
+                          "text": "This code causes an error."
+                        }
+                      ],
+                      "correctAnswer": "B",
+                      "explanation": "The variable name `dessert` is reassigned.\n\nThe string **`\"cake\"`** does not change. Strings are immutable.\n\nThe name `dessert` simply starts pointing to a new string: **`\"pie\"`**."
+                    }
+                  },
+                  {
+                    "block_key": "practice_multi-4",
+                    "type": "practice_single",
+                    "order": 4,
+                    "data": {
+                      "question": "## 4. Predict the Output\n\nWhat will this code print?",
+                      "code": "snacks = [\"cookies\", \"muffins\"]\nsnacks.append(\"brownies\")\n\nprint(snacks)",
+                      "options": [
+                        {
+                          "key": "A",
+                          "text": "['cookies', 'muffins']"
+                        },
+                        {
+                          "key": "B",
+                          "text": "['cookies', 'muffins', 'brownies']"
+                        },
+                        {
+                          "key": "C",
+                          "text": "['brownies', 'cookies', 'muffins']"
+                        },
+                        {
+                          "key": "D",
+                          "text": "This code causes an error."
+                        }
+                      ],
+                      "correctAnswer": "B",
+                      "explanation": "A list is mutable, so `.append()` changes the same list.\n\nThe final output is:\n\n```python\n['cookies', 'muffins', 'brownies']"
+                    }
+                  },
+                  {
+                    "block_key": "practice_multi-5",
+                    "type": "practice_single",
+                    "order": 5,
+                    "data": {
+                      "question": "## 5. Copying a Value\n\nWhat will this code print?",
+                      "code": "basket_a = [\"apple\", \"banana\"]\nbasket_b = basket_a\n\nbasket_b.append(\"orange\")\n\nprint(basket_a)",
+                      "options": [
+                        {
+                          "key": "A",
+                          "text": "['apple', 'banana']"
+                        },
+                        {
+                          "key": "B",
+                          "text": "['orange']"
+                        },
+                        {
+                          "key": "C",
+                          "text": "['apple', 'banana', 'orange']"
+                        },
+                        {
+                          "key": "D",
+                          "text": "This code causes an error."
+                        }
+                      ],
+                      "correctAnswer": "C",
+                      "explanation": "`basket_a` and `basket_b` point to the same list.\n\nSo when we change the list through `basket_b`, we also see the change through `basket_a`.\n\nSame salad bowl, two name tags. Python is not being dramatic here — just very literal.\n\nThe final output is:\n\n```python\n['apple', 'banana', 'orange']"
+                    }
+                  },
+                  {
+                    "block_key": "practice_multi-6",
+                    "type": "practice_single",
+                    "order": 6,
+                    "data": {
+                      "question": "## 6. Updating a Variable\n\nWhat will this code print?",
+                      "code": "drink = \"tea\"\ndrink.upper()\n\nprint(drink)",
+                      "options": [
+                        {
+                          "key": "A",
+                          "text": "tea"
+                        },
+                        {
+                          "key": "B",
+                          "text": "TEA"
+                        },
+                        {
+                          "key": "C",
+                          "text": "drink"
+                        },
+                        {
+                          "key": "D",
+                          "text": "This code causes an error."
+                        }
+                      ],
+                      "correctAnswer": "A",
+                      "explanation": "Strings are immutable.\n\n`drink.upper()` creates a new string, but we did not save it anywhere.\n\nSo the original value is still:\n\n```python\ntea"
+                    }
+                  },
+                  {
+                    "block_key": "practice_multi-7",
+                    "type": "practice_single",
+                    "order": 7,
+                    "data": {
+                      "question": "## 7. Find the Mistake\n\nWhat is wrong with this code?",
+                      "code": "cake = \"lemon\"\ncake[0] = \"m\"\n\nprint(cake)",
+                      "options": [
+                        {
+                          "key": "A",
+                          "text": "The code tries to change one character inside a string."
+                        },
+                        {
+                          "key": "B",
+                          "text": "The variable name cake is not allowed."
+                        },
+                        {
+                          "key": "C",
+                          "text": "print() cannot print strings."
+                        },
+                        {
+                          "key": "D",
+                          "text": "The word \"lemon\" is too long."
+                        }
+                      ],
+                      "correctAnswer": "A",
+                      "explanation": "The mistake is that the code tries to change one character inside a string.\n\nStrings are immutable, so this causes an error."
+                    }
+                  },
+                  {
+                    "block_key": "practice_multi-8",
+                    "type": "practice_single",
+                    "order": 8,
+                    "data": {
+                      "question": "## 8. Assignment Direction\n\nRead this line and choose a correct explanation:",
+                      "code": "toppings = [\"cheese\", \"tomato\"]",
+                      "options": [
+                        {
+                          "key": "A",
+                          "text": "Put the name toppings on the list [\"cheese\", \"tomato\"]."
+                        },
+                        {
+                          "key": "B",
+                          "text": "Put the list inside the word toppings."
+                        },
+                        {
+                          "key": "C",
+                          "text": "Change \"cheese\" into \"tomato\"."
+                        },
+                        {
+                          "key": "D",
+                          "text": "Compare toppings with the list."
+                        }
+                      ],
+                      "correctAnswer": "A",
+                      "explanation": "Assignment works from right to left.\n\nPython first creates the list: [\"cheese\", \"tomato\"]\n\nThen it binds the name toppings to that list."
+                    }
+                  },
+                  {
+                    "block_key": "practice_multi-9",
+                    "type": "practice_single",
+                    "order": 9,
+                    "data": {
+                      "question": "## 9. Better Variable Name\nWhich variable name is better? Choose the best replacement for x.",
+                      "code": "x = [\"soup\", \"salad\", \"pasta\"]",
+                      "options": [
+                        {
+                          "key": "A",
+                          "text": "menu_items"
+                        },
+                        {
+                          "key": "B",
+                          "text": "number"
+                        },
+                        {
+                          "key": "C",
+                          "text": "is_ready"
+                        },
+                        {
+                          "key": "D",
+                          "text": "cake"
+                        }
+                      ],
+                      "correctAnswer": "A",
+                      "explanation": "`menu_items` clearly tells us that the variable stores several items from a menu.\n\nGood variable names should explain the meaning of the value."
+                    }
+                  },
+                  {
+                    "block_key": "practice_multi-10",
+                    "type": "practice_single",
+                    "order": 10,
+                    "data": {
+                      "question": "## 10. Boolean Variable Name\n\nWhich boolean variable name is better? Choose the best improved version.",
+                      "code": "available = True",
+                      "options": [
+                        {
+                          "key": "A",
+                          "text": "is_available"
+                        },
+                        {
+                          "key": "B",
+                          "text": "available_list"
+                        },
+                        {
+                          "key": "C",
+                          "text": "food"
+                        },
+                        {
+                          "key": "D",
+                          "text": "availability_name"
+                        }
+                      ],
+                      "correctAnswer": "A",
+                      "explanation": "Boolean variables usually sound good with names like:\n\n- is_available\n- has_discount\n- can_order\n- is_empty\n\nThe name should sound like a yes/no question."
+                    }
+                  },
+                  {
+                    "block_key": "practice_multi-11",
+                    "type": "practice_code",
+                    "order": 11,
+                    "data": {
+                      "task": "## 10. Coding Task\n\nCreate a list called `pizza_toppings`.\n\nIt should contain two toppings.\n\nThen add one more topping using `.append()`.\n\nPrint the final list.",
+                      "starterCode": "# Create a list called pizza_toppings with two toppings\n\n\n# Add one more topping using .append()\n\n\n# Print the final list",
+                      "expectedOutput": "['cheese', 'tomato', 'basil']",
+                      "explanation": "One correct solution is:\n\npizza_toppings = [\"cheese\", \"tomato\"]\npizza_toppings.append(\"basil\")\n\nprint(pizza_toppings)"
+                    }
+                  }
+                ]
+              },
+              {
+                "section_key": "interview-7",
+                "type": "interview",
+                "title": "Say It Like in an Interview",
+                "order": 7,
+                "paragraphs": [
+                  "Try to explain this aloud before revealing the answer."
+                ],
+                "code": null,
+                "output": null,
+                "image_url": null,
+                "image_alt": null,
+                "image_position": null,
+                "items": [
+                  {
+                    "order": 1,
+                    "title": "What is the difference between mutable and immutable objects in Python?",
+                    "content": "Mutable objects can be changed after they are created. For example, lists, dictionaries, and sets are mutable. If I append an item to a list, the same list object is updated.\n\nImmutable objects cannot be changed after creation. For example, strings, integers, booleans, and tuples are immutable. If I appear to change a string, Python actually creates a new string and the variable name is reassigned to it.\n\nThe main difference is that mutation changes the object itself, while reassignment changes what the variable name refers to.",
+                    "code": null,
+                    "output": null,
+                    "after_text": null,
+                    "image_url": null,
+                    "image_alt": null
+                  }
+                ],
+                "table": null,
+                "blocks": []
+              },
+              {
+                "section_key": "cheat_sheet-8",
+                "type": "cheat_sheet",
+                "title": "Final Cheat Sheet",
+                "order": 8,
+                "paragraphs": [],
+                "code": null,
+                "output": null,
+                "image_url": null,
+                "image_alt": null,
+                "image_position": null,
+                "items": [],
+                "table": {
+                  "headers": [
+                    "Concept",
+                    "Meaning"
+                  ],
+                  "rows": [
+                    [
+                      "Mutable object",
+                      "Can be changed after creation"
+                    ],
+                    [
+                      "Immutable object",
+                      "Cannot be changed after creation"
+                    ],
+                    [
+                      "Mutable examples",
+                      "list, dict, set"
+                    ],
+                    [
+                      "Immutable examples",
+                      "int, float, str, bool, tuple"
+                    ],
+                    [
+                      "Mutation",
+                      "Changing the object itself"
+                    ],
+                    [
+                      "Reassignment",
+                      "Moving a variable name to another object"
+                    ],
+                    [
+                      "Shared mutable object",
+                      "Two variables point to the same object"
+                    ],
+                    [
+                      "Safe list copy",
+                      "Use .copy() for a simple list copy"
+                    ],
+                    [
+                      "String change",
+                      "Create a new string and reassign the variable"
+                    ],
+                    [
+                      "Interview hook",
+                      "Mutation changes the object; reassignment changes the name binding"
+                    ]
+                  ]
+                },
+                "blocks": []
+              }
+            ]
+          }
+        },
+        {
+          "slug": "dynamic-typing-in-python",
+          "order": 3,
+          "title": "Dynamic Typing in Python",
+          "status": "coming_soon",
+          "difficulty": "beginner",
+          "estimated_time": "10–15 min",
+          "short_description": "Understand why variable names in Python are not locked to one type.",
+          "content": {
+            "title": "Dynamic Typing in Python",
+            "goal": "By the end of this lesson, you should understand that Python variables are names bound to objects and are not locked to one fixed type.",
+            "image_prompts": [
+              "A label moving between different jars to show that a variable name can point to different objects.",
+              "A Python learner switching one label from a number card to a text card."
+            ],
+            "hero_visual": null,
+            "completion_image_url": null,
+            "completion_image_alt": null,
+            "completion_kicker": null,
+            "completion_title": null,
+            "completion_body": null,
+            "sections": []
+          }
+        },
+        {
+          "slug": "is-vs-equals",
+          "order": 4,
+          "title": "is vs ==",
+          "status": "coming_soon",
+          "difficulty": "beginner",
+          "estimated_time": "15 min",
+          "short_description": "Learn the difference between identity comparison and value comparison.",
+          "content": null
+        },
+        {
+          "slug": "truthy-and-falsy-values",
+          "order": 5,
+          "title": "Truthy and Falsy Values",
+          "status": "planned",
+          "difficulty": "beginner",
+          "estimated_time": "10–15 min",
+          "short_description": "Learn how Python decides whether a value behaves like True or False.",
+          "content": null
+        },
+        {
+          "slug": "basic-input-output",
+          "order": 6,
+          "title": "Basic Input / Output",
+          "status": "planned",
+          "difficulty": "beginner",
+          "estimated_time": "10–15 min",
+          "short_description": "Work with print(), input(), and simple user interaction.",
+          "content": null
+        },
+        {
+          "slug": "type-conversion",
+          "order": 7,
+          "title": "Type Conversion",
+          "status": "planned",
+          "difficulty": "beginner",
+          "estimated_time": "10–15 min",
+          "short_description": "Learn how to convert values with int(), float(), str(), bool(), and avoid common conversion errors.",
+          "content": null
+        },
+        {
+          "slug": "string-methods",
+          "order": 8,
+          "title": "String Methods",
+          "status": "planned",
+          "difficulty": "beginner",
+          "estimated_time": "15–20 min",
+          "short_description": "Practice useful string methods like lower(), upper(), strip(), replace(), split(), and join().",
+          "content": null
+        },
+        {
+          "slug": "string-formatting",
+          "order": 9,
+          "title": "String Formatting",
+          "status": "planned",
+          "difficulty": "beginner",
+          "estimated_time": "15 min",
+          "short_description": "Compare f-strings, .format(), and older % formatting in Python.",
+          "content": null
+        },
+        {
+          "slug": "slicing-strings-and-lists",
+          "order": 10,
+          "title": "Slicing Strings and Lists",
+          "status": "planned",
+          "difficulty": "beginner",
+          "estimated_time": "15–20 min",
+          "short_description": "Understand start, stop, step, negative indexes, and common slicing traps.",
+          "content": null
+        },
+        {
+          "slug": "off-by-one-mistakes",
+          "order": 11,
+          "title": "Common Off-by-One Mistakes",
+          "status": "planned",
+          "difficulty": "beginner",
+          "estimated_time": "10–15 min",
+          "short_description": "Learn why indexes, ranges, and loop boundaries often go wrong by exactly one step.",
+          "content": null
+        },
+        {
+          "slug": "none-and-proper-checks",
+          "order": 12,
+          "title": "None and How to Check It Properly",
+          "status": "planned",
+          "difficulty": "beginner",
+          "estimated_time": "10–15 min",
+          "short_description": "Learn what None means and why Python developers usually check it with is None.",
+          "content": null
+        },
+        {
+          "slug": "scope-basics",
+          "order": 13,
+          "title": "Scope Basics: Local vs Global Variables",
+          "status": "planned",
+          "difficulty": "beginner",
+          "estimated_time": "15 min",
+          "short_description": "Understand where variables live and why some names are visible only inside functions.",
+          "content": null
+        },
+        {
+          "slug": "naming-conventions-pep8",
+          "order": 14,
+          "title": "Naming Conventions and PEP 8 Basics",
+          "status": "planned",
+          "difficulty": "beginner",
+          "estimated_time": "10–15 min",
+          "short_description": "Learn readable Python naming rules and basic PEP 8 style habits.",
+          "content": null
+        }
+      ]
+    },
+    {
+      "slug": "control-flow",
+      "title": "Conditions, Loops, and Control Flow",
+      "description": "Learn how to control program logic with conditions, loops, range, enumerate, zip, and loop patterns.",
+      "status": "planned",
+      "lesson_count": 11,
+      "lessons": []
+    },
+    {
+      "slug": "data-structures",
+      "title": "Data Structures",
+      "description": "Lists, tuples, dictionaries, sets, sorting, copying, and classic interview traps.",
+      "status": "planned",
+      "lesson_count": 13,
+      "lessons": []
+    },
+    {
+      "slug": "functions",
+      "title": "Functions",
+      "description": "Parameters, arguments, return values, default arguments, *args, **kwargs, lambdas, and recursion.",
+      "status": "planned",
+      "lesson_count": 14,
+      "lessons": [
+        {
+          "slug": "defining-functions",
+          "order": 1,
+          "title": "Defining Functions",
+          "status": "planned",
+          "difficulty": "beginner",
+          "estimated_time": "15 min",
+          "short_description": "Learn how to create reusable blocks of Python code with def.",
+          "content": null
+        }
+      ]
+    },
+    {
+      "slug": "oop",
+      "title": "OOP Basics",
+      "description": "Classes, objects, self, attributes, methods, dataclasses, inheritance, composition, and polymorphism.",
+      "status": "planned",
+      "lesson_count": 26,
+      "lessons": [
+        {
+          "slug": "what-is-a-class",
+          "order": 1,
+          "title": "What Is a Class?",
+          "status": "planned",
+          "difficulty": "beginner",
+          "estimated_time": "15 min",
+          "short_description": "Understand classes as blueprints for creating objects.",
+          "content": null
+        },
+        {
+          "slug": "what-is-an-object",
+          "order": 2,
+          "title": "What Is an Object?",
+          "status": "planned",
+          "difficulty": "beginner",
+          "estimated_time": "15 min",
+          "short_description": "Learn how objects combine data and behavior.",
+          "content": null
+        }
+      ]
+    },
+    {
+      "slug": "comprehensions",
+      "title": "Comprehensions and Pythonic Code",
+      "description": "Readable Python with list, dict, set comprehensions, generator expressions, map, filter, any, and all.",
+      "status": "planned",
+      "lesson_count": 10,
+      "lessons": []
+    },
+    {
+      "slug": "decorators-closures",
+      "title": "Decorators, Closures, and Advanced Functions",
+      "description": "Closures, inner functions, decorators, decorator arguments, functools.wraps, and built-in decorators.",
+      "status": "planned",
+      "lesson_count": 9,
+      "lessons": []
+    },
+    {
+      "slug": "iterators-generators",
+      "title": "Iterators and Generators",
+      "description": "Iterable vs iterator, iter(), next(), StopIteration, yield, lazy evaluation, and memory benefits.",
+      "status": "planned",
+      "lesson_count": 9,
+      "lessons": []
+    },
+    {
+      "slug": "exceptions",
+      "title": "Exceptions and Error Handling",
+      "description": "try, except, else, finally, custom exceptions, broad exceptions, EAFP, and traceback debugging.",
+      "status": "planned",
+      "lesson_count": 8,
+      "lessons": []
+    },
+    {
+      "slug": "files-context-managers",
+      "title": "Files, Context Managers, and Data",
+      "description": "Reading files, writing files, with open, CSV, JSON, pathlib, encodings, and file tasks.",
+      "status": "planned",
+      "lesson_count": 9,
+      "lessons": []
+    },
+    {
+      "slug": "modules-packages",
+      "title": "Modules, Packages, and Project Structure",
+      "description": "Imports, packages, __name__ == '__main__', virtual environments, pip, requirements, and project folders.",
+      "status": "planned",
+      "lesson_count": 11,
+      "lessons": []
+    },
+    {
+      "slug": "testing",
+      "title": "Testing",
+      "description": "pytest basics, test naming, Arrange / Act / Assert, fixtures, mocking, coverage, and test thinking.",
+      "status": "planned",
+      "lesson_count": 10,
+      "lessons": []
+    },
+    {
+      "slug": "algorithms",
+      "title": "Algorithms and Coding Interview Tasks",
+      "description": "Big O, search, two pointers, sliding window, frequency maps, stacks, queues, recursion, and live coding.",
+      "status": "planned",
+      "lesson_count": 18,
+      "lessons": []
+    },
+    {
+      "slug": "backend-basics",
+      "title": "Backend / Web Basics",
+      "description": "HTTP, REST APIs, JSON, status codes, authentication, authorization, JWT, FastAPI, and CRUD.",
+      "status": "planned",
+      "lesson_count": 14,
+      "lessons": []
+    },
+    {
+      "slug": "databases",
+      "title": "Databases",
+      "description": "SQL basics, keys, relationships, SELECT, WHERE, JOIN, GROUP BY, indexes, transactions, ORM, and migrations.",
+      "status": "planned",
+      "lesson_count": 15,
+      "lessons": []
+    },
+    {
+      "slug": "async-concurrency",
+      "title": "Async, Concurrency, and Performance",
+      "description": "Sync vs async, async/await, coroutines, event loop, threads, processes, GIL, and performance basics.",
+      "status": "planned",
+      "lesson_count": 9,
+      "lessons": []
+    },
+    {
+      "slug": "git-workflow",
+      "title": "Git, Terminal, and Developer Workflow",
+      "description": "Git basics, commits, branches, pull requests, .gitignore, terminal errors, Linux commands, and debugging workflow.",
+      "status": "planned",
+      "lesson_count": 10,
+      "lessons": []
+    },
+    {
+      "slug": "clean-code",
+      "title": "Clean Code and Practical Thinking",
+      "description": "Naming, splitting code into functions, avoiding repetition, refactoring, comments, code review, and explanation skills.",
+      "status": "planned",
+      "lesson_count": 10,
+      "lessons": []
+    }
+  ]
+}

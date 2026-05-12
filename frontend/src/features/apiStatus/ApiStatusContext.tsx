@@ -23,10 +23,19 @@ interface ApiStatusProviderProps {
   children: ReactNode;
 }
 
+const shouldCheckApiHealth = import.meta.env.DEV;
+
 export function ApiStatusProvider({ children }: ApiStatusProviderProps) {
-  const [apiStatus, setApiStatus] = useState<ApiStatusValue>("checking");
+  const [apiStatus, setApiStatus] = useState<ApiStatusValue>(
+    shouldCheckApiHealth ? "checking" : "online"
+  );
 
   async function refreshApiStatus() {
+    if (!shouldCheckApiHealth) {
+      setApiStatus("online");
+      return;
+    }
+
     try {
       await fetchApiHealth();
       setApiStatus("online");
@@ -36,6 +45,10 @@ export function ApiStatusProvider({ children }: ApiStatusProviderProps) {
   }
 
   useEffect(() => {
+    if (!shouldCheckApiHealth) {
+      return;
+    }
+
     refreshApiStatus();
   }, []);
 

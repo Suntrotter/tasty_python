@@ -112,35 +112,40 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   async function loginWithGoogle() {
+  try {
     const result = await signInWithPopup(firebaseAuth, googleProvider);
 
     setCurrentUser(result.user);
     await syncBackendUser(result.user);
+  } catch (error) {
+    console.error("Google sign-in failed:", error);
+    throw error;
   }
+}
 
-  async function logout() {
-    await signOut(firebaseAuth);
+async function logout() {
+  await signOut(firebaseAuth);
 
-    setCurrentUser(null);
-    setBackendUser(null);
-  }
+  setCurrentUser(null);
+  setBackendUser(null);
+}
 
-  const value = useMemo(
-    () => ({
-      currentUser,
-      backendUser,
-      isAuthLoading,
-      isBackendUserLoading,
-      isAuthenticated: Boolean(currentUser),
-      getIdToken,
-      registerWithEmail,
-      loginWithEmail,
-      loginWithGoogle,
-      logout,
-      refreshBackendUser,
-    }),
-    [currentUser, backendUser, isAuthLoading, isBackendUserLoading]
-  );
+const value = useMemo(
+  () => ({
+    currentUser,
+    backendUser,
+    isAuthLoading,
+    isBackendUserLoading,
+    isAuthenticated: Boolean(currentUser),
+    getIdToken,
+    registerWithEmail,
+    loginWithEmail,
+    loginWithGoogle,
+    logout,
+    refreshBackendUser,
+  }),
+  [currentUser, backendUser, isAuthLoading, isBackendUserLoading]
+);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

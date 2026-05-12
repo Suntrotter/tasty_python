@@ -5,16 +5,15 @@ from sqlalchemy import engine_from_config, pool
 
 from app.core.config import get_database_url
 from app.db.database import Base
-
-from app.core.config import get_database_url
-from app.db.database import Base
 from app.models import (
+    LessonBlockModel,
     LessonContentModel,
     LessonItemModel,
     LessonModel,
     LessonSectionModel,
     LessonTableModel,
     TrackModel,
+    UserModel,
     UserProgressModel,
 )
 
@@ -44,6 +43,7 @@ def run_migrations_offline() -> None:
 
 def run_migrations_online() -> None:
     configuration = config.get_section(config.config_ini_section, {})
+
     connectable = engine_from_config(
         configuration,
         prefix="sqlalchemy.",

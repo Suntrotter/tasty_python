@@ -11,6 +11,7 @@ import {
   markLessonCompletedApi,
   markLessonIncompleteApi,
 } from "../../api/progressApi";
+import { useAuth } from "../auth/AuthContext";
 import { getOrCreateLearnerId } from "./learnerId";
 
 const STORAGE_KEY = "tasty-python-progress";
@@ -74,7 +75,11 @@ interface ProgressProviderProps {
 }
 
 export function ProgressProvider({ children }: ProgressProviderProps) {
-  const [learnerId] = useState(getOrCreateLearnerId);
+  const { currentUser, backendUser, isAuthLoading, getIdToken } = useAuth();
+
+  const [localLearnerId] = useState(getOrCreateLearnerId);
+
+  const learnerId = backendUser ? String(backendUser.id) : localLearnerId;
 
   const [completedLessonSlugs, setCompletedLessonSlugs] = useState<string[]>(
     readCompletedLessonsFromLocalStorage
@@ -87,8 +92,29 @@ export function ProgressProvider({ children }: ProgressProviderProps) {
 
   useEffect(() => {
     async function loadProgress() {
+      if (isAuthLoading) {
+        return;
+      }
+
+      setIsProgressLoading(true);
+
+      if (!currentUser) {
+        const localCompletedLessons = readCompletedLessonsFromLocalStorage();
+
+        setCompletedLessonSlugs(localCompletedLessons);
+        setProgressSource("local");
+        setIsProgressLoading(false);
+        return;
+      }
+
       try {
-        const progress = await fetchProgress(learnerId);
+        const idToken = await getIdToken();
+
+        if (!idToken) {
+          throw new Error("Missing Firebase ID token");
+        }
+
+        const progress = await fetchProgress(idToken);
 
         setCompletedLessonSlugs(progress.completedLessonSlugs);
         saveCompletedLessonsToLocalStorage(progress.completedLessonSlugs);
@@ -104,7 +130,7 @@ export function ProgressProvider({ children }: ProgressProviderProps) {
     }
 
     loadProgress();
-  }, [learnerId]);
+  }, [currentUser, getIdToken, isAuthLoading]);
 
   function isLessonCompleted(lessonSlug: string) {
     return completedLessonSlugs.includes(lessonSlug);
@@ -118,8 +144,19 @@ export function ProgressProvider({ children }: ProgressProviderProps) {
     setCompletedLessonSlugs(optimisticSlugs);
     saveCompletedLessonsToLocalStorage(optimisticSlugs);
 
+    if (!currentUser) {
+      setProgressSource("local");
+      return;
+    }
+
     try {
-      const progress = await markLessonCompletedApi(learnerId, lessonSlug);
+      const idToken = await getIdToken();
+
+      if (!idToken) {
+        throw new Error("Missing Firebase ID token");
+      }
+
+      const progress = await markLessonCompletedApi(idToken, lessonSlug);
 
       setCompletedLessonSlugs(progress.completedLessonSlugs);
       saveCompletedLessonsToLocalStorage(progress.completedLessonSlugs);
@@ -137,8 +174,19 @@ export function ProgressProvider({ children }: ProgressProviderProps) {
     setCompletedLessonSlugs(optimisticSlugs);
     saveCompletedLessonsToLocalStorage(optimisticSlugs);
 
+    if (!currentUser) {
+      setProgressSource("local");
+      return;
+    }
+
     try {
-      const progress = await markLessonIncompleteApi(learnerId, lessonSlug);
+      const idToken = await getIdToken();
+
+      if (!idToken) {
+        throw new Error("Missing Firebase ID token");
+      }
+
+      const progress = await markLessonIncompleteApi(idToken, lessonSlug);
 
       setCompletedLessonSlugs(progress.completedLessonSlugs);
       saveCompletedLessonsToLocalStorage(progress.completedLessonSlugs);
@@ -169,7 +217,12 @@ export function ProgressProvider({ children }: ProgressProviderProps) {
       markLessonIncomplete,
       toggleLessonCompletion,
     }),
-    [learnerId, completedLessonSlugs, progressSource, isProgressLoading]
+    [
+      learnerId,
+      completedLessonSlugs,
+      progressSource,
+      isProgressLoading,
+    ]
   );
 
   return (

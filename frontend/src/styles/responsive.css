@@ -1,162 +1,270 @@
-.eyebrow {
-    margin: 0 0 12px;
-    font-weight: 800;
-    color: #b45309;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-size: 14px;
-}
+/* responsive.css */
 
-.button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 48px;
-    padding: 0 22px;
-    border-radius: 999px;
-    font-weight: 800;
-}
-
-.button-primary {
-    background: #241f1c;
-    color: #fff8ed;
-}
-
-.button-secondary {
-    background: #ffe2ad;
-    color: #241f1c;
-}
-
-.feature-card,
-.track-card,
-.lesson-card,
-.coming-soon-box,
-.lesson-section,
-.lesson-hero,
-.dashboard-card {
-    background: #ffffff;
-    border: 1px solid #f2d6aa;
-    border-radius: 24px;
-    padding: 24px;
-    box-shadow: 0 14px 40px rgba(120, 72, 24, 0.08);
-}
-
-.track-card,
-.lesson-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.track-card:hover,
-.lesson-card-clickable:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 18px 48px rgba(120, 72, 24, 0.14);
-}
-
-.status {
-    display: inline-flex;
-    margin-bottom: 16px;
-    padding: 6px 10px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 800;
-    text-transform: capitalize;
-}
-
-.status-published {
-    background: #dcfce7;
-    color: #166534;
-}
-
-.status-in_progress {
-    background: #fef3c7;
-    color: #92400e;
-}
-
-.status-planned {
-    background: #e5e7eb;
-    color: #374151;
-}
-
-.status-coming_soon {
-    background: #dbeafe;
-    color: #1d4ed8;
-}
-
-.status-premium {@media (max-width: 860px) {
-
-        .site-header,
-        .lesson-card {
-            align-items: flex-start;
-            flex-direction: column;
-        }
-
-        .feature-grid,
-        .track-grid,
-        .dashboard-grid,
-        .lesson-navigation {
-            grid-template-columns: 1fr;
-        }
-
-        .roadmap-summary,
-        .track-summary {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
-        .lesson-card-footer {
-            width: 100%;
-            align-items: flex-start;
-        }
-
-        .dashboard-card-large {
-            grid-column: span 1;
-        }
-
-        h1 {
-            font-size: 48px;
-        }
-
-        .completion-box {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .interview-card-header {
-            flex-direction: column;
-        }
-                
-        .interview-toggle {
-            width: 100%;
-            }
-
-        .api-status {
-            margin-top: 4px;
-                        }
-
-        .admin-grid {
-            grid-template-columns: 1fr;
-                }
-
-.admin-detail-grid,
-.admin-section-card {
-    grid-template-columns: 1fr;
-}
-
-.admin-form-row {
-    grid-template-columns: 1fr;
-}
-    }
-
-    @media (max-width: 560px) {
-
-        .roadmap-summary,
-        .track-summary {
-            grid-template-columns: 1fr;
-        }
-
-        .site-nav {
-            flex-wrap: wrap;
-        }
-    }
+.status-premium {
     background: #fce7f3;
     color: #9d174d;
+}
+
+/* =========================================================
+   TABLET / SMALL DESKTOP
+   ========================================================= */
+
+@media (max-width: 860px) {
+    .lesson-card {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .feature-grid,
+    .track-grid,
+    .dashboard-grid,
+    .lesson-navigation {
+        grid-template-columns: 1fr;
+    }
+
+    .roadmap-summary,
+    .track-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .lesson-card-footer {
+        width: 100%;
+        align-items: flex-start;
+    }
+
+    .dashboard-card-large {
+        grid-column: span 1;
+    }
+
+    h1 {
+        font-size: 48px;
+    }
+
+    .completion-box {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .interview-card-header {
+        flex-direction: column;
+    }
+
+    .interview-toggle {
+        width: 100%;
+    }
+
+    .api-status {
+        margin-top: 4px;
+    }
+
+    .admin-grid,
+    .admin-detail-grid,
+    .admin-section-card,
+    .admin-form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Tablet header: not full mobile yet */
+@media (max-width: 860px) and (min-width: 761px) {
+    .site-header {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 18px 24px;
+        align-items: center;
+    }
+
+    .site-header .logo {
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
+    }
+
+    .site-nav {
+        grid-column: 1 / -1;
+        grid-row: 2 / 3;
+        justify-self: center;
+        width: 100%;
+        max-width: 100%;
+        justify-content: center;
+    }
+
+    .site-header>.button,
+    .site-header>.button-primary,
+    .site-header>.site-cta,
+    .site-header>a:last-child {
+        grid-column: 2 / 3;
+        grid-row: 1 / 2;
+        width: auto;
+        min-width: 150px;
+        justify-self: end;
+    }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 760px) {
+    .site-header {
+        display: flex;
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .site-nav {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .site-header>.button,
+    .site-header>.button-primary,
+    .site-header>.site-cta,
+    .site-header>a:last-child {
+        width: 100%;
+    }
+}
+
+@media (max-width: 560px) {
+
+    .roadmap-summary,
+    .track-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .site-nav {
+        flex-wrap: wrap;
+    }
+}
+
+/* Tablet/mobile overflow safety for lesson content */
+
+.lesson-page,
+.lesson-section,
+.lesson-block-list,
+.lesson-block,
+.lesson-markdown,
+.lesson-callout,
+.lesson-item,
+.lesson-practice-exercise,
+.lesson-question-box,
+.lesson-choice-list,
+.lesson-choice-button,
+.lesson-code-card,
+.python-runner,
+.table-wrapper,
+.lesson-inline-image {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.lesson-block-list,
+.lesson-block,
+.lesson-markdown,
+.lesson-callout,
+.lesson-code-card,
+.python-runner,
+.table-wrapper,
+.lesson-inline-image {
+    width: 100%;
+}
+
+.lesson-markdown p,
+.lesson-callout p,
+.lesson-item p,
+.lesson-question-box p,
+.lesson-practice-exercise p {
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+.lesson-markdown code,
+.lesson-callout code,
+.lesson-item code,
+.lesson-question-box code,
+.lesson-practice-exercise code {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.lesson-code-card,
+.python-runner,
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.lesson-code-card pre,
+.python-runner pre {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+/* Monaco editor safety, if the code editor injects fixed inner widths */
+.monaco-editor,
+.monaco-editor .overflow-guard {
+    max-width: 100% !important;
+}
+
+@media (max-width: 900px) {
+    .lesson-section {
+        overflow: hidden;
+    }
+
+    .lesson-code-card {
+        width: 100%;
+    }
+}
+
+/* Small phone header alignment fix */
+
+@media (max-width: 560px) {
+    .site-header {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+        align-items: stretch;
+        justify-items: stretch;
+    }
+
+    .site-header .logo {
+        justify-self: start;
+    }
+
+    .site-nav {
+        width: 100%;
+        max-width: 100%;
+        justify-self: stretch;
+        justify-content: center;
+    }
+
+    .site-header > .button,
+    .site-header > .button-primary,
+    .site-header > .button-secondary,
+    .site-header > .site-cta,
+    .site-header > .start-cooking-button,
+    .site-header > nav + a,
+    .site-header > a:not(.logo):last-child {
+        width: 100%;
+        max-width: none;
+        justify-self: stretch;
+        align-self: stretch;
+        text-align: center;
+    }
+}
+
+@media (max-width: 560px) {
+
+    .site-header>.button,
+    .site-header>.button-primary,
+    .site-header>.button-secondary,
+    .site-header>.site-cta,
+    .site-header>.start-cooking-button,
+    .site-header>nav+a,
+    .site-header>a:not(.logo):last-child {
+        width: 100%;
+        max-width: 340px;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+    }
 }

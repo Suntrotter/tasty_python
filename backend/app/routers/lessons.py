@@ -28,12 +28,28 @@ def lesson_to_response(lesson: LessonModel) -> dict:
     }
 
 
+def block_to_response(block) -> dict:
+    return {
+        "id": block.id,
+        "key": block.block_key,
+        "type": block.type,
+        "order": block.order,
+        "data": block.data or {},
+    }
+
+
 def lesson_content_to_response(lesson_content: LessonContentModel) -> dict:
     return {
         "slug": lesson_content.lesson.slug,
         "title": lesson_content.title,
         "goal": lesson_content.goal,
         "image_prompts": lesson_content.image_prompts,
+        "hero_visual": lesson_content.hero_visual,
+        "completion_image_url": lesson_content.completion_image_url,
+        "completion_image_alt": lesson_content.completion_image_alt,
+        "completion_kicker": lesson_content.completion_kicker,
+        "completion_title": lesson_content.completion_title,
+        "completion_body": lesson_content.completion_body,
         "sections": [
             {
                 "id": section.section_key,
@@ -42,6 +58,9 @@ def lesson_content_to_response(lesson_content: LessonContentModel) -> dict:
                 "paragraphs": section.paragraphs,
                 "code": section.code,
                 "output": section.output,
+                "image_url": section.image_url,
+                "image_alt": section.image_alt,
+                "image_position": section.image_position,
                 "items": [
                     {
                         "id": item.id,
@@ -49,6 +68,9 @@ def lesson_content_to_response(lesson_content: LessonContentModel) -> dict:
                         "content": item.content,
                         "code": item.code,
                         "output": item.output,
+                        "after_text": item.after_text,
+                        "image_url": item.image_url,
+                        "image_alt": item.image_alt,
                     }
                     for item in section.items
                 ]
@@ -60,6 +82,12 @@ def lesson_content_to_response(lesson_content: LessonContentModel) -> dict:
                 }
                 if section.table
                 else None,
+                "blocks": [
+                    block_to_response(block)
+                    for block in section.blocks
+                ]
+                if section.blocks
+                else None,
             }
             for section in lesson_content.sections
         ],
@@ -70,10 +98,11 @@ def lesson_content_to_response(lesson_content: LessonContentModel) -> dict:
 def read_lessons(db: Session = Depends(get_db)):
     lessons = db.scalars(
         select(LessonModel)
-    .options(
-        joinedload(LessonModel.track),
-        joinedload(LessonModel.content),
-    )        .order_by(LessonModel.track_id, LessonModel.order)
+        .options(
+            joinedload(LessonModel.track),
+            joinedload(LessonModel.content),
+        )
+        .order_by(LessonModel.track_id, LessonModel.order)
     ).all()
 
     return [lesson_to_response(lesson) for lesson in lessons]
@@ -108,6 +137,9 @@ def read_lesson_content(lesson_slug: str, db: Session = Depends(get_db)):
             ),
             selectinload(LessonContentModel.sections).selectinload(
                 LessonSectionModel.table
+            ),
+            selectinload(LessonContentModel.sections).selectinload(
+                LessonSectionModel.blocks
             ),
         )
         .where(LessonModel.slug == lesson_slug)

@@ -1,3 +1,6 @@
+import type { HeroVisual } from "./heroVisual";
+import type { LessonBlock } from "./lessonBlock";
+
 export type LessonSectionType =
   | "metaphor"
   | "theory"
@@ -8,12 +11,17 @@ export type LessonSectionType =
   | "cheat_sheet"
   | "answer_key";
 
+export type LessonImagePosition = "top" | "after_code" | "bottom";
+
 export interface LessonTextItem {
   id?: number;
   title?: string;
   content: string;
   code?: string;
   output?: string;
+  afterText?: string;
+  imageUrl?: string;
+  imageAlt?: string;
 }
 
 export interface LessonTable {
@@ -28,8 +36,12 @@ export interface LessonSection {
   paragraphs?: string[];
   code?: string;
   output?: string;
+  imageUrl?: string;
+  imageAlt?: string;
+  imagePosition?: LessonImagePosition;
   items?: LessonTextItem[];
   table?: LessonTable;
+  blocks?: LessonBlock[];
 }
 
 export interface LessonContent {
@@ -37,5 +49,11 @@ export interface LessonContent {
   title: string;
   goal: string;
   imagePrompts?: string[];
+  heroVisual?: HeroVisual;
+  completionImageUrl?: string;
+  completionImageAlt?: string;
+  completionKicker?: string;
+  completionTitle?: string;
+  completionBody?: string;
   sections: LessonSection[];
 }

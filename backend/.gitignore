@@ -4,3 +4,7 @@ __pycache__/
 .env
 tasty_python.db
 *.db
+
+firebase-service-account.json
+backend/firebase-service-account.json
+*tasty-python-firebase-adminsdk*.json

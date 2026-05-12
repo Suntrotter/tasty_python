@@ -14,6 +14,10 @@ import AdminLessonDetailPage from "./pages/admin/AdminLessonDetailPage";
 import AdminTrackDetailPage from "./pages/admin/AdminTrackDetailPage";
 import AdminLoginPage from "./pages/admin/AdminLoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import AboutTastyPythonPage from "./pages/AboutTastyPythonPage";
+import AboutAuthorPage from "./pages/AboutAuthorPage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 
 function App() {
   return (
@@ -27,6 +31,10 @@ function App() {
         <Route path="/interview-mode" element={<InterviewModePage />} />
         <Route path="*" element={<NotFoundPage />} />
         <Route path="/admin-login" element={<AdminLoginPage />} />
+        <Route path="/about-tasty-python" element={<AboutTastyPythonPage />} />
+        <Route path="/about-author" element={<AboutAuthorPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
 
         <Route element={<RequireAdminAuth />}>
           <Route path="/admin" element={<AdminDashboardPage />} />

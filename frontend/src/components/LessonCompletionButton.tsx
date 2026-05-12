@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../features/auth/AuthContext";
 import { useLessonProgress } from "../features/progress/useLessonProgress";
 import type { LessonPreview } from "../types/curriculum";
 
@@ -7,19 +8,91 @@ interface LessonCompletionButtonProps {
   lessonSlug: string;
   trackSlug: string;
   nextLesson?: LessonPreview;
+  completionImageUrl?: string;
+  completionImageAlt?: string;
+  completionKicker?: string;
+  completionTitle?: string;
+  completionBody?: string;
+}
+
+const defaultCompletionImage = {
+  src: "/lesson-images/lesson1_completion.png",
+  alt: "Cozy celebration scene for completing a Python lesson.",
+};
+
+const defaultCompletionText = {
+  kicker: "Lesson complete",
+  title: "Delicious progress. Lesson completed.",
+  body: `You’ve cooked this Python concept successfully. The main idea, examples, traps, and practice tasks are all plated and ready.
+
+If this lesson feels clear, you’re in a very good place. Ready for the next bite?`,
+};
+
+function renderCompletionBody(body: string) {
+  return body
+    .split(/\n{2,}/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean)
+    .map((paragraph, index) => (
+      <p key={`completion-body-${index}`}>{paragraph}</p>
+    ));
 }
 
 function LessonCompletionButton({
   lessonSlug,
   trackSlug,
   nextLesson,
+  completionImageUrl,
+  completionImageAlt,
+  completionKicker,
+  completionTitle,
+  completionBody,
 }: LessonCompletionButtonProps) {
-  const { isLessonCompleted, isProgressLoading, toggleLessonCompletion } =
-    useLessonProgress();
+  const { currentUser, isAuthLoading } = useAuth();
+
+  const {
+    isLessonCompleted,
+    isProgressLoading,
+    progressSource,
+    toggleLessonCompletion,
+  } = useLessonProgress();
 
   const [isUpdating, setIsUpdating] = useState(false);
 
   const completed = isLessonCompleted(lessonSlug);
+
+  const imageSrc = completionImageUrl || defaultCompletionImage.src;
+  const imageAlt = completionImageAlt || defaultCompletionImage.alt;
+
+  const kicker = completionKicker || defaultCompletionText.kicker;
+  const title = completionTitle || defaultCompletionText.title;
+  const body = completionBody || defaultCompletionText.body;
+
+  const isCheckingProgress = isAuthLoading || isProgressLoading;
+
+  function getProgressMessage() {
+    if (isCheckingProgress) {
+      return "Checking your progress...";
+    }
+
+    if (!currentUser) {
+      return completed
+        ? "Marked locally on this device. Sign in to save progress across devices."
+        : "You can mark this lesson locally, but sign in to save progress across devices.";
+    }
+
+    if (progressSource === "backend") {
+      return completed
+        ? "Saved to your account."
+        : "Your progress will be saved to your account.";
+    }
+
+    if (progressSource === "local") {
+      return "Backend progress is not available right now. Changes are saved locally on this device.";
+    }
+
+    return "Progress is being prepared.";
+  }
 
   async function handleToggleCompletion() {
     setIsUpdating(true);
@@ -38,26 +111,25 @@ function LessonCompletionButton({
       }`}
     >
       <div className="completion-image-wrap">
-        <img
-          src="/lesson-images/lesson1_completion.png"
-          alt="Cozy celebration scene for completing a Python lesson."
-        />
+        <img src={imageSrc} alt={imageAlt} />
       </div>
 
       <div className="completion-content">
-        <p className="completion-kicker">Lesson complete</p>
+        <p className="completion-kicker">{kicker}</p>
 
-        <h2>Delicious progress. Lesson 1 completed.</h2>
+        <h2>{title}</h2>
 
-        <p>
-          You’ve cooked your first Python concept successfully. Variables,
-          assignment, reassignment — all plated and ready.
-        </p>
+        {renderCompletionBody(body)}
 
-        <p>
-          If this lesson feels clear, you’re in a very good place. Ready for the
-          next bite?
-        </p>
+        <p className="completion-progress-note">{getProgressMessage()}</p>
+
+        {!currentUser && !isAuthLoading && (
+          <div className="completion-auth-actions">
+            <Link to="/login" className="completion-auth-link">
+              Sign in to save progress
+            </Link>
+          </div>
+        )}
 
         <div className="completion-actions">
           <button

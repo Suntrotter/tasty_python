@@ -1,6 +1,6 @@
 const PRACTICE_STORAGE_KEY = "tasty-python-practice-attempts";
 
-export type PracticeExerciseType = "multiple_choice" | "coding";
+export type PracticeExerciseType = "multiple_choice" | "multi_select" | "coding";
 
 export interface PracticeAttempt {
   id: string;

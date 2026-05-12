@@ -1,5 +1,7 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { Link, useParams } from "react-router-dom";
+import AdminLessonBlockEditor from "../../components/admin/AdminLessonBlockEditor";
+import type { HeroVisualTone, HeroVisualVariant } from "../../types/heroVisual";
 import {
   createLessonSection,
   createLessonSectionItem,
@@ -22,7 +24,30 @@ import type {
   LessonPreview,
   LessonStatus,
 } from "../../types/curriculum";
-import type { LessonContent, LessonSection } from "../../types/lesson";
+import type {
+  LessonContent,
+  LessonImagePosition,
+  LessonSection,
+} from "../../types/lesson";
+
+const sectionTypeOptions: LessonSection["type"][] = [
+  "metaphor",
+  "theory",
+  "code_example",
+  "interview",
+  "trap_zone",
+  "practice",
+  "cheat_sheet",
+  "answer_key",
+];
+
+const imagePositionOptions: LessonImagePosition[] = [
+  "top",
+  "after_code",
+  "bottom",
+];
+
+const showLegacyEditor = false;
 
 function AdminLessonDetailPage() {
   const { lessonSlug } = useParams();
@@ -76,10 +101,21 @@ function AdminLessonDetailPage() {
   });
 
   const [contentForm, setContentForm] = useState({
-    title: "",
-    goal: "",
-    imagePromptsText: "",
-  });
+      title: "",
+      goal: "",
+      imagePromptsText: "",
+      heroVisualVariant: "code-card" as HeroVisualVariant,
+      heroVisualTone: "warm" as HeroVisualTone,
+      heroVisualKicker: "",
+      heroVisualTitle: "",
+      heroVisualLinesText: "",
+      heroVisualChipsText: "",
+      completionImageUrl: "",
+      completionImageAlt: "",
+      completionKicker: "",
+      completionTitle: "",
+      completionBody: "",
+    });
 
   const [sectionForm, setSectionForm] = useState({
     type: "theory" as LessonSection["type"],
@@ -87,6 +123,9 @@ function AdminLessonDetailPage() {
     paragraphsText: "",
     code: "",
     output: "",
+    imageUrl: "",
+    imageAlt: "",
+    imagePosition: "top" as LessonImagePosition,
   });
 
   const [editSectionForm, setEditSectionForm] = useState({
@@ -96,6 +135,9 @@ function AdminLessonDetailPage() {
     paragraphsText: "",
     code: "",
     output: "",
+    imageUrl: "",
+    imageAlt: "",
+    imagePosition: "top" as LessonImagePosition,
   });
 
   const [itemForm, setItemForm] = useState({
@@ -104,6 +146,9 @@ function AdminLessonDetailPage() {
     content: "",
     code: "",
     output: "",
+    afterText: "",
+    imageUrl: "",
+    imageAlt: "",
   });
 
   const [editItemForm, setEditItemForm] = useState({
@@ -113,6 +158,9 @@ function AdminLessonDetailPage() {
     content: "",
     code: "",
     output: "",
+    afterText: "",
+    imageUrl: "",
+    imageAlt: "",
   });
 
   const [tableForm, setTableForm] = useState({
@@ -191,6 +239,17 @@ function AdminLessonDetailPage() {
         title: lessonContent.title,
         goal: lessonContent.goal,
         imagePromptsText: lessonContent.imagePrompts?.join("\n") ?? "",
+        heroVisualVariant: lessonContent.heroVisual?.variant ?? "code-card",
+        heroVisualTone: lessonContent.heroVisual?.tone ?? "warm",
+        heroVisualKicker: lessonContent.heroVisual?.kicker ?? "",
+        heroVisualTitle: lessonContent.heroVisual?.title ?? "",
+        heroVisualLinesText: lessonContent.heroVisual?.lines?.join("\n") ?? "",
+        heroVisualChipsText: lessonContent.heroVisual?.chips?.join("\n") ?? "",
+        completionImageUrl: lessonContent.completionImageUrl ?? "",
+        completionImageAlt: lessonContent.completionImageAlt ?? "",
+        completionKicker: lessonContent.completionKicker ?? "",
+        completionTitle: lessonContent.completionTitle ?? "",
+        completionBody: lessonContent.completionBody ?? "",
       });
 
       return;
@@ -201,6 +260,17 @@ function AdminLessonDetailPage() {
         title: lesson.title,
         goal: "",
         imagePromptsText: "",
+        heroVisualVariant: "code-card",
+        heroVisualTone: "warm",
+        heroVisualKicker: "",
+        heroVisualTitle: "",
+        heroVisualLinesText: "",
+        heroVisualChipsText: "",
+        completionImageUrl: "",
+        completionImageAlt: "",
+        completionKicker: "",
+        completionTitle: "",
+        completionBody: "",
       });
     }
   }, [lesson, lessonContent]);
@@ -232,6 +302,9 @@ function AdminLessonDetailPage() {
       paragraphsText: selectedSection.paragraphs?.join("\n") ?? "",
       code: selectedSection.code ?? "",
       output: selectedSection.output ?? "",
+      imageUrl: selectedSection.imageUrl ?? "",
+      imageAlt: selectedSection.imageAlt ?? "",
+      imagePosition: selectedSection.imagePosition ?? "top",
     });
   }, [lessonContent]);
 
@@ -259,6 +332,9 @@ function AdminLessonDetailPage() {
       content: firstEntry.item.content,
       code: firstEntry.item.code ?? "",
       output: firstEntry.item.output ?? "",
+      afterText: firstEntry.item.afterText ?? "",
+      imageUrl: firstEntry.item.imageUrl ?? "",
+      imageAlt: firstEntry.item.imageAlt ?? "",
     });
   }, [lessonContent]);
 
@@ -326,16 +402,18 @@ function AdminLessonDetailPage() {
     }
   }
 
-  function handleContentInputChange(
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) {
-    const { name, value } = event.target;
+function handleContentInputChange(
+  event: ChangeEvent<
+    HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+  >
+) {
+  const { name, value } = event.target;
 
-    setContentForm((currentForm) => ({
-      ...currentForm,
-      [name]: value,
-    }));
-  }
+  setContentForm((currentForm) => ({
+    ...currentForm,
+    [name]: value,
+  }));
+}
 
   async function handleContentSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -351,14 +429,61 @@ function AdminLessonDetailPage() {
       .split("\n")
       .map((prompt) => prompt.trim())
       .filter(Boolean);
+    
+    const heroVisualLines = contentForm.heroVisualLinesText
+  .split("\n")
+  .map((line) => line.trim())
+  .filter(Boolean)
+  .slice(0, 4);
+
+const heroVisualChips = contentForm.heroVisualChipsText
+  .split("\n")
+  .map((chip) => chip.trim())
+  .filter(Boolean)
+  .slice(0, 5);
+
+const hasHeroVisual =
+  contentForm.heroVisualKicker.trim() ||
+  contentForm.heroVisualTitle.trim() ||
+  heroVisualLines.length > 0 ||
+  heroVisualChips.length > 0;
+
+if (
+  hasHeroVisual &&
+  (!contentForm.heroVisualKicker.trim() ||
+    !contentForm.heroVisualTitle.trim() ||
+    heroVisualLines.length === 0)
+) {
+  setContentMessage(
+    "Hero visual needs a kicker, a title, and at least one line."
+  );
+  setIsUpdatingContent(false);
+  return;
+}
+
+const heroVisual = hasHeroVisual
+  ? {
+      variant: contentForm.heroVisualVariant,
+      tone: contentForm.heroVisualTone,
+      kicker: contentForm.heroVisualKicker.trim(),
+      title: contentForm.heroVisualTitle.trim(),
+      lines: heroVisualLines,
+      chips: heroVisualChips,
+    }
+  : undefined;
 
     try {
       const updatedContent = await updateLessonContentBasics(lesson.slug, {
         title: contentForm.title,
         goal: contentForm.goal,
         imagePrompts,
+        heroVisual,
+        completionImageUrl: contentForm.completionImageUrl.trim() || undefined,
+        completionImageAlt: contentForm.completionImageAlt.trim() || undefined,
+        completionKicker: contentForm.completionKicker.trim() || undefined,
+        completionTitle: contentForm.completionTitle.trim() || undefined,
+        completionBody: contentForm.completionBody.trim() || undefined,
       });
-
       setLessonContent(updatedContent);
       setLesson((currentLesson) =>
         currentLesson ? { ...currentLesson, hasContent: true } : currentLesson
@@ -463,6 +588,11 @@ function AdminLessonDetailPage() {
         paragraphs,
         code: sectionForm.code.trim() || undefined,
         output: sectionForm.output.trim() || undefined,
+        imageUrl: sectionForm.imageUrl.trim() || undefined,
+        imageAlt: sectionForm.imageAlt.trim() || undefined,
+        imagePosition: sectionForm.imageUrl.trim()
+          ? sectionForm.imagePosition
+          : undefined,
       });
 
       setLessonContent(updatedContent);
@@ -473,6 +603,9 @@ function AdminLessonDetailPage() {
         paragraphsText: "",
         code: "",
         output: "",
+        imageUrl: "",
+        imageAlt: "",
+        imagePosition: "top",
       });
 
       setSectionMessage("Lesson section created successfully.");
@@ -506,6 +639,9 @@ function AdminLessonDetailPage() {
       paragraphsText: selectedSection.paragraphs?.join("\n") ?? "",
       code: selectedSection.code ?? "",
       output: selectedSection.output ?? "",
+      imageUrl: selectedSection.imageUrl ?? "",
+      imageAlt: selectedSection.imageAlt ?? "",
+      imagePosition: selectedSection.imagePosition ?? "top",
     });
   }
 
@@ -547,6 +683,11 @@ function AdminLessonDetailPage() {
           paragraphs,
           code: editSectionForm.code.trim() || undefined,
           output: editSectionForm.output.trim() || undefined,
+          imageUrl: editSectionForm.imageUrl.trim() || undefined,
+          imageAlt: editSectionForm.imageAlt.trim() || undefined,
+          imagePosition: editSectionForm.imageUrl.trim()
+            ? editSectionForm.imagePosition
+            : undefined,
         }
       );
 
@@ -625,6 +766,9 @@ function AdminLessonDetailPage() {
           content: itemForm.content,
           code: itemForm.code.trim() || undefined,
           output: itemForm.output.trim() || undefined,
+          afterText: itemForm.afterText.trim() || undefined,
+          imageUrl: itemForm.imageUrl.trim() || undefined,
+          imageAlt: itemForm.imageAlt.trim() || undefined,
         }
       );
 
@@ -636,6 +780,9 @@ function AdminLessonDetailPage() {
         content: "",
         code: "",
         output: "",
+        afterText: "",
+        imageUrl: "",
+        imageAlt: "",
       }));
 
       setItemMessage("Section item created successfully.");
@@ -673,6 +820,9 @@ function AdminLessonDetailPage() {
       content: item.content,
       code: item.code ?? "",
       output: item.output ?? "",
+      afterText: item.afterText ?? "",
+      imageUrl: item.imageUrl ?? "",
+      imageAlt: item.imageAlt ?? "",
     });
   }
 
@@ -707,6 +857,9 @@ function AdminLessonDetailPage() {
           content: editItemForm.content,
           code: editItemForm.code.trim() || undefined,
           output: editItemForm.output.trim() || undefined,
+          afterText: editItemForm.afterText.trim() || undefined,
+          imageUrl: editItemForm.imageUrl.trim() || undefined,
+          imageAlt: editItemForm.imageAlt.trim() || undefined,
         }
       );
 
@@ -955,6 +1108,15 @@ function AdminLessonDetailPage() {
                 <dt>Image prompts</dt>
                 <dd>{lessonContent.imagePrompts?.length ?? 0}</dd>
               </div>
+
+              <div>
+                <dt>Completion image</dt>
+                <dd>{lessonContent.completionImageUrl || "not set"}</dd>
+              </div>
+              <div>
+  <dt>Completion title</dt>
+  <dd>{lessonContent.completionTitle || "not set"}</dd>
+</div>
             </dl>
           ) : (
             <p>No full lesson content has been added yet.</p>
@@ -963,144 +1125,350 @@ function AdminLessonDetailPage() {
       </section>
 
       <section className="admin-edit-panel">
-        <h2>Edit lesson metadata</h2>
+  <h2>Current lesson structure</h2>
 
-        <form className="admin-form" onSubmit={handleMetadataSubmit}>
-          <label>
-            Title
-            <input
-              name="title"
-              value={metadataForm.title}
-              onChange={handleMetadataInputChange}
-            />
-          </label>
+  <p className="admin-help-text">
+    This overview shows the real block-based lesson structure used by the
+    learner view.
+  </p>
 
-          <label>
-            Short description
-            <textarea
-              name="shortDescription"
-              value={metadataForm.shortDescription}
-              onChange={handleMetadataInputChange}
-              rows={4}
-            />
-          </label>
+  {deleteSectionMessage && (
+    <p className="admin-status-message">{deleteSectionMessage}</p>
+  )}
 
-          <div className="admin-form-row">
-            <label>
-              Difficulty
-              <select
-                name="difficulty"
-                value={metadataForm.difficulty}
-                onChange={handleMetadataInputChange}
+  {lessonContent && lessonContent.sections.length > 0 ? (
+    <div className="admin-section-list">
+      {lessonContent.sections.map((section, index) => {
+        const sortedBlocks = [...(section.blocks ?? [])].sort(
+          (firstBlock, secondBlock) => firstBlock.order - secondBlock.order
+        );
+
+        const hasLegacyContent =
+          (section.paragraphs?.length ?? 0) > 0 ||
+          Boolean(section.code) ||
+          Boolean(section.output) ||
+          Boolean(section.imageUrl) ||
+          (section.items?.length ?? 0) > 0 ||
+          Boolean(section.table);
+
+        return (
+          <article className="admin-section-card" key={section.id}>
+            <div className="admin-section-card-header">
+              <div>
+                <p className="eyebrow">
+                  {index + 1}. {section.type}
+                </p>
+                <h3>{section.title}</h3>
+              </div>
+
+              <button
+                type="button"
+                className="button button-secondary"
+                disabled={deletingSectionKey === section.id}
+                onClick={() => handleDeleteSection(section.id)}
               >
-                <option value="beginner">beginner</option>
-                <option value="easy">easy</option>
-                <option value="medium">medium</option>
-              </select>
-            </label>
+                {deletingSectionKey === section.id
+                  ? "Deleting..."
+                  : "Delete section"}
+              </button>
+            </div>
 
-            <label>
-              Estimated time
-              <input
-                name="estimatedTime"
-                value={metadataForm.estimatedTime}
-                onChange={handleMetadataInputChange}
-              />
-            </label>
+            <div className="admin-structure-stats">
+              <span>Blocks: {sortedBlocks.length}</span>
+              <span>Type: {section.type}</span>
 
-            <label>
-              Order
-              <input
-                name="order"
-                type="number"
-                min="1"
-                value={metadataForm.order}
-                onChange={handleMetadataInputChange}
-              />
-            </label>
-          </div>
+              {hasLegacyContent && (
+                <span className="admin-structure-warning">
+                  Legacy content exists
+                </span>
+              )}
+            </div>
 
-          <button
-            type="submit"
-            className="button button-primary"
-            disabled={isUpdatingMetadata}
-          >
-            {isUpdatingMetadata ? "Saving..." : "Save metadata"}
-          </button>
+            {sortedBlocks.length > 0 ? (
+              <div className="admin-block-summary-list">
+                <h4>Blocks in this section</h4>
 
-          {metadataMessage && (
-            <p className="admin-status-message">{metadataMessage}</p>
-          )}
-        </form>
-      </section>
+                {sortedBlocks.map((block, blockIndex) => (
+                  <div
+                    className="admin-block-summary-row"
+                    key={block.id ?? block.key ?? `${section.id}-${blockIndex}`}
+                  >
+                    <div>
+                      <strong>
+                        {blockIndex + 1}. {block.type.replace(/_/g, " ")}
+                      </strong>
+
+                      <span>Order: {block.order}</span>
+                    </div>
+
+                    <code>{block.key}</code>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="empty-progress-card">
+                <h3>No blocks yet.</h3>
+                <p>
+                  This section will use legacy content until at least one block
+                  is added in the Flexible section blocks editor.
+                </p>
+              </div>
+            )}
+
+            {showLegacyEditor && hasLegacyContent && (
+              <div className="admin-legacy-summary">
+                <h4>Legacy content</h4>
+
+                <ul>
+                  <li>Paragraphs: {section.paragraphs?.length ?? 0}</li>
+                  <li>Code block: {section.code ? "yes" : "no"}</li>
+                  <li>Output block: {section.output ? "yes" : "no"}</li>
+                  <li>Image: {section.imageUrl ? section.imageUrl : "no"}</li>
+                  <li>Items: {section.items?.length ?? 0}</li>
+                  <li>Table: {section.table ? "yes" : "no"}</li>
+                </ul>
+              </div>
+            )}
+
+            {showLegacyEditor && section.items && section.items.length > 0 && (
+              <div className="admin-item-list">
+                <h4>Items</h4>
+
+                {section.items.map((item) => (
+                  <div className="admin-item-row" key={item.id}>
+                    <span>
+                      {item.title || "Untitled item"}
+                      {item.afterText ? " · after text" : ""}
+                      {item.imageUrl ? " · image" : ""}
+                    </span>
+
+                    <button
+                      type="button"
+                      className="button button-secondary"
+                      disabled={!item.id || deletingItemId === item.id}
+                      onClick={() => handleDeleteItem(section.id, item.id)}
+                    >
+                      {deletingItemId === item.id ? "Deleting..." : "Delete"}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </article>
+        );
+      })}
+    </div>
+  ) : (
+    <p>No sections yet.</p>
+  )}
+</section>
 
       <section className="admin-edit-panel">
-        <h2>Edit lesson content basics</h2>
+  <h2>Edit lesson content basics</h2>
 
-        <p className="admin-help-text">
-          This creates or updates the lesson content shell: title, goal, and
-          image prompts. Section editing will be added later.
-        </p>
+  <p className="admin-help-text">
+    This creates or updates the lesson content shell: title, goal, image
+    prompts, and the final completion block.
+  </p>
 
-        <form className="admin-form" onSubmit={handleContentSubmit}>
-          <label>
-            Content title
-            <input
-              name="title"
-              value={contentForm.title}
-              onChange={handleContentInputChange}
+  <form className="admin-form" onSubmit={handleContentSubmit}>
+    <label>
+      Content title
+      <input
+        name="title"
+        value={contentForm.title}
+        onChange={handleContentInputChange}
+      />
+    </label>
+
+    <label>
+      Goal
+      <textarea
+        name="goal"
+        value={contentForm.goal}
+        onChange={handleContentInputChange}
+        rows={5}
+        placeholder="By the end of this lesson, the learner should..."
+      />
+    </label>
+
+    <label>
+      Image prompts
+      <textarea
+        name="imagePromptsText"
+        value={contentForm.imagePromptsText}
+        onChange={handleContentInputChange}
+        rows={5}
+        placeholder="Write one image prompt per line"
+      />
+          </label>
+          
+    <div className="admin-completion-editor">
+  <h3>Hero visual</h3>
+
+  <div className="admin-form-row admin-form-row-two">
+    <label>
+      Variant
+      <select
+        name="heroVisualVariant"
+        value={contentForm.heroVisualVariant}
+        onChange={handleContentInputChange}
+      >
+        <option value="code-card">code-card</option>
+        <option value="recipe-card">recipe-card</option>
+        <option value="ingredient-board">ingredient-board</option>
+        <option value="terminal-card">terminal-card</option>
+      </select>
+    </label>
+
+    <label>
+      Tone
+      <select
+        name="heroVisualTone"
+        value={contentForm.heroVisualTone}
+        onChange={handleContentInputChange}
+      >
+        <option value="warm">warm</option>
+        <option value="green">green</option>
+        <option value="berry">berry</option>
+        <option value="blue">blue</option>
+        <option value="dark">dark</option>
+      </select>
+    </label>
+  </div>
+
+  <label>
+    Hero kicker
+    <input
+      name="heroVisualKicker"
+      value={contentForm.heroVisualKicker}
+      onChange={handleContentInputChange}
+      placeholder="Today's recipe"
+    />
+  </label>
+
+  <label>
+    Hero title
+    <input
+      name="heroVisualTitle"
+      value={contentForm.heroVisualTitle}
+      onChange={handleContentInputChange}
+      placeholder="Mutable picnic basket"
+    />
+  </label>
+
+  <label>
+    Hero lines
+    <textarea
+      name="heroVisualLinesText"
+      value={contentForm.heroVisualLinesText}
+      onChange={handleContentInputChange}
+      rows={4}
+      placeholder={`snacks = ["apple", "tea"]
+snacks.append("cake")
+print(snacks)`}
+    />
+  </label>
+
+  <label>
+    Hero chips
+    <textarea
+      name="heroVisualChipsText"
+      value={contentForm.heroVisualChipsText}
+      onChange={handleContentInputChange}
+      rows={3}
+      placeholder={`mutable
+        lists
+        references`}
             />
           </label>
+        </div>
 
-          <label>
-            Goal
-            <textarea
-              name="goal"
-              value={contentForm.goal}
-              onChange={handleContentInputChange}
-              rows={5}
-              placeholder="By the end of this lesson, the learner should..."
-            />
-          </label>
+    <div className="admin-completion-editor">
+      <h3>Completion block</h3>
 
-          <label>
-            Image prompts
-            <textarea
-              name="imagePromptsText"
-              value={contentForm.imagePromptsText}
-              onChange={handleContentInputChange}
-              rows={5}
-              placeholder="Write one image prompt per line"
-            />
-          </label>
+      <div className="admin-form-row admin-form-row-two">
+        <label>
+          Completion image URL
+          <input
+            name="completionImageUrl"
+            value={contentForm.completionImageUrl}
+            onChange={handleContentInputChange}
+            placeholder="/lesson-images/lesson2_completion.png"
+          />
+        </label>
 
-          <button
-            type="submit"
-            className="button button-primary"
-            disabled={isUpdatingContent}
-          >
-            {isUpdatingContent ? "Saving..." : "Save content basics"}
-          </button>
+        <label>
+          Completion image alt text
+          <input
+            name="completionImageAlt"
+            value={contentForm.completionImageAlt}
+            onChange={handleContentInputChange}
+            placeholder="Celebration illustration for this lesson"
+          />
+        </label>
+      </div>
 
-          {contentMessage && (
-            <p className="admin-status-message">{contentMessage}</p>
-          )}
-        </form>
-      </section>
+      <label>
+        Completion kicker
+        <input
+          name="completionKicker"
+          value={contentForm.completionKicker}
+          onChange={handleContentInputChange}
+          placeholder="Lesson complete"
+        />
+      </label>
 
-      <section className="admin-edit-panel">
+      <label>
+        Completion title
+        <input
+          name="completionTitle"
+          value={contentForm.completionTitle}
+          onChange={handleContentInputChange}
+          placeholder="Nice work. You now know what can change and what cannot."
+        />
+      </label>
+
+      <label>
+        Completion body
+        <textarea
+          name="completionBody"
+          value={contentForm.completionBody}
+          onChange={handleContentInputChange}
+          rows={7}
+          placeholder={`Mutable objects can be changed in place. Immutable objects cannot.
+
+You also saw why reassignment is not the same as mutation — a classic junior interview trap.`}
+        />
+      </label>
+    </div>
+
+    <button
+      type="submit"
+      className="button button-primary"
+      disabled={isUpdatingContent}
+    >
+      {isUpdatingContent ? "Saving..." : "Save content basics"}
+    </button>
+
+    {contentMessage && (
+      <p className="admin-status-message">{contentMessage}</p>
+    )}
+  </form>
+</section>
+
+      {showLegacyEditor && (
+<section className="admin-edit-panel">
         <h2>Import lesson from Markdown</h2>
 
         <p className="admin-help-text">
-          Paste a full lesson in Markdown. This is the fast path for lessons
-          written like your Variables and Assignment draft: metadata, image
-          prompts, sections, code blocks, practice, cheat sheet, and answer key.
+          Paste a full lesson in Markdown. This is useful for loading lesson
+          text quickly. Images and after-text can be adjusted after import.
         </p>
 
         <p className="api-notice">
           Importing will replace the current lesson content sections, items, and
-          tables for this lesson. Use it when you want to load a full lesson in
-          one move.
+          tables for this lesson.
         </p>
 
         <form className="admin-form" onSubmit={handleMarkdownImportSubmit}>
@@ -1134,12 +1502,14 @@ By the end of this lesson...
         </form>
       </section>
 
+      )}
+
       <section className="admin-edit-panel">
         <h2>Add lesson section</h2>
 
         <p className="admin-help-text">
-          Create a basic section with paragraphs and optional code/output
-          blocks. Items and tables will be added later.
+          Create a section with paragraphs, optional code/output blocks, and an
+          optional image.
         </p>
 
         {!lessonContent && (
@@ -1158,14 +1528,11 @@ By the end of this lesson...
                 onChange={handleSectionInputChange}
                 disabled={!lessonContent}
               >
-                <option value="metaphor">metaphor</option>
-                <option value="theory">theory</option>
-                <option value="code_example">code_example</option>
-                <option value="interview">interview</option>
-                <option value="trap_zone">trap_zone</option>
-                <option value="practice">practice</option>
-                <option value="cheat_sheet">cheat_sheet</option>
-                <option value="answer_key">answer_key</option>
+                {sectionTypeOptions.map((sectionType) => (
+                  <option value={sectionType} key={sectionType}>
+                    {sectionType}
+                  </option>
+                ))}
               </select>
             </label>
 
@@ -1216,6 +1583,46 @@ By the end of this lesson...
             />
           </label>
 
+          <div className="admin-form-row">
+            <label>
+              Section image URL
+              <input
+                name="imageUrl"
+                value={sectionForm.imageUrl}
+                onChange={handleSectionInputChange}
+                placeholder="/lesson-images/lesson1_jars.png"
+                disabled={!lessonContent}
+              />
+            </label>
+
+            <label>
+              Section image alt text
+              <input
+                name="imageAlt"
+                value={sectionForm.imageAlt}
+                onChange={handleSectionInputChange}
+                placeholder="Illustration for this lesson section"
+                disabled={!lessonContent}
+              />
+            </label>
+
+            <label>
+              Image position
+              <select
+                name="imagePosition"
+                value={sectionForm.imagePosition}
+                onChange={handleSectionInputChange}
+                disabled={!lessonContent}
+              >
+                {imagePositionOptions.map((position) => (
+                  <option value={position} key={position}>
+                    {position === "after_code" ? "after code/output" : position}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+
           <button
             type="submit"
             className="button button-primary"
@@ -1234,8 +1641,7 @@ By the end of this lesson...
         <h2>Edit existing section</h2>
 
         <p className="admin-help-text">
-          Update the basic structure of an existing section. Items and tables
-          are not changed here.
+          Update an existing section, including its optional image.
         </p>
 
         {(!lessonContent || lessonContent.sections.length === 0) && (
@@ -1270,14 +1676,11 @@ By the end of this lesson...
                 onChange={handleEditSectionInputChange}
                 disabled={!lessonContent || lessonContent.sections.length === 0}
               >
-                <option value="metaphor">metaphor</option>
-                <option value="theory">theory</option>
-                <option value="code_example">code_example</option>
-                <option value="interview">interview</option>
-                <option value="trap_zone">trap_zone</option>
-                <option value="practice">practice</option>
-                <option value="cheat_sheet">cheat_sheet</option>
-                <option value="answer_key">answer_key</option>
+                {sectionTypeOptions.map((sectionType) => (
+                  <option value={sectionType} key={sectionType}>
+                    {sectionType}
+                  </option>
+                ))}
               </select>
             </label>
 
@@ -1328,6 +1731,46 @@ By the end of this lesson...
             />
           </label>
 
+          <div className="admin-form-row">
+            <label>
+              Section image URL
+              <input
+                name="imageUrl"
+                value={editSectionForm.imageUrl}
+                onChange={handleEditSectionInputChange}
+                placeholder="/lesson-images/lesson1_cups.png"
+                disabled={!lessonContent || lessonContent.sections.length === 0}
+              />
+            </label>
+
+            <label>
+              Section image alt text
+              <input
+                name="imageAlt"
+                value={editSectionForm.imageAlt}
+                onChange={handleEditSectionInputChange}
+                placeholder="Illustration for this lesson section"
+                disabled={!lessonContent || lessonContent.sections.length === 0}
+              />
+            </label>
+
+            <label>
+              Image position
+              <select
+                name="imagePosition"
+                value={editSectionForm.imagePosition}
+                onChange={handleEditSectionInputChange}
+                disabled={!lessonContent || lessonContent.sections.length === 0}
+              >
+                {imagePositionOptions.map((position) => (
+                  <option value={position} key={position}>
+                    {position === "after_code" ? "after code/output" : position}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+
           <button
             type="submit"
             className="button button-primary"
@@ -1346,11 +1789,20 @@ By the end of this lesson...
         </form>
       </section>
 
-      <section className="admin-edit-panel">
+      {lessonContent && (
+  <AdminLessonBlockEditor
+    lessonSlug={lesson.slug}
+    lessonContent={lessonContent}
+    onLessonContentChange={setLessonContent}
+  />
+)}
+
+      {showLegacyEditor && (
+<section className="admin-edit-panel">
         <h2>Add item to section</h2>
 
         <p className="admin-help-text">
-          Add a simple item to an existing section. This is useful for interview
+          Add an item to an existing section. This is useful for interview
           questions, practice tasks, traps, and answer key entries.
         </p>
 
@@ -1389,19 +1841,19 @@ By the end of this lesson...
           </label>
 
           <label>
-            Item content
+            Content
             <textarea
               name="content"
               value={itemForm.content}
               onChange={handleItemInputChange}
               rows={5}
-              placeholder="Write the main item text"
+              placeholder="Item content before code/output"
               disabled={!lessonContent || lessonContent.sections.length === 0}
             />
           </label>
 
           <label>
-            Code block
+            Code
             <textarea
               name="code"
               value={itemForm.code}
@@ -1413,16 +1865,52 @@ By the end of this lesson...
           </label>
 
           <label>
-            Output block
+            Output
             <textarea
               name="output"
               value={itemForm.output}
               onChange={handleItemInputChange}
               rows={4}
-              placeholder="Optional output block"
+              placeholder="Optional output or correct answer"
               disabled={!lessonContent || lessonContent.sections.length === 0}
             />
           </label>
+
+          <label>
+            Text after code/output
+            <textarea
+              name="afterText"
+              value={itemForm.afterText}
+              onChange={handleItemInputChange}
+              rows={4}
+              placeholder="Optional explanation shown after the code/output"
+              disabled={!lessonContent || lessonContent.sections.length === 0}
+            />
+          </label>
+
+          <div className="admin-form-row">
+            <label>
+              Item image URL
+              <input
+                name="imageUrl"
+                value={itemForm.imageUrl}
+                onChange={handleItemInputChange}
+                placeholder="/lesson-images/lesson1_receipt.png"
+                disabled={!lessonContent || lessonContent.sections.length === 0}
+              />
+            </label>
+
+            <label>
+              Item image alt text
+              <input
+                name="imageAlt"
+                value={itemForm.imageAlt}
+                onChange={handleItemInputChange}
+                placeholder="Illustration for this practice item"
+                disabled={!lessonContent || lessonContent.sections.length === 0}
+              />
+            </label>
+          </div>
 
           <button
             type="submit"
@@ -1441,17 +1929,19 @@ By the end of this lesson...
           )}
         </form>
       </section>
+      )}
 
+      {showLegacyEditor && (
       <section className="admin-edit-panel">
-        <h2>Edit or delete section item</h2>
+        <h2>Edit existing item</h2>
 
         <p className="admin-help-text">
-          Update or remove an existing section item.
+          Update an existing item, including its optional image and after-text.
         </p>
 
         {editableItems.length === 0 && (
           <p className="api-notice">
-            Create at least one section item before editing items.
+            Add at least one editable item before using this form.
           </p>
         )}
 
@@ -1463,13 +1953,12 @@ By the end of this lesson...
               onChange={handleEditItemTargetChange}
               disabled={editableItems.length === 0}
             >
-              {editableItems.map((entry, index) => (
+              {editableItems.map((entry) => (
                 <option
                   value={`${entry.sectionKey}::${entry.item.id}`}
                   key={`${entry.sectionKey}-${entry.item.id}`}
                 >
-                  {index + 1}. {entry.sectionTitle} —{" "}
-                  {entry.item.title || "Untitled item"}
+                  {entry.sectionTitle} — {entry.item.title || "Untitled item"}
                 </option>
               ))}
             </select>
@@ -1486,7 +1975,7 @@ By the end of this lesson...
           </label>
 
           <label>
-            Item content
+            Content
             <textarea
               name="content"
               value={editItemForm.content}
@@ -1497,7 +1986,7 @@ By the end of this lesson...
           </label>
 
           <label>
-            Code block
+            Code
             <textarea
               name="code"
               value={editItemForm.code}
@@ -1508,7 +1997,7 @@ By the end of this lesson...
           </label>
 
           <label>
-            Output block
+            Output
             <textarea
               name="output"
               value={editItemForm.output}
@@ -1518,51 +2007,65 @@ By the end of this lesson...
             />
           </label>
 
-          <div className="admin-form-actions">
-            <button
-              type="submit"
-              className="button button-primary"
-              disabled={editableItems.length === 0 || isUpdatingItem}
-            >
-              {isUpdatingItem ? "Saving..." : "Save item changes"}
-            </button>
+          <label>
+            Text after code/output
+            <textarea
+              name="afterText"
+              value={editItemForm.afterText}
+              onChange={handleEditItemInputChange}
+              rows={4}
+              placeholder="Optional explanation shown after the code/output"
+              disabled={editableItems.length === 0}
+            />
+          </label>
 
-            <button
-              type="button"
-              className="button button-secondary admin-danger-button"
-              disabled={
-                editableItems.length === 0 ||
-                deletingItemId === editItemForm.itemId
-              }
-              onClick={() =>
-                handleDeleteItem(editItemForm.sectionKey, editItemForm.itemId)
-              }
-            >
-              {deletingItemId === editItemForm.itemId
-                ? "Deleting..."
-                : "Delete item"}
-            </button>
+          <div className="admin-form-row">
+            <label>
+              Item image URL
+              <input
+                name="imageUrl"
+                value={editItemForm.imageUrl}
+                onChange={handleEditItemInputChange}
+                placeholder="/lesson-images/lesson1_receipt.png"
+                disabled={editableItems.length === 0}
+              />
+            </label>
+
+            <label>
+              Item image alt text
+              <input
+                name="imageAlt"
+                value={editItemForm.imageAlt}
+                onChange={handleEditItemInputChange}
+                placeholder="Illustration for this practice item"
+                disabled={editableItems.length === 0}
+              />
+            </label>
           </div>
+
+          <button
+            type="submit"
+            className="button button-primary"
+            disabled={editableItems.length === 0 || isUpdatingItem}
+          >
+            {isUpdatingItem ? "Saving..." : "Save item changes"}
+          </button>
 
           {editItemMessage && (
             <p className="admin-status-message">{editItemMessage}</p>
           )}
         </form>
       </section>
+      )}
 
+      {showLegacyEditor && (
       <section className="admin-edit-panel">
-        <h2>Add or update section table</h2>
+        <h2>Section table</h2>
 
         <p className="admin-help-text">
-          Add a simple table to an existing section. Use vertical bars to
-          separate columns.
+          Add or replace a table for a section. Headers and row cells are split
+          with the pipe character.
         </p>
-
-        {(!lessonContent || lessonContent.sections.length === 0) && (
-          <p className="api-notice">
-            Create at least one lesson section before adding a table.
-          </p>
-        )}
 
         <form className="admin-form" onSubmit={handleTableSubmit}>
           <label>
@@ -1588,7 +2091,7 @@ By the end of this lesson...
               value={tableForm.headersText}
               onChange={handleTableInputChange}
               rows={2}
-              placeholder="Concept | Meaning | Example"
+              placeholder="Concept | Meaning"
               disabled={!lessonContent || lessonContent.sections.length === 0}
             />
           </label>
@@ -1600,8 +2103,8 @@ By the end of this lesson...
               value={tableForm.rowsText}
               onChange={handleTableInputChange}
               rows={6}
-              placeholder={`Variable | A name bound to a value | name = "Python"
-Assignment | Binding a name to a value | x = 10`}
+              placeholder={`Variable | A name that refers to a value
+Assignment | Binding a name to a value`}
               disabled={!lessonContent || lessonContent.sections.length === 0}
             />
           </label>
@@ -1624,34 +2127,30 @@ Assignment | Binding a name to a value | x = 10`}
         </form>
       </section>
 
-      {lessonContent && (
-        <section className="admin-sections-preview">
-          <h2>Lesson sections</h2>
+      )}
 
-          {deleteSectionMessage && (
-            <p className="admin-status-message">{deleteSectionMessage}</p>
-          )}
+      <section className="admin-edit-panel">
+        <h2>Current lesson structure</h2>
 
+        {deleteSectionMessage && (
+          <p className="admin-status-message">{deleteSectionMessage}</p>
+        )}
+
+        {lessonContent && lessonContent.sections.length > 0 ? (
           <div className="admin-section-list">
-            {lessonContent.sections.length === 0 && (
-              <article className="admin-section-card">
-                <h3>No sections yet</h3>
-                <p>Add the first section above to start building this lesson.</p>
-              </article>
-            )}
-
             {lessonContent.sections.map((section, index) => (
               <article className="admin-section-card" key={section.id}>
-                <div>
-                  <p className="eyebrow">Section {index + 1}</p>
-                  <h3>{section.title}</h3>
-                  <p>
-                    Type: <strong>{section.type}</strong>
-                  </p>
+                <div className="admin-section-card-header">
+                  <div>
+                    <p className="eyebrow">
+                      {index + 1}. {section.type}
+                    </p>
+                    <h3>{section.title}</h3>
+                  </div>
 
                   <button
                     type="button"
-                    className="button button-secondary admin-danger-button"
+                    className="button button-secondary"
                     disabled={deletingSectionKey === section.id}
                     onClick={() => handleDeleteSection(section.id)}
                   >
@@ -1662,35 +2161,44 @@ Assignment | Binding a name to a value | x = 10`}
                 </div>
 
                 <ul>
-                  <li>Paragraphs: {section.paragraphs?.length ?? 0}</li>
-                  <li>Items: {section.items?.length ?? 0}</li>
-                  <li>Code block: {section.code ? "yes" : "no"}</li>
-                  <li>Output block: {section.output ? "yes" : "no"}</li>
-                  <li>
-                    Table:{" "}
-                    {section.table
-                      ? `${section.table.headers.length} columns, ${section.table.rows.length} rows`
-                      : "no"}
-                  </li>
-
-                  {section.items && section.items.length > 0 && (
-                    <li>
-                      Item titles:
-                      <ul>
-                        {section.items.map((item, itemIndex) => (
-                          <li key={`${section.id}-item-${itemIndex}`}>
-                            {item.title || "Untitled item"}
-                          </li>
-                        ))}
-                      </ul>
-                    </li>
-                  )}
+                  <li>Blocks: {section.blocks?.length ?? 0}</li>
+                  <li>Section type: {section.type}</li>
+                  <li>Legacy paragraphs: {section.paragraphs?.length ?? 0}</li>
+                  <li>Legacy items: {section.items?.length ?? 0}</li>
+                  <li>Legacy table: {section.table ? "yes" : "no"}</li>
                 </ul>
+
+                {showLegacyEditor && section.items && section.items.length > 0 && (
+                  <div className="admin-item-list">
+                    <h4>Items</h4>
+
+                    {section.items.map((item) => (
+                      <div className="admin-item-row" key={item.id}>
+                        <span>
+                          {item.title || "Untitled item"}
+                          {item.afterText ? " · after text" : ""}
+                          {item.imageUrl ? " · image" : ""}
+                        </span>
+
+                        <button
+                          type="button"
+                          className="button button-secondary"
+                          disabled={!item.id || deletingItemId === item.id}
+                          onClick={() => handleDeleteItem(section.id, item.id)}
+                        >
+                          {deletingItemId === item.id ? "Deleting..." : "Delete"}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </article>
             ))}
           </div>
-        </section>
-      )}
+        ) : (
+          <p>No sections yet.</p>
+        )}
+      </section>
     </main>
   );
 }

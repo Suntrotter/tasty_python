@@ -1,0 +1,28 @@
+/* Admin editor helper styles moved out of lessons.css */
+
+.admin-block-bottom-add {
+    display: grid;
+    gap: 18px;
+    margin-top: 28px;
+    padding: 22px;
+    border: 1px dashed #d8b98f;
+    border-radius: 24px;
+    background: #fff7e8;
+}
+
+.admin-block-bottom-add .admin-help-text {
+    margin: 4px 0 0;
+}
+
+.admin-block-bottom-add .admin-form-row {
+    margin: 0;
+}
+
+.admin-block-bottom-add .admin-block-add-control {
+    display: flex;
+    align-items: flex-end;
+}
+
+.admin-block-bottom-add .admin-block-add-control .button {
+    width: 100%;
+}

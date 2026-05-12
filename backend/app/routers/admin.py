@@ -1,13 +1,16 @@
+import copy
 import re
 
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy import select
 from sqlalchemy.orm import Session, joinedload, selectinload
 
-from app.db.database import get_db
 from app.core.admin_auth import require_admin_token
+from app.db.database import get_db
 from app.models.lesson import LessonModel
 from app.models.lesson_content import (
+    LessonBlockModel,
     LessonContentModel,
     LessonItemModel,
     LessonSectionModel,
@@ -15,6 +18,9 @@ from app.models.lesson_content import (
 )
 from app.models.track import TrackModel
 from app.schemas.admin import (
+    LessonBlockCreate,
+    LessonBlockReorder,
+    LessonBlockUpdate,
     LessonContentBasicsUpdate,
     LessonItemCreate,
     LessonItemUpdate,
@@ -35,6 +41,7 @@ router = APIRouter(
     tags=["admin"],
     dependencies=[Depends(require_admin_token)],
 )
+
 
 def lesson_to_response(lesson: LessonModel) -> dict:
     return {
@@ -60,12 +67,28 @@ def track_to_response(track: TrackModel) -> dict:
     }
 
 
+def block_to_response(block: LessonBlockModel) -> dict:
+    return {
+        "id": block.id,
+        "key": block.block_key,
+        "type": block.type,
+        "order": block.order,
+        "data": block.data or {},
+    }
+
+
 def lesson_content_to_response(lesson_content: LessonContentModel) -> dict:
     return {
         "slug": lesson_content.lesson.slug,
         "title": lesson_content.title,
         "goal": lesson_content.goal,
         "image_prompts": lesson_content.image_prompts,
+        "hero_visual": lesson_content.hero_visual,
+        "completion_image_url": lesson_content.completion_image_url,
+        "completion_image_alt": lesson_content.completion_image_alt,
+        "completion_kicker": lesson_content.completion_kicker,
+        "completion_title": lesson_content.completion_title,
+        "completion_body": lesson_content.completion_body,
         "sections": [
             {
                 "id": section.section_key,
@@ -74,6 +97,9 @@ def lesson_content_to_response(lesson_content: LessonContentModel) -> dict:
                 "paragraphs": section.paragraphs,
                 "code": section.code,
                 "output": section.output,
+                "image_url": section.image_url,
+                "image_alt": section.image_alt,
+                "image_position": section.image_position,
                 "items": [
                     {
                         "id": item.id,
@@ -81,6 +107,9 @@ def lesson_content_to_response(lesson_content: LessonContentModel) -> dict:
                         "content": item.content,
                         "code": item.code,
                         "output": item.output,
+                        "after_text": item.after_text,
+                        "image_url": item.image_url,
+                        "image_alt": item.image_alt,
                     }
                     for item in section.items
                 ]
@@ -91,6 +120,12 @@ def lesson_content_to_response(lesson_content: LessonContentModel) -> dict:
                     "rows": section.table.rows,
                 }
                 if section.table
+                else None,
+                "blocks": [
+                    block_to_response(block)
+                    for block in section.blocks
+                ]
+                if section.blocks
                 else None,
             }
             for section in lesson_content.sections
@@ -112,6 +147,9 @@ def load_lesson_content_by_slug(
             ),
             selectinload(LessonContentModel.sections).selectinload(
                 LessonSectionModel.table
+            ),
+            selectinload(LessonContentModel.sections).selectinload(
+                LessonSectionModel.blocks
             ),
         )
         .where(LessonModel.slug == lesson_slug)
@@ -135,6 +173,41 @@ def get_section_or_404(
         raise HTTPException(status_code=404, detail="Section not found")
 
     return section
+
+
+def get_block_or_404(
+    section: LessonSectionModel,
+    block_id: int,
+) -> LessonBlockModel:
+    block = next(
+        (
+            current_block
+            for current_block in section.blocks
+            if current_block.id == block_id
+        ),
+        None,
+    )
+
+    if not block:
+        raise HTTPException(status_code=404, detail="Block not found")
+
+    return block
+
+
+def normalize_block_order(
+    section: LessonSectionModel,
+    excluded_block_id: int | None = None,
+) -> None:
+    remaining_blocks = [
+        block
+        for block in section.blocks
+        if excluded_block_id is None or block.id != excluded_block_id
+    ]
+
+    sorted_blocks = sorted(remaining_blocks, key=lambda block: block.order)
+
+    for index, block in enumerate(sorted_blocks, start=1):
+        block.order = index
 
 
 SECTION_TYPE_BY_TITLE = {
@@ -174,18 +247,25 @@ def get_section_type(title: str) -> str:
 
     if "metaphor" in normalized_title:
         return "metaphor"
+
     if "theory" in normalized_title:
         return "theory"
+
     if "code" in normalized_title and "example" in normalized_title:
         return "code_example"
+
     if "interview" in normalized_title:
         return "interview"
+
     if "trap" in normalized_title:
         return "trap_zone"
+
     if "practice" in normalized_title:
         return "practice"
+
     if "cheat" in normalized_title:
         return "cheat_sheet"
+
     if "answer" in normalized_title and "key" in normalized_title:
         return "answer_key"
 
@@ -203,7 +283,10 @@ def parse_heading(line: str) -> tuple[int, str] | None:
 
 
 def split_table_row(line: str) -> list[str]:
-    return [strip_markdown_markup(cell) for cell in line.strip().strip("|").split("|")]
+    return [
+        strip_markdown_markup(cell)
+        for cell in line.strip().strip("|").split("|")
+    ]
 
 
 def is_table_separator(line: str) -> bool:
@@ -302,7 +385,9 @@ def extract_lesson_goal(lines: list[str]) -> str:
                     break
                 continue
 
-            if stripped_next_line.startswith("**[") or parse_heading(stripped_next_line):
+            if stripped_next_line.startswith("**[") or parse_heading(
+                stripped_next_line
+            ):
                 break
 
             goal_lines.append(strip_markdown_markup(stripped_next_line))
@@ -322,8 +407,6 @@ def should_start_new_lesson_section(
     if normalized_title in TOP_LEVEL_SECTION_TITLES:
         return True
 
-    # A random H1 is usually either the lesson title or a code comment
-    # that was copied badly. Known H1 sections are handled above.
     if level == 1:
         return False
 
@@ -333,7 +416,10 @@ def should_start_new_lesson_section(
     return level == 2
 
 
-def split_lesson_sections(lines: list[str], skipped_line_indexes: set[int]) -> list[dict]:
+def split_lesson_sections(
+    lines: list[str],
+    skipped_line_indexes: set[int],
+) -> list[dict]:
     sections: list[dict] = []
     current_section: dict | None = None
     is_inside_code_fence = False
@@ -355,9 +441,15 @@ def split_lesson_sections(lines: list[str], skipped_line_indexes: set[int]) -> l
 
             if heading:
                 level, title = heading
-                current_section_type = current_section["type"] if current_section else None
+                current_section_type = (
+                    current_section["type"] if current_section else None
+                )
 
-                if should_start_new_lesson_section(level, title, current_section_type):
+                if should_start_new_lesson_section(
+                    level,
+                    title,
+                    current_section_type,
+                ):
                     if current_section:
                         sections.append(current_section)
 
@@ -421,7 +513,9 @@ def parse_block_lines(lines: list[str]) -> dict:
             code_lines: list[str] = []
             index += 1
 
-            while index < len(lines) and not lines[index].strip().startswith("```"):
+            while index < len(lines) and not lines[index].strip().startswith(
+                "```"
+            ):
                 code_lines.append(lines[index].rstrip())
                 index += 1
 
@@ -445,7 +539,11 @@ def parse_block_lines(lines: list[str]) -> dict:
 
             continue
 
-        if line.startswith("|") and index + 1 < len(lines) and is_table_separator(lines[index + 1]):
+        if (
+            line.startswith("|")
+            and index + 1 < len(lines)
+            and is_table_separator(lines[index + 1])
+        ):
             flush_paragraph_buffer(paragraphs, paragraph_buffer)
 
             headers = split_table_row(line)
@@ -535,6 +633,9 @@ def parse_lesson_section(raw_section: dict, existing_keys: set[str]) -> dict:
                 "content": item_content or "Untitled content",
                 "code": item_block["code"],
                 "output": item_block["output"],
+                "after_text": None,
+                "image_url": None,
+                "image_alt": None,
             }
         )
 
@@ -555,6 +656,9 @@ def parse_lesson_section(raw_section: dict, existing_keys: set[str]) -> dict:
         "paragraphs": section_block["paragraphs"],
         "code": section_block["code"],
         "output": section_block["output"],
+        "image_url": None,
+        "image_alt": None,
+        "image_position": None,
         "table": section_block["table"],
         "items": item_data,
     }
@@ -665,6 +769,14 @@ def upsert_lesson_content_basics(
             title=payload.title,
             goal=payload.goal,
             image_prompts=payload.image_prompts,
+            hero_visual=jsonable_encoder(payload.hero_visual)
+            if payload.hero_visual
+            else None,
+            completion_image_url=payload.completion_image_url,
+            completion_image_alt=payload.completion_image_alt,
+            completion_kicker=payload.completion_kicker,
+            completion_title=payload.completion_title,
+            completion_body=payload.completion_body,
         )
         db.add(lesson_content)
         db.flush()
@@ -672,6 +784,14 @@ def upsert_lesson_content_basics(
     lesson_content.title = payload.title
     lesson_content.goal = payload.goal
     lesson_content.image_prompts = payload.image_prompts
+    lesson_content.hero_visual = (
+        jsonable_encoder(payload.hero_visual) if payload.hero_visual else None
+    )
+    lesson_content.completion_image_url = payload.completion_image_url
+    lesson_content.completion_image_alt = payload.completion_image_alt
+    lesson_content.completion_kicker = payload.completion_kicker
+    lesson_content.completion_title = payload.completion_title
+    lesson_content.completion_body = payload.completion_body
 
     db.commit()
 
@@ -731,7 +851,10 @@ def import_lesson_markdown(
     lesson_content.goal = parsed_lesson["goal"]
     lesson_content.image_prompts = parsed_lesson["image_prompts"]
 
-    for section_order, section_data in enumerate(parsed_lesson["sections"], start=1):
+    for section_order, section_data in enumerate(
+        parsed_lesson["sections"],
+        start=1,
+    ):
         section = LessonSectionModel(
             lesson_content_id=lesson_content.id,
             section_key=section_data["section_key"],
@@ -741,6 +864,9 @@ def import_lesson_markdown(
             paragraphs=section_data["paragraphs"],
             code=section_data["code"],
             output=section_data["output"],
+            image_url=section_data["image_url"],
+            image_alt=section_data["image_alt"],
+            image_position=section_data["image_position"],
         )
         db.add(section)
         db.flush()
@@ -753,6 +879,9 @@ def import_lesson_markdown(
                 content=item_data["content"],
                 code=item_data["code"],
                 output=item_data["output"],
+                after_text=item_data["after_text"],
+                image_url=item_data["image_url"],
+                image_alt=item_data["image_alt"],
             )
             db.add(item)
 
@@ -819,6 +948,9 @@ def create_lesson_section(
         paragraphs=payload.paragraphs,
         code=payload.code,
         output=payload.output,
+        image_url=payload.image_url,
+        image_alt=payload.image_alt,
+        image_position=payload.image_position,
     )
 
     db.add(section)
@@ -854,6 +986,9 @@ def update_lesson_section(
     section.paragraphs = payload.paragraphs
     section.code = payload.code
     section.output = payload.output
+    section.image_url = payload.image_url
+    section.image_alt = payload.image_alt
+    section.image_position = payload.image_position
 
     db.commit()
 
@@ -893,6 +1028,190 @@ def delete_lesson_section(
 
 
 @router.post(
+    "/lessons/{lesson_slug}/sections/{section_key}/blocks",
+    response_model=LessonContent,
+)
+def create_lesson_section_block(
+    lesson_slug: str,
+    section_key: str,
+    payload: LessonBlockCreate,
+    db: Session = Depends(get_db),
+):
+    lesson_content = load_lesson_content_by_slug(db, lesson_slug)
+
+    if not lesson_content:
+        raise HTTPException(status_code=404, detail="Lesson content not found")
+
+    section = get_section_or_404(lesson_content, section_key)
+
+    next_order = max((block.order for block in section.blocks), default=0) + 1
+
+    block = LessonBlockModel(
+        section_id=section.id,
+        block_key=f"{payload.type}-{next_order}",
+        type=payload.type,
+        order=next_order,
+        data=jsonable_encoder(payload.data),
+    )
+
+    db.add(block)
+    db.commit()
+
+    saved_content = load_lesson_content_by_slug(db, lesson_slug)
+
+    if not saved_content:
+        raise HTTPException(status_code=404, detail="Lesson content not found")
+
+    return lesson_content_to_response(saved_content)
+
+
+@router.put(
+    "/lessons/{lesson_slug}/sections/{section_key}/blocks/reorder",
+    response_model=LessonContent,
+)
+def reorder_lesson_section_blocks(
+    lesson_slug: str,
+    section_key: str,
+    payload: LessonBlockReorder,
+    db: Session = Depends(get_db),
+):
+    lesson_content = load_lesson_content_by_slug(db, lesson_slug)
+
+    if not lesson_content:
+        raise HTTPException(status_code=404, detail="Lesson content not found")
+
+    section = get_section_or_404(lesson_content, section_key)
+
+    existing_blocks_by_id = {block.id: block for block in section.blocks}
+    existing_block_ids = set(existing_blocks_by_id.keys())
+    incoming_block_ids = set(payload.block_ids)
+
+    if incoming_block_ids != existing_block_ids:
+        raise HTTPException(
+            status_code=400,
+            detail="Reorder payload must include every block in this section",
+        )
+
+    for index, block_id in enumerate(payload.block_ids, start=1):
+        existing_blocks_by_id[block_id].order = index
+
+    db.commit()
+
+    saved_content = load_lesson_content_by_slug(db, lesson_slug)
+
+    if not saved_content:
+        raise HTTPException(status_code=404, detail="Lesson content not found")
+
+    return lesson_content_to_response(saved_content)
+
+
+@router.put(
+    "/lessons/{lesson_slug}/sections/{section_key}/blocks/{block_id}",
+    response_model=LessonContent,
+)
+def update_lesson_section_block(
+    lesson_slug: str,
+    section_key: str,
+    block_id: int,
+    payload: LessonBlockUpdate,
+    db: Session = Depends(get_db),
+):
+    lesson_content = load_lesson_content_by_slug(db, lesson_slug)
+
+    if not lesson_content:
+        raise HTTPException(status_code=404, detail="Lesson content not found")
+
+    section = get_section_or_404(lesson_content, section_key)
+    block = get_block_or_404(section, block_id)
+
+    block.type = payload.type
+    block.data = jsonable_encoder(payload.data)
+
+    db.commit()
+
+    saved_content = load_lesson_content_by_slug(db, lesson_slug)
+
+    if not saved_content:
+        raise HTTPException(status_code=404, detail="Lesson content not found")
+
+    return lesson_content_to_response(saved_content)
+
+
+@router.delete(
+    "/lessons/{lesson_slug}/sections/{section_key}/blocks/{block_id}",
+    response_model=LessonContent,
+)
+def delete_lesson_section_block(
+    lesson_slug: str,
+    section_key: str,
+    block_id: int,
+    db: Session = Depends(get_db),
+):
+    lesson_content = load_lesson_content_by_slug(db, lesson_slug)
+
+    if not lesson_content:
+        raise HTTPException(status_code=404, detail="Lesson content not found")
+
+    section = get_section_or_404(lesson_content, section_key)
+    block = get_block_or_404(section, block_id)
+
+    db.delete(block)
+    db.flush()
+
+    normalize_block_order(section, excluded_block_id=block_id)
+
+    db.commit()
+
+    saved_content = load_lesson_content_by_slug(db, lesson_slug)
+
+    if not saved_content:
+        raise HTTPException(status_code=404, detail="Lesson content not found")
+
+    return lesson_content_to_response(saved_content)
+
+
+@router.post(
+    "/lessons/{lesson_slug}/sections/{section_key}/blocks/{block_id}/duplicate",
+    response_model=LessonContent,
+)
+def duplicate_lesson_section_block(
+    lesson_slug: str,
+    section_key: str,
+    block_id: int,
+    db: Session = Depends(get_db),
+):
+    lesson_content = load_lesson_content_by_slug(db, lesson_slug)
+
+    if not lesson_content:
+        raise HTTPException(status_code=404, detail="Lesson content not found")
+
+    section = get_section_or_404(lesson_content, section_key)
+    source_block = get_block_or_404(section, block_id)
+
+    for block in section.blocks:
+        if block.order > source_block.order:
+            block.order += 1
+
+    duplicated_block = LessonBlockModel(
+        section_id=section.id,
+        block_key=f"{source_block.type}-{source_block.order + 1}-copy",
+        type=source_block.type,
+        order=source_block.order + 1,
+        data=copy.deepcopy(source_block.data or {}),
+    )
+
+    db.add(duplicated_block)
+    db.commit()
+
+    saved_content = load_lesson_content_by_slug(db, lesson_slug)
+
+    if not saved_content:
+        raise HTTPException(status_code=404, detail="Lesson content not found")
+
+    return lesson_content_to_response(saved_content)
+
+
+@router.post(
     "/lessons/{lesson_slug}/sections/{section_key}/items",
     response_model=LessonContent,
 )
@@ -918,6 +1237,9 @@ def create_lesson_section_item(
         content=payload.content,
         code=payload.code,
         output=payload.output,
+        after_text=payload.after_text,
+        image_url=payload.image_url,
+        image_alt=payload.image_alt,
     )
 
     db.add(item)
@@ -950,7 +1272,11 @@ def update_lesson_section_item(
     section = get_section_or_404(lesson_content, section_key)
 
     item = next(
-        (current_item for current_item in section.items if current_item.id == item_id),
+        (
+            current_item
+            for current_item in section.items
+            if current_item.id == item_id
+        ),
         None,
     )
 
@@ -961,6 +1287,9 @@ def update_lesson_section_item(
     item.content = payload.content
     item.code = payload.code
     item.output = payload.output
+    item.after_text = payload.after_text
+    item.image_url = payload.image_url
+    item.image_alt = payload.image_alt
 
     db.commit()
 
@@ -990,7 +1319,11 @@ def delete_lesson_section_item(
     section = get_section_or_404(lesson_content, section_key)
 
     item = next(
-        (current_item for current_item in section.items if current_item.id == item_id),
+        (
+            current_item
+            for current_item in section.items
+            if current_item.id == item_id
+        ),
         None,
     )
 

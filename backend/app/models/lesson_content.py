@@ -17,6 +17,30 @@ class LessonContentModel(Base):
     title: Mapped[str] = mapped_column(String(255))
     goal: Mapped[str] = mapped_column(Text)
     image_prompts: Mapped[list[str] | None] = mapped_column(JSON, nullable=True)
+    hero_visual: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+
+    completion_image_url: Mapped[str | None] = mapped_column(
+        String(500),
+        nullable=True,
+    )
+
+    completion_image_alt: Mapped[str | None] = mapped_column(
+        String(500),
+        nullable=True,
+    )
+    completion_kicker: Mapped[str | None] = mapped_column(
+        String(255),
+        nullable=True,
+    )
+    completion_title: Mapped[str | None] = mapped_column(
+        String(500),
+        nullable=True,
+    )
+    completion_body: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+    
 
     lesson = relationship("LessonModel", back_populates="content")
 
@@ -45,6 +69,13 @@ class LessonSectionModel(Base):
     code: Mapped[str | None] = mapped_column(Text, nullable=True)
     output: Mapped[str | None] = mapped_column(Text, nullable=True)
 
+    image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    image_alt: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    image_position: Mapped[str | None] = mapped_column(
+        String(50),
+        nullable=True,
+    )
+
     lesson_content = relationship("LessonContentModel", back_populates="sections")
 
     items = relationship(
@@ -59,6 +90,13 @@ class LessonSectionModel(Base):
         back_populates="section",
         cascade="all, delete-orphan",
         uselist=False,
+    )
+
+    blocks = relationship(
+        "LessonBlockModel",
+        back_populates="section",
+        cascade="all, delete-orphan",
+        order_by="LessonBlockModel.order",
     )
 
 
@@ -76,6 +114,10 @@ class LessonItemModel(Base):
     content: Mapped[str] = mapped_column(Text)
     code: Mapped[str | None] = mapped_column(Text, nullable=True)
     output: Mapped[str | None] = mapped_column(Text, nullable=True)
+    after_text: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    image_alt: Mapped[str | None] = mapped_column(String(500), nullable=True)
 
     section = relationship("LessonSectionModel", back_populates="items")
 
@@ -94,3 +136,19 @@ class LessonTableModel(Base):
     rows: Mapped[list[list[str]]] = mapped_column(JSON)
 
     section = relationship("LessonSectionModel", back_populates="table")
+
+class LessonBlockModel(Base):
+    __tablename__ = "lesson_blocks"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    section_id: Mapped[int] = mapped_column(
+        ForeignKey("lesson_sections.id"),
+        index=True,
+    )
+
+    block_key: Mapped[str] = mapped_column(String(120))
+    type: Mapped[str] = mapped_column(String(50))
+    order: Mapped[int] = mapped_column(Integer)
+    data: Mapped[dict] = mapped_column(JSON, default=dict)
+
+    section = relationship("LessonSectionModel", back_populates="blocks")

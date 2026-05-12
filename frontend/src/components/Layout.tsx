@@ -1,43 +1,173 @@
-import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {
+  Link,
+  NavLink,
+  Outlet,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { isAdminLoggedIn, logoutAdmin } from "../features/admin/adminAuth";
+import { useAuth } from "../features/auth/AuthContext";
+import SiteFooter from "./SiteFooter";
 
 function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
 
+const {
+  currentUser,
+  backendUser,
+  isAuthLoading,
+  isBackendUserLoading,
+  isAuthenticated,
+  logout,
+} = useAuth();
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const isAdminArea =
     location.pathname === "/admin" || location.pathname.startsWith("/admin/");
 
+  const isLessonPage = location.pathname.startsWith("/lessons/");
+
   const showAdminBar = isAdminArea && isAdminLoggedIn();
 
-  function handleLogout() {
+  const showHeaderCta = !isLessonPage && !isAdminArea && !isAuthenticated;
+
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
+
+  function handleAdminLogout() {
     logoutAdmin();
     navigate("/", { replace: true });
+  }
+
+  async function handleUserLogout() {
+    await logout();
+    setIsMenuOpen(false);
+    navigate("/", { replace: true });
+  }
+
+  function toggleMenu() {
+    setIsMenuOpen((currentValue) => !currentValue);
+  }
+
+  function closeMenu() {
+    setIsMenuOpen(false);
   }
 
   return (
     <div className="app">
       <header className="site-header">
-        <Link to="/" className="logo">
-          <img
-            src="/Logo.png"
-            alt="Tasty Python logo"
-            className="logo-image"
-          />
-          <span>Tasty Python</span>
-        </Link>
+        <div
+          className={`site-header__inner ${
+            isMenuOpen ? "site-header__inner--menu-open" : ""
+          }`}
+        >
+          <Link to="/" className="logo" onClick={closeMenu}>
+            <img
+              src="/Logo.png"
+              alt="Tasty Python logo"
+              className="logo-image"
+            />
 
-        <nav className="site-nav">
-          <NavLink to="/" end>
-            Home
-          </NavLink>
+            <span className="logo-wordmark">
+              <span className="logo-wordmark__tasty">Tasty</span>
+              <span className="logo-wordmark__python">Python</span>
+            </span>
+          </Link>
 
-          <NavLink to="/tracks">Tracks</NavLink>
+          <button
+            type="button"
+            className="site-menu-toggle"
+            aria-label={
+              isMenuOpen ? "Close navigation menu" : "Open navigation menu"
+            }
+            aria-expanded={isMenuOpen}
+            aria-controls="site-navigation"
+            onClick={toggleMenu}
+          >
+            <img
+              src="/burger-menu.png"
+              alt=""
+              aria-hidden="true"
+              className="site-menu-toggle__icon"
+            />
+          </button>
 
-          <NavLink to="/dashboard">Progress</NavLink>
+          <nav
+            id="site-navigation"
+            className="site-nav"
+            aria-label="Main navigation"
+          >
+            <NavLink to="/" end onClick={closeMenu}>
+              Home
+            </NavLink>
 
-          <NavLink to="/interview-mode">Interview Mode</NavLink>
-        </nav>
+            <NavLink to="/tracks" onClick={closeMenu}>
+              Tracks
+            </NavLink>
+
+            <NavLink to="/dashboard" onClick={closeMenu}>
+              Progress
+            </NavLink>
+
+            <NavLink to="/interview-mode" onClick={closeMenu}>
+              Interview Mode
+            </NavLink>
+          </nav>
+
+          <div className="header-actions">
+            {showHeaderCta && (
+              <Link to="/tracks" className="header-cta" onClick={closeMenu}>
+                Start cooking
+              </Link>
+            )}
+
+            {isAuthLoading ? (
+              <span className="nav-auth-label">Checking user...</span>
+            ) : isAuthenticated ? (
+              <div className="nav-auth">
+                <span className="nav-auth-label">
+                  {isBackendUserLoading
+                    ? "Syncing..."
+                    : backendUser?.display_name ||
+                      backendUser?.email ||
+                      currentUser?.displayName ||
+                      currentUser?.email ||
+                      "Learner"}
+                </span>
+
+                <button
+                  type="button"
+                  className="button button-secondary nav-auth-button"
+                  onClick={handleUserLogout}
+                >
+                  Log out
+                </button>
+              </div>
+            ) : (
+              <div className="nav-auth">
+                <Link
+                  to="/login"
+                  className="button button-secondary nav-auth-button"
+                  onClick={closeMenu}
+                >
+                  Sign in
+                </Link>
+
+                <Link
+                  to="/register"
+                  className="button button-primary nav-auth-button"
+                  onClick={closeMenu}
+                >
+                  Create account
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
       </header>
 
       {showAdminBar && (
@@ -47,13 +177,14 @@ function Layout() {
             <span>Managing Tasty Python content</span>
           </div>
 
-          <button type="button" onClick={handleLogout}>
+          <button type="button" onClick={handleAdminLogout}>
             Log out
           </button>
         </div>
       )}
 
       <Outlet />
+      <SiteFooter />
     </div>
   );
 }

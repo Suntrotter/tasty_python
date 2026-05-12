@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import get_allowed_origins
 from app.routers import admin, lessons, progress, tracks
+from app.routers import me
 
 app = FastAPI(
     title="Tasty Python API",
@@ -24,6 +25,7 @@ app.include_router(tracks.router)
 app.include_router(lessons.router)
 app.include_router(progress.router)
 app.include_router(admin.router)
+app.include_router(me.router)
 
 
 @app.get("/")

@@ -284,3 +284,194 @@
     border-radius: 8px;
     background: #fff2d4;
 }
+
+.admin-item-list {
+    grid-column: 1 / -1;
+    margin-top: 24px;
+    display: grid;
+    gap: 12px;
+}
+
+.admin-item-list h4 {
+    margin: 0 0 6px;
+}
+
+.admin-item-row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 14px;
+    border: 1px solid #f1c982;
+    border-radius: 16px;
+    background: #fffaf1;
+}
+
+.admin-item-row span {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.admin-item-row .button {
+    flex: 0 0 auto;
+    min-width: 92px;
+    padding: 8px 14px;
+    font-size: 13px;
+}
+
+@media (max-width: 640px) {
+    .admin-item-row {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .admin-item-row .button {
+        width: 100%;
+    }
+}
+
+.admin-completion-editor {
+    display: grid;
+    gap: 18px;
+    margin-top: 24px;
+    padding: 22px;
+    border: 1px solid #f1c982;
+    border-radius: 22px;
+    background: #fffaf1;
+}
+
+.admin-completion-editor h3 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.admin-form-row-two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.admin-completion-editor label {
+    min-width: 0;
+}
+
+.admin-completion-editor input,
+.admin-completion-editor textarea {
+    width: 100%;
+}
+
+.admin-completion-editor textarea {
+    min-height: 160px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+@media (max-width: 760px) {
+    .admin-form-row-two {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-completion-editor {
+        padding: 18px;
+    }
+}
+
+.admin-block-editor {
+    border-color: #c7d2fe;
+    background:
+        radial-gradient(circle at top right, rgba(199, 210, 254, 0.4), transparent 34%),
+        #ffffff;
+}
+
+.admin-block-editor-toolbar {
+    margin-bottom: 24px;
+}
+
+.admin-block-add-control {
+    display: flex;
+    align-items: flex-end;
+}
+
+.admin-block-add-control .button {
+    width: 100%;
+}
+
+.admin-block-list {
+    display: grid;
+    gap: 22px;
+    margin-top: 24px;
+}
+
+.admin-block-card {
+    padding: 20px;
+    border: 1px solid #e2d4bd;
+    border-radius: 24px;
+    background: #fffaf1;
+    box-shadow: 0 14px 38px rgba(120, 72, 24, 0.08);
+}
+
+.admin-block-card-dragging {
+    box-shadow: 0 24px 70px rgba(79, 70, 229, 0.22);
+}
+
+.admin-block-card-header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.admin-block-card-header h4 {
+    margin: 0;
+    font-size: 22px;
+    text-transform: capitalize;
+}
+
+.admin-block-drag-handle {
+    width: 42px;
+    height: 42px;
+    border: 1px solid #d9c7ad;
+    border-radius: 14px;
+    background: #ffffff;
+    color: #7c4a1d;
+    font-size: 22px;
+    font-weight: 900;
+    cursor: grab;
+}
+
+.admin-block-drag-handle:active {
+    cursor: grabbing;
+}
+
+.admin-block-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.admin-block-card textarea {
+    font-family: inherit;
+}
+
+.admin-block-card textarea[name="code"],
+.admin-block-card textarea[name="starterCode"] {
+    font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+@media (max-width: 760px) {
+    .admin-block-card-header {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-block-actions {
+        justify-content: stretch;
+    }
+
+    .admin-block-actions .button {
+        width: 100%;
+    }
+}

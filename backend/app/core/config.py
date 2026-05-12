@@ -19,7 +19,14 @@ def get_allowed_origins() -> list[str]:
 
 
 def get_database_url() -> str:
-    return os.getenv("DATABASE_URL", "sqlite:///./tasty_python.db")
+    database_url = os.getenv("DATABASE_URL", "sqlite:///./tasty_python.db")
+
+    # Render and some providers may expose URLs starting with postgres://.
+    # SQLAlchemy expects postgresql://.
+    if database_url.startswith("postgres://"):
+        database_url = database_url.replace("postgres://", "postgresql://", 1)
+
+    return database_url
 
 
 def get_admin_api_token() -> str:

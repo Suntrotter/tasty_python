@@ -7,6 +7,7 @@ import {
   type PracticeExerciseType,
 } from "../features/practice/practiceProgress";
 import type { LessonSection } from "../types/lesson";
+import LessonBlockRenderer from "./LessonBlockRenderer";
 
 interface LessonSectionRendererProps {
   section: LessonSection;
@@ -54,24 +55,27 @@ const sectionDecorations: Record<
   },
 };
 
-const lessonOneSectionVisuals: Record<
+const lessonOneSectionFallbackImages: Record<
   string,
   {
     src: string;
     alt: string;
+    position?: "top" | "after_code" | "bottom";
   }
 > = {
   "tasty metaphor": {
     src: "/lesson-images/lesson1_jars.png",
     alt: "Cozy kitchen shelf with jars and labels showing variables as labels.",
+    position: "top",
   },
   "main code example": {
     src: "/lesson-images/lesson1_cups.png",
     alt: "Two café cups showing reassignment as a label moving from one cup to another.",
+    position: "after_code",
   },
 };
 
-const lessonOneCodingTaskVisual = {
+const lessonOneCodingTaskFallbackImage = {
   src: "/lesson-images/lesson1_receipt.png",
   alt: "Cozy café receipt scene showing drink, cups, price per cup, and total.",
 };
@@ -103,16 +107,61 @@ function getItemTone(sectionType: string, itemTitle?: string) {
   return "default";
 }
 
-function normalizeAnswer(value?: string) {
-  return value?.trim().slice(0, 1).toUpperCase() ?? "";
+function parseCorrectAnswerKeys(value?: string) {
+  const rawValue = value?.trim().toUpperCase() ?? "";
+
+  if (!rawValue) {
+    return [];
+  }
+
+  if (/^[A-Z](\s*,\s*[A-Z])+$/.test(rawValue)) {
+    return rawValue
+      .split(",")
+      .map((key) => key.trim())
+      .filter(Boolean);
+  }
+
+  if (/^[A-Z]{2,}$/.test(rawValue)) {
+    return rawValue.split("");
+  }
+
+  if (/^[A-Z]$/.test(rawValue)) {
+    return [rawValue];
+  }
+
+  return [];
+}
+
+function normalizeAnswerList(values: string[]) {
+  return [...values].map((value) => value.toUpperCase()).sort();
+}
+
+function areAnswerListsEqual(firstList: string[], secondList: string[]) {
+  const first = normalizeAnswerList(firstList);
+  const second = normalizeAnswerList(secondList);
+
+  return (
+    first.length === second.length &&
+    first.every((value, index) => value === second[index])
+  );
+}
+
+function hasMultipleChoiceOptions(content: string) {
+  return /(^|\n)\s*[A-Z][).]\s+/.test(content);
 }
 
 function isMultipleChoiceItem(item: NonNullable<LessonSection["items"]>[number]) {
-  const correctAnswer = normalizeAnswer(item.output);
-  const hasCorrectAnswer = /^[A-Z]$/.test(correctAnswer);
-  const hasOptions = /(^|\n)\s*[A-Z][).]\s+/.test(item.content);
+  const correctAnswerKeys = parseCorrectAnswerKeys(item.output);
 
-  return hasCorrectAnswer && hasOptions;
+  return (
+    correctAnswerKeys.length === 1 && hasMultipleChoiceOptions(item.content)
+  );
+}
+
+function isMultiSelectItem(item: NonNullable<LessonSection["items"]>[number]) {
+  const correctAnswerKeys = parseCorrectAnswerKeys(item.output);
+
+  return correctAnswerKeys.length > 1 && hasMultipleChoiceOptions(item.content);
 }
 
 function parseMultipleChoiceContent(content: string) {
@@ -141,25 +190,6 @@ function parseMultipleChoiceContent(content: string) {
     question: questionLines.join("\n\n"),
     options,
   };
-}
-
-function getSectionVisual(lessonSlug: string | undefined, sectionTitle: string) {
-  if (lessonSlug !== "variables-and-assignment") {
-    return null;
-  }
-
-  return lessonOneSectionVisuals[sectionTitle.toLowerCase()] ?? null;
-}
-
-function shouldShowCodingTaskVisual(
-  lessonSlug: string | undefined,
-  itemTitle?: string
-) {
-  if (lessonSlug !== "variables-and-assignment") {
-    return false;
-  }
-
-  return (itemTitle ?? "").toLowerCase().includes("coding task");
 }
 
 function isMainCodeExampleSection(section: LessonSection) {
@@ -208,6 +238,48 @@ function savePracticeAttempt(params: {
   });
 }
 
+function getSectionImage(section: LessonSection, lessonSlug?: string) {
+  if (section.imageUrl) {
+    return {
+      src: section.imageUrl,
+      alt: section.imageAlt || section.title,
+      position: section.imagePosition ?? "top",
+    };
+  }
+
+  if (lessonSlug === "variables-and-assignment") {
+    const fallback =
+      lessonOneSectionFallbackImages[section.title.toLowerCase()];
+
+    if (fallback) {
+      return fallback;
+    }
+  }
+
+  return null;
+}
+
+function getItemImage(
+  item: NonNullable<LessonSection["items"]>[number],
+  lessonSlug?: string
+) {
+  if (item.imageUrl) {
+    return {
+      src: item.imageUrl,
+      alt: item.imageAlt || item.title || "Lesson illustration",
+    };
+  }
+
+  if (
+    lessonSlug === "variables-and-assignment" &&
+    (item.title ?? "").toLowerCase().includes("coding task")
+  ) {
+    return lessonOneCodingTaskFallbackImage;
+  }
+
+  return null;
+}
+
 interface InlineLessonImageProps {
   src: string;
   alt: string;
@@ -238,6 +310,7 @@ function InterviewAccordionItem({
   index,
 }: InterviewAccordionItemProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const itemImage = getItemImage(item);
 
   return (
     <details
@@ -259,6 +332,14 @@ function InterviewAccordionItem({
       <div className="lesson-accordion-content">
         <p className="lesson-accordion-answer-label">Suggested answer</p>
 
+        {itemImage && (
+          <InlineLessonImage
+            src={itemImage.src}
+            alt={itemImage.alt}
+            variant="coding"
+          />
+        )}
+
         {item.content
           ? renderTextBlocks(
               item.content,
@@ -278,6 +359,13 @@ function InterviewAccordionItem({
             variant="output"
           />
         )}
+
+        {item.afterText
+          ? renderTextBlocks(
+              item.afterText,
+              `${sectionId}-interview-after-text-${index}`
+            )
+          : null}
       </div>
     </details>
   );
@@ -297,9 +385,11 @@ function MultipleChoiceExercise({
   lessonSlug,
 }: MultipleChoiceExerciseProps) {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [isExplanationOpen, setIsExplanationOpen] = useState(false);
 
-  const correctAnswer = normalizeAnswer(item.output);
+  const correctAnswer = parseCorrectAnswerKeys(item.output)[0] ?? "";
   const { question, options } = parseMultipleChoiceContent(item.content);
+  const itemImage = getItemImage(item, lessonSlug);
 
   const hasAnswered = selectedAnswer !== null;
   const isCorrect = selectedAnswer === correctAnswer;
@@ -308,6 +398,7 @@ function MultipleChoiceExercise({
     const answerIsCorrect = answer === correctAnswer;
 
     setSelectedAnswer(answer);
+    setIsExplanationOpen(false);
 
     savePracticeAttempt({
       lessonSlug,
@@ -324,6 +415,14 @@ function MultipleChoiceExercise({
   return (
     <article className="lesson-practice-exercise">
       {item.title && <h3>{item.title}</h3>}
+
+      {itemImage && (
+        <InlineLessonImage
+          src={itemImage.src}
+          alt={itemImage.alt}
+          variant="coding"
+        />
+      )}
 
       {question && (
         <div className="lesson-question-box">
@@ -380,6 +479,196 @@ function MultipleChoiceExercise({
             : "Not quite. Try again before checking the next one."}
         </p>
       )}
+
+      {hasAnswered && item.afterText && (
+        <div className="lesson-explanation-control">
+          <button
+            type="button"
+            className="button button-secondary"
+            onClick={() => {
+              setIsExplanationOpen((currentValue) => !currentValue);
+            }}
+          >
+            {isExplanationOpen ? "Hide explanation" : "Explain why"}
+          </button>
+
+          {isExplanationOpen && (
+            <div className="lesson-explanation-box">
+              {renderTextBlocks(
+                item.afterText,
+                `${sectionId}-practice-after-text-${index}`
+              )}
+            </div>
+          )}
+        </div>
+      )}
+    </article>
+  );
+}
+
+interface MultiSelectExerciseProps {
+  sectionId: string;
+  item: NonNullable<LessonSection["items"]>[number];
+  index: number;
+  lessonSlug?: string;
+}
+
+function MultiSelectExercise({
+  sectionId,
+  item,
+  index,
+  lessonSlug,
+}: MultiSelectExerciseProps) {
+  const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [lastResultCorrect, setLastResultCorrect] = useState<boolean | null>(
+    null
+  );
+  const [isExplanationOpen, setIsExplanationOpen] = useState(false);
+
+  const correctAnswers = parseCorrectAnswerKeys(item.output);
+  const { question, options } = parseMultipleChoiceContent(item.content);
+  const itemImage = getItemImage(item, lessonSlug);
+
+  function handleToggleAnswer(answer: string) {
+    setSelectedAnswers((currentAnswers) => {
+      if (currentAnswers.includes(answer)) {
+        return currentAnswers.filter((currentAnswer) => currentAnswer !== answer);
+      }
+
+      return [...currentAnswers, answer];
+    });
+
+    setHasSubmitted(false);
+    setLastResultCorrect(null);
+    setIsExplanationOpen(false);
+  }
+
+  function handleSubmitAnswer() {
+    const answerIsCorrect = areAnswerListsEqual(
+      selectedAnswers,
+      correctAnswers
+    );
+
+    setHasSubmitted(true);
+    setLastResultCorrect(answerIsCorrect);
+    setIsExplanationOpen(false);
+
+    savePracticeAttempt({
+      lessonSlug,
+      sectionId,
+      item,
+      index,
+      exerciseType: "multi_select",
+      isCorrect: answerIsCorrect,
+      selectedAnswer: normalizeAnswerList(selectedAnswers).join(","),
+      correctAnswer: normalizeAnswerList(correctAnswers).join(","),
+    });
+  }
+
+  return (
+    <article className="lesson-practice-exercise">
+      {item.title && <h3>{item.title}</h3>}
+
+      {itemImage && (
+        <InlineLessonImage
+          src={itemImage.src}
+          alt={itemImage.alt}
+          variant="coding"
+        />
+      )}
+
+      {question && (
+        <div className="lesson-question-box">
+          <p className="lesson-question-label">Question</p>
+          {renderTextBlocks(question, `${sectionId}-multi-question-${index}`)}
+        </div>
+      )}
+
+      {item.code && (
+        <CodeBlock code={item.code} language="python" title="Python" />
+      )}
+
+      <div className="lesson-choice-list">
+        {options.map((option) => {
+          const isSelected = selectedAnswers.includes(option.key);
+          const isCorrectOption = correctAnswers.includes(option.key);
+
+          let optionClassName = "lesson-choice-button";
+
+          if (hasSubmitted && isSelected && isCorrectOption) {
+            optionClassName += " lesson-choice-button-correct";
+          } else if (hasSubmitted && isSelected && !isCorrectOption) {
+            optionClassName += " lesson-choice-button-wrong";
+          } else if (hasSubmitted && !isSelected && isCorrectOption) {
+            optionClassName += " lesson-choice-button-correct";
+          } else if (isSelected) {
+            optionClassName += " lesson-choice-button-selected";
+          }
+
+          return (
+            <button
+              className={optionClassName}
+              key={option.key}
+              type="button"
+              onClick={() => {
+                handleToggleAnswer(option.key);
+              }}
+            >
+              <span className="lesson-choice-key">{option.key}</span>
+              <span>{option.text}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <button
+        type="button"
+        className="button button-primary"
+        disabled={selectedAnswers.length === 0}
+        onClick={handleSubmitAnswer}
+      >
+        Check answers
+      </button>
+
+      {hasSubmitted && (
+        <p
+          className={`lesson-choice-feedback ${
+            lastResultCorrect
+              ? "lesson-choice-feedback-correct"
+              : "lesson-choice-feedback-wrong"
+          }`}
+        >
+          {lastResultCorrect
+            ? "Correct. All the right ingredients are in the bowl."
+            : `Not quite. Correct answers: ${normalizeAnswerList(
+                correctAnswers
+              ).join(", ")}.`}
+        </p>
+      )}
+
+      {hasSubmitted && item.afterText && (
+        <div className="lesson-explanation-control">
+          <button
+            type="button"
+            className="button button-secondary"
+            onClick={() => {
+              setIsExplanationOpen((currentValue) => !currentValue);
+            }}
+          >
+            {isExplanationOpen ? "Hide explanation" : "Explain why"}
+          </button>
+
+          {isExplanationOpen && (
+            <div className="lesson-explanation-box">
+              {renderTextBlocks(
+                item.afterText,
+                `${sectionId}-multi-after-text-${index}`
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </article>
   );
 }
@@ -397,10 +686,7 @@ function CodingTaskExercise({
   index,
   lessonSlug,
 }: CodingTaskExerciseProps) {
-  const showCodingTaskVisual = shouldShowCodingTaskVisual(
-    lessonSlug,
-    item.title
-  );
+  const itemImage = getItemImage(item, lessonSlug);
 
   function handleRunComplete(result: PythonRunResult) {
     savePracticeAttempt({
@@ -420,10 +706,10 @@ function CodingTaskExercise({
     <article className="lesson-practice-exercise lesson-practice-coding-task">
       {item.title && <h3>{item.title}</h3>}
 
-      {showCodingTaskVisual && (
+      {itemImage && (
         <InlineLessonImage
-          src={lessonOneCodingTaskVisual.src}
-          alt={lessonOneCodingTaskVisual.alt}
+          src={itemImage.src}
+          alt={itemImage.alt}
           variant="coding"
         />
       )}
@@ -440,6 +726,13 @@ function CodingTaskExercise({
         expectedOutput={item.output ?? ""}
         onRunComplete={handleRunComplete}
       />
+
+      {item.afterText
+        ? renderTextBlocks(
+            item.afterText,
+            `${sectionId}-coding-after-text-${index}`
+          )
+        : null}
     </article>
   );
 }
@@ -453,14 +746,20 @@ function LessonSectionRenderer({
     icon: "📄",
   };
 
-  const sectionVisual = getSectionVisual(lessonSlug, section.title);
+  const sectionImage = getSectionImage(section, lessonSlug);
+  const sectionImagePosition = sectionImage?.position ?? "top";
 
   const isInterviewSection = section.type === "interview";
   const isPracticeSection = section.type === "practice";
   const isMainCodeExample = isMainCodeExampleSection(section);
+  const hasBlocks = Boolean(section.blocks && section.blocks.length > 0);
 
   return (
-    <section className={`lesson-section lesson-section-${section.type}`}>
+    <section
+      className={`lesson-section lesson-section-${section.type}`}
+      id={`lesson-section-${section.id}`}
+      data-lesson-scroll-anchor={`section-${section.id}`}
+    >
       <div className="lesson-section-header">
         <span className="lesson-section-icon">{decoration.icon}</span>
 
@@ -470,143 +769,212 @@ function LessonSectionRenderer({
         </div>
       </div>
 
-      {sectionVisual && !isMainCodeExample && (
-        <InlineLessonImage src={sectionVisual.src} alt={sectionVisual.alt} />
+      {sectionImage && sectionImagePosition === "top" && (
+        <InlineLessonImage src={sectionImage.src} alt={sectionImage.alt} />
       )}
 
-      {isMainCodeExample && section.code && (
-        <CodeBlock code={section.code} language="python" title="Python" />
-      )}
+      {hasBlocks ? (
+        <>
+          <div className="lesson-block-list">
+            {section.blocks
+              ?.slice()
+              .sort((firstBlock, secondBlock) => firstBlock.order - secondBlock.order)
+              .map((block) => {
+                const blockAnchor = `block-${block.id ?? block.key}`;
 
-      {isMainCodeExample && section.output && (
-        <CodeBlock
-          code={section.output}
-          language="plaintext"
-          title="Output"
-          variant="output"
-        />
-      )}
+                return (
+                  <div
+                    className="lesson-block-anchor"
+                    id={`lesson-${blockAnchor}`}
+                    data-lesson-scroll-anchor={blockAnchor}
+                    key={block.id ?? block.key}
+                  >
+                    <LessonBlockRenderer block={block} />
+                  </div>
+                );
+              })}
+          </div>
 
-      {section.paragraphs?.map((paragraph, index) => (
-        <p key={`${section.id}-paragraph-${index}`}>{paragraph}</p>
-      ))}
-
-      {sectionVisual && isMainCodeExample && (
-        <InlineLessonImage src={sectionVisual.src} alt={sectionVisual.alt} />
-      )}
-
-      {!isMainCodeExample && section.code && (
-        <CodeBlock code={section.code} language="python" title="Python" />
-      )}
-
-      {!isMainCodeExample && section.output && (
-        <CodeBlock
-          code={section.output}
-          language="plaintext"
-          title="Output"
-          variant="output"
-        />
-      )}
-
-      {section.items && isInterviewSection && (
-        <div className="lesson-accordion-list">
-          {section.items.map((item, index) => (
-            <InterviewAccordionItem
-              key={`${section.id}-interview-${index}`}
-              sectionId={section.id}
-              item={item}
-              index={index}
-            />
-          ))}
-        </div>
-      )}
-
-      {section.items && isPracticeSection && (
-        <div className="lesson-practice-list">
-          {section.items.map((item, index) =>
-            isMultipleChoiceItem(item) ? (
-              <MultipleChoiceExercise
-                key={`${section.id}-practice-${index}`}
-                sectionId={section.id}
-                item={item}
-                index={index}
-                lessonSlug={lessonSlug}
-              />
-            ) : (
-              <CodingTaskExercise
-                key={`${section.id}-coding-${index}`}
-                sectionId={section.id}
-                item={item}
-                index={index}
-                lessonSlug={lessonSlug}
-              />
-            )
+          {sectionImage && sectionImagePosition === "bottom" && (
+            <InlineLessonImage src={sectionImage.src} alt={sectionImage.alt} />
           )}
-        </div>
-      )}
+        </>
+      ) : (
+        <>
+          {isMainCodeExample && section.code && (
+            <CodeBlock code={section.code} language="python" title="Python" />
+          )}
 
-      {section.items && !isInterviewSection && !isPracticeSection && (
-        <div className="lesson-items">
-          {section.items.map((item, index) => {
-            const tone = getItemTone(section.type, item.title);
+          {isMainCodeExample && section.output && (
+            <CodeBlock
+              code={section.output}
+              language="plaintext"
+              title="Output"
+              variant="output"
+            />
+          )}
 
-            return (
-              <article
-                className={`lesson-item lesson-item-${tone}`}
-                key={`${section.id}-${index}`}
-              >
-                {item.title && <h3>{item.title}</h3>}
+          {sectionImage && sectionImagePosition === "after_code" && (
+            <InlineLessonImage src={sectionImage.src} alt={sectionImage.alt} />
+          )}
 
-                {item.content
-                  ? renderTextBlocks(item.content, `${section.id}-item-${index}`)
-                  : null}
+          {section.paragraphs?.map((paragraph, index) => (
+            <p key={`${section.id}-paragraph-${index}`}>{paragraph}</p>
+          ))}
 
-                {item.code && (
-                  <CodeBlock
-                    code={item.code}
-                    language="python"
-                    title="Python"
-                  />
-                )}
+          {!isMainCodeExample && section.code && (
+            <CodeBlock code={section.code} language="python" title="Python" />
+          )}
 
-                {item.output && (
-                  <CodeBlock
-                    code={item.output}
-                    language="plaintext"
-                    title="Output"
-                    variant="output"
-                  />
-                )}
-              </article>
-            );
-          })}
-        </div>
-      )}
+          {!isMainCodeExample && section.output && (
+            <CodeBlock
+              code={section.output}
+              language="plaintext"
+              title="Output"
+              variant="output"
+            />
+          )}
 
-      {section.table && (
-        <div className="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                {section.table.headers.map((header) => (
-                  <th key={header}>{header}</th>
-                ))}
-              </tr>
-            </thead>
-
-            <tbody>
-              {section.table.rows.map((row, rowIndex) => (
-                <tr key={`${section.id}-row-${rowIndex}`}>
-                  {row.map((cell, cellIndex) => (
-                    <td key={`${section.id}-cell-${rowIndex}-${cellIndex}`}>
-                      {cell}
-                    </td>
-                  ))}
-                </tr>
+          {section.items && isInterviewSection && (
+            <div className="lesson-accordion-list">
+              {section.items.map((item, index) => (
+                <InterviewAccordionItem
+                  key={`${section.id}-interview-${index}`}
+                  sectionId={section.id}
+                  item={item}
+                  index={index}
+                />
               ))}
-            </tbody>
-          </table>
-        </div>
+            </div>
+          )}
+
+          {section.items && isPracticeSection && (
+            <div className="lesson-practice-list">
+              {section.items.map((item, index) => {
+                if (isMultiSelectItem(item)) {
+                  return (
+                    <MultiSelectExercise
+                      key={`${section.id}-multi-${index}`}
+                      sectionId={section.id}
+                      item={item}
+                      index={index}
+                      lessonSlug={lessonSlug}
+                    />
+                  );
+                }
+
+                if (isMultipleChoiceItem(item)) {
+                  return (
+                    <MultipleChoiceExercise
+                      key={`${section.id}-practice-${index}`}
+                      sectionId={section.id}
+                      item={item}
+                      index={index}
+                      lessonSlug={lessonSlug}
+                    />
+                  );
+                }
+
+                return (
+                  <CodingTaskExercise
+                    key={`${section.id}-coding-${index}`}
+                    sectionId={section.id}
+                    item={item}
+                    index={index}
+                    lessonSlug={lessonSlug}
+                  />
+                );
+              })}
+            </div>
+          )}
+
+          {section.items && !isInterviewSection && !isPracticeSection && (
+            <div className="lesson-items">
+              {section.items.map((item, index) => {
+                const tone = getItemTone(section.type, item.title);
+                const itemImage = getItemImage(item, lessonSlug);
+
+                return (
+                  <article
+                    className={`lesson-item lesson-item-${tone}`}
+                    key={`${section.id}-${index}`}
+                  >
+                    {item.title && <h3>{item.title}</h3>}
+
+                    {itemImage && (
+                      <InlineLessonImage
+                        src={itemImage.src}
+                        alt={itemImage.alt}
+                        variant="coding"
+                      />
+                    )}
+
+                    {item.content
+                      ? renderTextBlocks(
+                          item.content,
+                          `${section.id}-item-${index}`
+                        )
+                      : null}
+
+                    {item.code && (
+                      <CodeBlock
+                        code={item.code}
+                        language="python"
+                        title="Python"
+                      />
+                    )}
+
+                    {item.output && (
+                      <CodeBlock
+                        code={item.output}
+                        language="plaintext"
+                        title="Output"
+                        variant="output"
+                      />
+                    )}
+
+                    {item.afterText
+                      ? renderTextBlocks(
+                          item.afterText,
+                          `${section.id}-after-text-${index}`
+                        )
+                      : null}
+                  </article>
+                );
+              })}
+            </div>
+          )}
+
+          {section.table && (
+            <div className="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    {section.table.headers.map((header) => (
+                      <th key={header}>{header}</th>
+                    ))}
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {section.table.rows.map((row, rowIndex) => (
+                    <tr key={`${section.id}-row-${rowIndex}`}>
+                      {row.map((cell, cellIndex) => (
+                        <td key={`${section.id}-cell-${rowIndex}-${cellIndex}`}>
+                          {cell}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {sectionImage && sectionImagePosition === "bottom" && (
+            <InlineLessonImage src={sectionImage.src} alt={sectionImage.alt} />
+          )}
+        </>
       )}
     </section>
   );

@@ -1,6 +1,8 @@
+import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { lessons } from "../data/lessons";
 import { tracks } from "../data/tracks";
+import { useAuth } from "../features/auth/AuthContext";
 import { getInterviewQuestionsToReview } from "../features/interview/interviewProgress";
 import { getAllLessonPracticeStats } from "../features/practice/practiceProgress";
 import { useLessonProgress } from "../features/progress/useLessonProgress";
@@ -8,9 +10,12 @@ import { useLessonProgress } from "../features/progress/useLessonProgress";
 const REVIEW_THRESHOLD = 70;
 
 function DashboardPage() {
+  const { currentUser, isAuthLoading } = useAuth();
+
   const {
     completedLessonSlugs,
     completedLessonsCount,
+    progressSource,
     isProgressLoading,
   } = useLessonProgress();
 
@@ -22,15 +27,21 @@ function DashboardPage() {
     completedLessonSlugs.includes(lesson.slug)
   );
 
-  const nextLesson =
-    publishedLessons.find(
-      (lesson) => !completedLessonSlugs.includes(lesson.slug)
-    ) ?? publishedLessons[0];
-
   const totalPublishedLessons = publishedLessons.length;
+
+  const allPublishedLessonsCompleted =
+    totalPublishedLessons > 0 &&
+    completedLessons.length >= totalPublishedLessons;
+
+  const nextLesson = allPublishedLessonsCompleted
+    ? undefined
+    : publishedLessons.find(
+        (lesson) => !completedLessonSlugs.includes(lesson.slug)
+      );
+
   const progressPercent =
     totalPublishedLessons > 0
-      ? Math.round((completedLessonsCount / totalPublishedLessons) * 100)
+      ? Math.round((completedLessons.length / totalPublishedLessons) * 100)
       : 0;
 
   const currentTrack = tracks.find((track) => track.slug === "python-core");
@@ -77,6 +88,8 @@ function DashboardPage() {
       new Date(firstQuestion.updatedAt).getTime()
   );
 
+  const isCheckingProgress = isAuthLoading || isProgressLoading;
+
   return (
     <main className="page progress-page">
       <section className="page-intro progress-intro">
@@ -87,6 +100,38 @@ function DashboardPage() {
           Track completed lessons, continue where you left off, and return to
           topics that need more practice.
         </p>
+
+        {!currentUser && !isAuthLoading && (
+          <div className="empty-progress-card">
+            <h3>Sign in to save your progress.</h3>
+            <p>
+              You can still explore lessons, but authenticated progress is saved
+              only after signing in.
+            </p>
+
+            <div className="hero-actions">
+              <Link to="/login" className="button button-primary">
+                Sign in
+              </Link>
+
+              <Link to="/register" className="button button-secondary">
+                Create account
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {currentUser && progressSource === "backend" && (
+          <p className="home-progress-note">
+            Progress is saved to your account.
+          </p>
+        )}
+
+        {currentUser && progressSource === "local" && (
+          <p className="api-notice">
+            Backend progress is not available right now. Showing local progress.
+          </p>
+        )}
       </section>
 
       <section className="progress-hero-card">
@@ -104,7 +149,11 @@ function DashboardPage() {
               to={`/lessons/${nextLesson.slug}`}
               className="button button-primary"
             >
-              {completedLessonsCount > 0 ? "Continue learning" : "Start lesson"}
+              {completedLessons.length > 0 ? "Continue learning" : "Start lesson"}
+            </Link>
+          ) : allPublishedLessonsCompleted ? (
+            <Link to="/tracks" className="button button-primary">
+              Review lessons
             </Link>
           ) : (
             <Link to="/tracks" className="button button-primary">
@@ -119,15 +168,15 @@ function DashboardPage() {
             style={
               {
                 "--progress": `${progressPercent}%`,
-              } as React.CSSProperties
+              } as CSSProperties
             }
           >
-            <span>{isProgressLoading ? "..." : `${progressPercent}%`}</span>
+            <span>{isCheckingProgress ? "..." : `${progressPercent}%`}</span>
           </div>
 
           <p>
-            {completedLessonsCount} of {totalPublishedLessons} available lessons
-            completed
+            {completedLessons.length} of {totalPublishedLessons} available
+            lessons completed
           </p>
         </div>
       </section>
@@ -135,7 +184,7 @@ function DashboardPage() {
       <section className="progress-grid">
         <article className="progress-card">
           <p className="progress-card-kicker">Completed</p>
-          <h2>{isProgressLoading ? "..." : completedLessonsCount}</h2>
+          <h2>{isCheckingProgress ? "..." : completedLessonsCount}</h2>
           <p>
             Lesson{completedLessonsCount === 1 ? "" : "s"} marked as completed.
           </p>
@@ -173,8 +222,14 @@ function DashboardPage() {
       <section className="progress-section">
         <div className="progress-section-header">
           <div>
-            <p className="eyebrow">Continue</p>
-            <h2>Your next lesson</h2>
+            <p className="eyebrow">
+              {allPublishedLessonsCompleted ? "Review" : "Continue"}
+            </p>
+            <h2>
+              {allPublishedLessonsCompleted
+                ? "You completed all available lessons"
+                : "Your next lesson"}
+            </h2>
           </div>
 
           <Link to="/tracks" className="progress-secondary-link">
@@ -192,6 +247,21 @@ function DashboardPage() {
 
             <span>Open lesson →</span>
           </Link>
+        ) : allPublishedLessonsCompleted ? (
+          <div className="next-lesson-card">
+            <div>
+              <p className="progress-card-kicker">Course complete</p>
+              <h3>Every published lesson is complete.</h3>
+              <p>
+                You can review previous lessons or keep practicing interview
+                explanations.
+              </p>
+            </div>
+
+            <Link to="/interview-mode" className="button button-secondary">
+              Practice interview answers
+            </Link>
+          </div>
         ) : (
           <div className="next-lesson-card">
             <div>
@@ -328,8 +398,6 @@ function DashboardPage() {
           </div>
         )}
       </section>
-
-      
     </main>
   );
 }

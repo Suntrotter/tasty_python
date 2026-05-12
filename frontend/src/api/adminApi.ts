@@ -2,8 +2,10 @@ import {
   getAdminAuthHeaders,
   logoutAdmin,
 } from "../features/admin/adminAuth";
+import type { LessonBlock, LessonBlockType } from "../types/lessonBlock";
 import type {
   LessonContent,
+  LessonImagePosition,
   LessonSection,
   LessonTable,
   LessonTextItem,
@@ -17,6 +19,7 @@ import type {
 } from "../types/curriculum";
 import { API_BASE_URL } from "./apiConfig";
 import { mapBackendLesson } from "./lessonsApi";
+import type { HeroVisual } from "../types/heroVisual";
 
 interface BackendLessonPreview {
   slug: string;
@@ -28,6 +31,14 @@ interface BackendLessonPreview {
   estimated_time: string;
   short_description: string;
   has_content?: boolean;
+}
+
+interface BackendLessonBlock {
+  id?: number | null;
+  key: string;
+  type: LessonBlockType;
+  order: number;
+  data?: Record<string, unknown> | null;
 }
 
 interface LessonMetadataPayload {
@@ -45,10 +56,21 @@ interface TrackMetadataPayload {
   lessonCount: number;
 }
 
+interface LessonBlockPayload {
+  type: LessonBlockType;
+  data: Record<string, unknown>;
+}
+
 interface LessonContentBasicsPayload {
   title: string;
   goal: string;
   imagePrompts: string[];
+  heroVisual?: HeroVisual;
+  completionImageUrl?: string;
+  completionImageAlt?: string;
+  completionKicker?: string;
+  completionTitle?: string;
+  completionBody?: string;
 }
 
 interface LessonMarkdownImportPayload {
@@ -60,6 +82,9 @@ interface LessonItemPayload {
   content: string;
   code?: string;
   output?: string;
+  afterText?: string;
+  imageUrl?: string;
+  imageAlt?: string;
 }
 
 interface LessonItemUpdatePayload {
@@ -67,6 +92,9 @@ interface LessonItemUpdatePayload {
   content: string;
   code?: string;
   output?: string;
+  afterText?: string;
+  imageUrl?: string;
+  imageAlt?: string;
 }
 
 interface LessonTablePayload {
@@ -80,6 +108,20 @@ interface LessonSectionUpdatePayload {
   paragraphs: string[];
   code?: string;
   output?: string;
+  imageUrl?: string;
+  imageAlt?: string;
+  imagePosition?: LessonImagePosition;
+}
+
+interface LessonSectionPayload {
+  type: LessonSection["type"];
+  title: string;
+  paragraphs: string[];
+  code?: string;
+  output?: string;
+  imageUrl?: string;
+  imageAlt?: string;
+  imagePosition?: LessonImagePosition;
 }
 
 interface BackendTrack {
@@ -96,6 +138,9 @@ interface BackendLessonTextItem {
   content: string;
   code?: string | null;
   output?: string | null;
+  after_text?: string | null;
+  image_url?: string | null;
+  image_alt?: string | null;
 }
 
 interface BackendLessonTable {
@@ -110,8 +155,12 @@ interface BackendLessonSection {
   paragraphs?: string[] | null;
   code?: string | null;
   output?: string | null;
+  image_url?: string | null;
+  image_alt?: string | null;
+  image_position?: LessonImagePosition | null;
   items?: BackendLessonTextItem[] | null;
   table?: BackendLessonTable | null;
+  blocks?: BackendLessonBlock[] | null;
 }
 
 interface BackendLessonContent {
@@ -119,6 +168,12 @@ interface BackendLessonContent {
   title: string;
   goal: string;
   image_prompts?: string[] | null;
+  hero_visual?: HeroVisual | null;
+  completion_image_url?: string | null;
+  completion_image_alt?: string | null;
+  completion_kicker?: string | null;
+  completion_title?: string | null;
+  completion_body?: string | null;
   sections: BackendLessonSection[];
 }
 
@@ -131,6 +186,16 @@ function buildAdminHeaders(headers?: HeadersInit) {
   });
 
   return nextHeaders;
+}
+
+function mapLessonBlock(block: BackendLessonBlock): LessonBlock {
+  return {
+    id: block.id ?? undefined,
+    key: block.key,
+    type: block.type,
+    order: block.order,
+    data: block.data ?? {},
+  };
 }
 
 function handleUnauthorizedAdminRequest() {
@@ -176,6 +241,9 @@ function mapLessonTextItem(item: BackendLessonTextItem): LessonTextItem {
     content: item.content,
     code: item.code ?? undefined,
     output: item.output ?? undefined,
+    afterText: item.after_text ?? undefined,
+    imageUrl: item.image_url ?? undefined,
+    imageAlt: item.image_alt ?? undefined,
   };
 }
 
@@ -194,8 +262,12 @@ function mapLessonSection(section: BackendLessonSection): LessonSection {
     paragraphs: section.paragraphs ?? undefined,
     code: section.code ?? undefined,
     output: section.output ?? undefined,
+    imageUrl: section.image_url ?? undefined,
+    imageAlt: section.image_alt ?? undefined,
+    imagePosition: section.image_position ?? undefined,
     items: section.items?.map(mapLessonTextItem),
     table: section.table ? mapLessonTable(section.table) : undefined,
+    blocks: section.blocks?.map(mapLessonBlock),
   };
 }
 
@@ -205,6 +277,12 @@ function mapLessonContent(content: BackendLessonContent): LessonContent {
     title: content.title,
     goal: content.goal,
     imagePrompts: content.image_prompts ?? undefined,
+    heroVisual: content.hero_visual ?? undefined,
+    completionImageUrl: content.completion_image_url ?? undefined,
+    completionImageAlt: content.completion_image_alt ?? undefined,
+    completionKicker: content.completion_kicker ?? undefined,
+    completionTitle: content.completion_title ?? undefined,
+    completionBody: content.completion_body ?? undefined,
     sections: content.sections.map(mapLessonSection),
   };
 }
@@ -284,6 +362,9 @@ export async function createLessonSectionItem(
         content: payload.content,
         code: payload.code || null,
         output: payload.output || null,
+        after_text: payload.afterText || null,
+        image_url: payload.imageUrl || null,
+        image_alt: payload.imageAlt || null,
       }),
     }
   );
@@ -317,6 +398,9 @@ export async function updateLessonSectionItem(
         content: payload.content,
         code: payload.code || null,
         output: payload.output || null,
+        after_text: payload.afterText || null,
+        image_url: payload.imageUrl || null,
+        image_alt: payload.imageAlt || null,
       }),
     }
   );
@@ -373,6 +457,9 @@ export async function updateLessonSection(
         paragraphs: payload.paragraphs,
         code: payload.code || null,
         output: payload.output || null,
+        image_url: payload.imageUrl || null,
+        image_alt: payload.imageAlt || null,
+        image_position: payload.imagePosition || null,
       }),
     }
   );
@@ -477,6 +564,12 @@ export async function updateLessonContentBasics(
         title: payload.title,
         goal: payload.goal,
         image_prompts: payload.imagePrompts,
+        hero_visual: payload.heroVisual || null,
+        completion_image_url: payload.completionImageUrl || null,
+        completion_image_alt: payload.completionImageAlt || null,
+        completion_kicker: payload.completionKicker || null,
+        completion_title: payload.completionTitle || null,
+        completion_body: payload.completionBody || null,
       }),
     }
   );
@@ -519,14 +612,6 @@ export async function updateTrackMetadata(
   return mapBackendTrack(data);
 }
 
-interface LessonSectionPayload {
-  type: LessonSection["type"];
-  title: string;
-  paragraphs: string[];
-  code?: string;
-  output?: string;
-}
-
 export async function createLessonSection(
   lessonSlug: string,
   payload: LessonSectionPayload
@@ -544,12 +629,151 @@ export async function createLessonSection(
         paragraphs: payload.paragraphs,
         code: payload.code || null,
         output: payload.output || null,
+        image_url: payload.imageUrl || null,
+        image_alt: payload.imageAlt || null,
+        image_position: payload.imagePosition || null,
       }),
     }
   );
 
   if (!response.ok) {
     throw new Error("Failed to create lesson section");
+  }
+
+  const data = (await response.json()) as BackendLessonContent;
+
+  return mapLessonContent(data);
+}
+
+export async function createLessonSectionBlock(
+  lessonSlug: string,
+  sectionKey: string,
+  payload: LessonBlockPayload
+): Promise<LessonContent> {
+  const response = await adminFetch(
+    `${API_BASE_URL}/api/admin/lessons/${lessonSlug}/sections/${encodeURIComponent(
+      sectionKey
+    )}/blocks`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        type: payload.type,
+        data: payload.data,
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to create lesson block");
+  }
+
+  const data = (await response.json()) as BackendLessonContent;
+
+  return mapLessonContent(data);
+}
+
+export async function updateLessonSectionBlock(
+  lessonSlug: string,
+  sectionKey: string,
+  blockId: number,
+  payload: LessonBlockPayload
+): Promise<LessonContent> {
+  const response = await adminFetch(
+    `${API_BASE_URL}/api/admin/lessons/${lessonSlug}/sections/${encodeURIComponent(
+      sectionKey
+    )}/blocks/${blockId}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        type: payload.type,
+        data: payload.data,
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to update lesson block");
+  }
+
+  const data = (await response.json()) as BackendLessonContent;
+
+  return mapLessonContent(data);
+}
+
+export async function deleteLessonSectionBlock(
+  lessonSlug: string,
+  sectionKey: string,
+  blockId: number
+): Promise<LessonContent> {
+  const response = await adminFetch(
+    `${API_BASE_URL}/api/admin/lessons/${lessonSlug}/sections/${encodeURIComponent(
+      sectionKey
+    )}/blocks/${blockId}`,
+    {
+      method: "DELETE",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to delete lesson block");
+  }
+
+  const data = (await response.json()) as BackendLessonContent;
+
+  return mapLessonContent(data);
+}
+
+export async function duplicateLessonSectionBlock(
+  lessonSlug: string,
+  sectionKey: string,
+  blockId: number
+): Promise<LessonContent> {
+  const response = await adminFetch(
+    `${API_BASE_URL}/api/admin/lessons/${lessonSlug}/sections/${encodeURIComponent(
+      sectionKey
+    )}/blocks/${blockId}/duplicate`,
+    {
+      method: "POST",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to duplicate lesson block");
+  }
+
+  const data = (await response.json()) as BackendLessonContent;
+
+  return mapLessonContent(data);
+}
+
+export async function reorderLessonSectionBlocks(
+  lessonSlug: string,
+  sectionKey: string,
+  blockIds: number[]
+): Promise<LessonContent> {
+  const response = await adminFetch(
+    `${API_BASE_URL}/api/admin/lessons/${lessonSlug}/sections/${encodeURIComponent(
+      sectionKey
+    )}/blocks/reorder`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        block_ids: blockIds,
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to reorder lesson blocks");
   }
 
   const data = (await response.json()) as BackendLessonContent;

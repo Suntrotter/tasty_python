@@ -5,12 +5,14 @@ from sqlalchemy.orm import Session, joinedload
 from app.core.current_user import get_current_user
 from app.db.database import get_db
 from app.models.lesson import LessonModel
+from app.models.track import TrackModel
 from app.models.progress import UserProgressModel
 from app.models.user import UserModel
 from app.schemas.progress import (
     HomeSummaryResponse,
     LessonProgressUpdate,
     ProgressResponse,
+    TracksSummaryResponse,
 )
 
 router = APIRouter(prefix="/api/progress", tags=["progress"])
@@ -25,6 +27,103 @@ def lesson_to_home_summary(lesson: LessonModel) -> dict:
         "level": lesson.difficulty,
         "duration": lesson.estimated_time,
         "summary": lesson.short_description,
+    }
+
+def get_all_tracks_with_lessons(db: Session) -> list[TrackModel]:
+    return db.scalars(
+        select(TrackModel)
+        .options(joinedload(TrackModel.lessons))
+        .order_by(TrackModel.id)
+    ).unique().all()
+
+
+def get_ready_lessons_for_track(track: TrackModel) -> list[LessonModel]:
+    return sorted(
+        [
+            lesson
+            for lesson in track.lessons
+            if lesson.status == "published"
+        ],
+        key=lambda lesson: lesson.order,
+    )
+
+
+def get_total_lessons_for_track(track: TrackModel) -> int:
+    return len(track.lessons)
+
+
+def get_next_unfinished_lesson_for_track(
+    ready_lessons: list[LessonModel],
+    completed_lesson_ids: set[int],
+) -> LessonModel | None:
+    return next(
+        (
+            lesson
+            for lesson in ready_lessons
+            if lesson.id not in completed_lesson_ids
+        ),
+        None,
+    )
+
+
+def track_to_summary_card(
+    track: TrackModel,
+    completed_lesson_ids: set[int],
+    is_current: bool = False,
+) -> dict:
+    ready_lessons = get_ready_lessons_for_track(track)
+    total_lessons_count = get_total_lessons_for_track(track)
+    ready_lessons_count = len(ready_lessons)
+
+    completed_lessons_count = len(
+        [
+            lesson
+            for lesson in ready_lessons
+            if lesson.id in completed_lesson_ids
+        ]
+    )
+
+    progress_percent = (
+        round((completed_lessons_count / ready_lessons_count) * 100)
+        if ready_lessons_count > 0
+        else 0
+    )
+
+    next_lesson = get_next_unfinished_lesson_for_track(
+        ready_lessons,
+        completed_lesson_ids,
+    )
+
+    track_is_completed = (
+        ready_lessons_count > 0
+        and completed_lessons_count >= ready_lessons_count
+    )
+
+    if track_is_completed:
+        cta_label = "Review track"
+        cta_to = f"/tracks/{track.slug}"
+    elif next_lesson:
+        cta_label = "Continue track" if completed_lessons_count > 0 else "Start track"
+        cta_to = f"/lessons/{next_lesson.slug}"
+    elif is_current:
+        cta_label = "View track"
+        cta_to = f"/tracks/{track.slug}"
+    else:
+        cta_label = "View roadmap"
+        cta_to = f"/tracks/{track.slug}"
+
+    return {
+        "id": str(track.id),
+        "slug": track.slug,
+        "title": track.title,
+        "description": track.description,
+        "status": track.status,
+        "totalLessonsCount": total_lessons_count,
+        "readyLessonsCount": ready_lessons_count,
+        "completedLessonsCount": completed_lessons_count,
+        "progressPercent": progress_percent,
+        "ctaLabel": cta_label,
+        "ctaTo": cta_to,
     }
 
 
@@ -277,4 +376,67 @@ def read_my_home_summary(
             "label": secondary_label,
             "to": secondary_to,
         },
+    }
+
+@router.get("/me/tracks-summary", response_model=TracksSummaryResponse)
+def read_my_tracks_summary(
+    db: Session = Depends(get_db),
+    current_user: UserModel = Depends(get_current_user),
+):
+    tracks = get_all_tracks_with_lessons(db)
+    progress_items = get_completed_progress_items(db, current_user)
+
+    completed_lesson_ids = {
+        progress.lesson_id for progress in progress_items
+    }
+
+    completed_tracks: list[dict] = []
+    incomplete_tracks: list[TrackModel] = []
+
+    for track in tracks:
+        ready_lessons = get_ready_lessons_for_track(track)
+        ready_lessons_count = len(ready_lessons)
+
+        completed_lessons_count = len(
+            [
+                lesson
+                for lesson in ready_lessons
+                if lesson.id in completed_lesson_ids
+            ]
+        )
+
+        track_is_completed = (
+            ready_lessons_count > 0
+            and completed_lessons_count >= ready_lessons_count
+        )
+
+        if track_is_completed:
+            completed_tracks.append(
+                track_to_summary_card(track, completed_lesson_ids)
+            )
+        else:
+            incomplete_tracks.append(track)
+
+    current_track = incomplete_tracks[0] if incomplete_tracks else None
+
+    up_next_tracks = incomplete_tracks[1:4] if current_track else []
+    more_tracks = incomplete_tracks[4:] if current_track else []
+
+    return {
+        "completedTracks": completed_tracks,
+        "currentTrack": track_to_summary_card(
+            current_track,
+            completed_lesson_ids,
+            is_current=True,
+        )
+        if current_track
+        else None,
+        "upNextTracks": [
+            track_to_summary_card(track, completed_lesson_ids)
+            for track in up_next_tracks
+        ],
+        "moreTracks": [
+            track_to_summary_card(track, completed_lesson_ids)
+            for track in more_tracks
+        ],
     }

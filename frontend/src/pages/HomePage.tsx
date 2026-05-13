@@ -1,23 +1,25 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { fetchHomeSummary, type HomeSummaryResponse } from "../api/homeSummaryApi";
+import {
+  fetchHomeSummary,
+  type HomeSummary,
+  type HomeSummaryCta,
+} from "../api/homeSummaryApi";
 import { useAuth } from "../features/auth/AuthContext";
 
-const guestHomeSummary: HomeSummaryResponse = {
-  userId: 0,
+const guestHomeSummary: HomeSummary = {
   hasProgress: false,
   completedLessonsCount: 0,
   totalLessonsCount: 0,
   allLessonsCompleted: false,
   nextLesson: {
-    id: "guest-first-lesson",
+    id: "variables-and-assignment",
     slug: "variables-and-assignment",
-    title: "Variables are labels",
+    title: "Variables and Assignment",
     lessonNumber: 1,
     level: "beginner",
-    duration: "15–20 min",
-    summary:
-      "A name can point to a value. Reassignment moves the label. Simple, visual, memorable.",
+    duration: "10–15 min",
+    summary: "Start with the idea that variables are names pointing to values.",
   },
   heroBite: {
     kicker: "Your first bite",
@@ -32,37 +34,90 @@ const guestHomeSummary: HomeSummaryResponse = {
   },
   secondaryCta: {
     label: "See how it works",
-    to: "/#how-it-works",
+    to: "#how-it-works",
   },
 };
 
-function renderCtaLink(
-  cta: HomeSummaryResponse["primaryCta"],
-  className: string
-) {
-  if (cta.to.startsWith("/#")) {
+interface HomeButtonLinkProps {
+  to: string;
+  className: string;
+  children: ReactNode;
+}
+
+function HomeButtonLink({ to, className, children }: HomeButtonLinkProps) {
+  const normalizedTo = to === "/#how-it-works" ? "#how-it-works" : to;
+
+  if (normalizedTo.startsWith("#")) {
     return (
-      <a href={cta.to.replace("/", "")} className={className}>
-        {cta.label}
+      <a href={normalizedTo} className={className}>
+        {children}
       </a>
     );
   }
 
   return (
-    <Link to={cta.to} className={className}>
-      {cta.label}
+    <Link to={normalizedTo} className={className}>
+      {children}
     </Link>
   );
 }
 
-function HomePage() {
-  const { currentUser, isAuthLoading, getIdToken } = useAuth();
+function getLearningPathCta(summary: HomeSummary): HomeSummaryCta {
+  if (summary.allLessonsCompleted) {
+    return {
+      label: "Review progress",
+      to: "/dashboard",
+    };
+  }
 
+  if (summary.nextLesson?.slug) {
+    return {
+      label: summary.hasProgress ? "Continue lesson" : "Start Python Core",
+      to: `/lessons/${summary.nextLesson.slug}`,
+    };
+  }
+
+  return {
+    label: "View tracks",
+    to: "/tracks",
+  };
+}
+
+function getLearningPathText(summary: HomeSummary) {
+  if (summary.allLessonsCompleted) {
+    return {
+      eyebrow: "Course complete",
+      title: "Review Python Core",
+      description:
+        "You have completed the available lessons. Use your dashboard to review progress or practice interview answers.",
+    };
+  }
+
+  if (summary.hasProgress && summary.nextLesson) {
+    return {
+      eyebrow: "Continue here",
+      title: "Continue Python Core",
+      description: `Your next lesson is ${summary.nextLesson.title}. Keep going while the idea is still warm.`,
+    };
+  }
+
+  return {
+    eyebrow: "Start here",
+    title: "Python Core",
+    description:
+      "Begin with variables and assignment, then move step by step through the foundations every junior developer should explain with confidence.",
+  };
+}
+
+function HomePage() {
+  const { currentUser, isAuthLoading } = useAuth();
   const [homeSummary, setHomeSummary] =
-    useState<HomeSummaryResponse>(guestHomeSummary);
+    useState<HomeSummary>(guestHomeSummary);
   const [isHomeSummaryLoading, setIsHomeSummaryLoading] = useState(false);
 
   useEffect(() => {
+    let shouldIgnore = false;
+
     async function loadHomeSummary() {
       if (isAuthLoading) {
         return;
@@ -76,38 +131,45 @@ function HomePage() {
       setIsHomeSummaryLoading(true);
 
       try {
-        const idToken = await getIdToken();
-
-        if (!idToken) {
-          throw new Error("Missing Firebase ID token");
-        }
-
+        const idToken = await currentUser.getIdToken();
         const summary = await fetchHomeSummary(idToken);
-        setHomeSummary(summary);
-      } catch {
-        setHomeSummary(guestHomeSummary);
+
+        if (!shouldIgnore) {
+          setHomeSummary(summary);
+        }
+      } catch (error) {
+        console.error("Failed to load homepage summary:", error);
+
+        if (!shouldIgnore) {
+          setHomeSummary(guestHomeSummary);
+        }
       } finally {
-        setIsHomeSummaryLoading(false);
+        if (!shouldIgnore) {
+          setIsHomeSummaryLoading(false);
+        }
       }
     }
 
     loadHomeSummary();
-  }, [currentUser, getIdToken, isAuthLoading]);
 
-  const progressLine = useMemo(() => {
-    if (!currentUser) {
-      return "Start your Python Core path and save your progress when you sign in.";
-    }
+    return () => {
+      shouldIgnore = true;
+    };
+  }, [currentUser, isAuthLoading]);
 
-    if (homeSummary.allLessonsCompleted) {
-      return "You completed every published lesson. Tiny chef hat earned.";
-    }
+  const heroLines =
+    homeSummary.heroBite.lines.length > 0
+      ? homeSummary.heroBite.lines
+      : guestHomeSummary.heroBite.lines;
 
-    return `${homeSummary.completedLessonsCount}/${homeSummary.totalLessonsCount} published lessons completed.`;
-  }, [currentUser, homeSummary]);
+  const learningPath = getLearningPathText(homeSummary);
+  const learningPathCta = getLearningPathCta(homeSummary);
 
   return (
-    <main className="page home-page">
+    <main
+      className="page home-page"
+      aria-busy={isHomeSummaryLoading ? "true" : "false"}
+    >
       <section className="hero home-hero">
         <div className="home-hero-content">
           <p className="eyebrow">Junior Python interview prep</p>
@@ -120,15 +182,20 @@ function HomePage() {
             interview-style explanations.
           </p>
 
-          {currentUser && (
-            <p className="home-progress-note">
-              {isHomeSummaryLoading ? "Checking your progress..." : progressLine}
-            </p>
-          )}
-
           <div className="hero-actions">
-            {renderCtaLink(homeSummary.primaryCta, "button button-primary")}
-            {renderCtaLink(homeSummary.secondaryCta, "button button-secondary")}
+            <HomeButtonLink
+              to={homeSummary.primaryCta.to}
+              className="button button-primary"
+            >
+              {homeSummary.primaryCta.label}
+            </HomeButtonLink>
+
+            <HomeButtonLink
+              to={homeSummary.secondaryCta.to}
+              className="button button-secondary"
+            >
+              {homeSummary.secondaryCta.label}
+            </HomeButtonLink>
           </div>
         </div>
 
@@ -143,13 +210,11 @@ function HomePage() {
             <p className="home-card-kicker">{homeSummary.heroBite.kicker}</p>
             <h2>{homeSummary.heroBite.title}</h2>
 
-            {homeSummary.heroBite.lines.length > 0 && (
-              <div className="home-code-preview">
-                {homeSummary.heroBite.lines.map((line) => (
-                  <code key={line}>{line}</code>
-                ))}
-              </div>
-            )}
+            <div className="home-code-preview">
+              {heroLines.slice(0, 3).map((line, index) => (
+                <code key={`${line}-${index}`}>{line}</code>
+              ))}
+            </div>
 
             <p>{homeSummary.heroBite.description}</p>
           </div>
@@ -207,39 +272,24 @@ function HomePage() {
 
       <section className="home-learning-path">
         <div>
-          <p className="eyebrow">
-            {homeSummary.hasProgress ? "Continue here" : "Start here"}
-          </p>
+          <p className="eyebrow">{learningPath.eyebrow}</p>
+          <h2>{learningPath.title}</h2>
 
-          <h2>Python Core</h2>
-
-          <p>
-            Begin with variables and assignment, then move step by step through
-            the foundations every junior developer should explain with
-            confidence.
-          </p>
+          <p>{learningPath.description}</p>
         </div>
 
-        <Link
-          to={
-            homeSummary.nextLesson
-              ? `/lessons/${homeSummary.nextLesson.slug}`
-              : "/dashboard"
-          }
+        <HomeButtonLink
+          to={learningPathCta.to}
           className="button button-primary"
         >
-          {homeSummary.nextLesson
-            ? homeSummary.hasProgress
-              ? "Continue Python Core"
-              : "Start Python Core"
-            : "Review Python Core"}
-        </Link>
+          {learningPathCta.label}
+        </HomeButtonLink>
       </section>
 
       <section className="home-about">
         <div>
           <p className="eyebrow">About the project</p>
-          <h2>Built for clear, cozy Python learning.</h2>
+          <h2>Built for junior Python interview prep.</h2>
 
           <p>
             Tasty Python is built for junior Python interview preparation. It
@@ -276,7 +326,9 @@ function HomePage() {
         </p>
 
         <div className="hero-actions">
-          {renderCtaLink(homeSummary.primaryCta, "button button-primary")}
+          <Link to="/tracks" className="button button-primary">
+            View tracks
+          </Link>
 
           <Link to="/dashboard" className="button button-secondary">
             See progress

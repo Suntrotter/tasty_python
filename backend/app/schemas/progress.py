@@ -41,3 +41,23 @@ class HomeSummaryResponse(BaseModel):
     heroBite: HomeSummaryHeroBite
     primaryCta: HomeSummaryCta
     secondaryCta: HomeSummaryCta
+
+class TrackSummaryCard(BaseModel):
+    id: str
+    slug: str
+    title: str
+    description: str
+    status: str
+    totalLessonsCount: int
+    readyLessonsCount: int
+    completedLessonsCount: int
+    progressPercent: int
+    ctaLabel: str
+    ctaTo: str
+
+
+class TracksSummaryResponse(BaseModel):
+    completedTracks: list[TrackSummaryCard]
+    currentTrack: TrackSummaryCard | None
+    upNextTracks: list[TrackSummaryCard]
+    moreTracks: list[TrackSummaryCard]

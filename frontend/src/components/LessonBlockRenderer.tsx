@@ -66,15 +66,45 @@ function CodeLessonBlock({ block }: LessonBlockRendererProps) {
   );
 }
 
+function getCalloutIcon(tone: string, title?: string) {
+  const normalizedTitle = title?.toLowerCase().trim();
+
+  if (normalizedTitle === "memory hook") {
+    return "💡";
+  }
+
+  if (tone === "success") {
+    return "✅";
+  }
+
+  if (tone === "warning") {
+    return "⚠️";
+  }
+
+  if (tone === "danger") {
+    return "🚫";
+  }
+
+  return "ℹ️";
+}
+
 function CalloutBlock({ block }: LessonBlockRendererProps) {
   const data = getBlockData<CalloutBlockData>(block);
   const tone = data.tone || "info";
   const codeLanguage = data.codeLanguage || "python";
   const codeTitle = data.codeTitle || codeLanguage.toUpperCase();
+  const icon = getCalloutIcon(tone, data.title);
 
   return (
     <aside className={`lesson-block lesson-callout lesson-callout-${tone}`}>
-      {data.title && <h3>{data.title}</h3>}
+      {data.title && (
+        <h3 className="lesson-callout-title">
+          <span className="lesson-callout-icon" aria-hidden="true">
+            {icon}
+          </span>
+          <span>{data.title}</span>
+        </h3>
+      )}
 
       <MarkdownContent markdown={data.markdown} />
 

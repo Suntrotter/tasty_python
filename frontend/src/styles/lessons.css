@@ -2739,3 +2739,22 @@
     border-radius: 18px;
     background: #fff7e8;
 }
+
+.lesson-callout-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.lesson-callout-icon {
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.75);
+    font-size: 15px;
+    line-height: 1;
+}

@@ -1,7 +1,5 @@
-import { useState } from "react";
-import type { FormEvent } from "react";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import { isAdminLoggedIn, loginAdmin } from "../../features/admin/adminAuth";
+import { Link, Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "../../features/auth/AuthContext";
 
 interface LocationState {
   from?: {
@@ -10,30 +8,32 @@ interface LocationState {
 }
 
 function AdminLoginPage() {
-  const navigate = useNavigate();
   const location = useLocation();
 
-  const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const {
+    currentUser,
+    backendUser,
+    isAuthLoading,
+    isBackendUserLoading,
+  } = useAuth();
 
   const locationState = location.state as LocationState | null;
   const targetPath = locationState?.from?.pathname || "/admin";
 
-  if (isAdminLoggedIn()) {
-    return <Navigate to="/admin" replace />;
+  if (isAuthLoading || isBackendUserLoading) {
+    return (
+      <main className="page admin-login-page">
+        <section className="admin-login-card">
+          <p className="eyebrow">Admin access</p>
+          <h1>Checking your kitchen pass...</h1>
+          <p>Please wait while we verify your account.</p>
+        </section>
+      </main>
+    );
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const success = loginAdmin(password);
-
-    if (!success) {
-      setErrorMessage("Wrong admin password. Try again.");
-      return;
-    }
-
-    navigate(targetPath, { replace: true });
+  if (currentUser && backendUser?.is_admin) {
+    return <Navigate to={targetPath} replace />;
   }
 
   return (
@@ -43,36 +43,40 @@ function AdminLoginPage() {
 
         <h1>Open the kitchen door.</h1>
 
-        <p>
-          This area is for managing tracks, lessons, sections, practice tasks,
-          and learning content.
-        </p>
+        {!currentUser ? (
+          <>
+            <p>
+              Sign in with an account that has admin access to manage tracks,
+              lessons, sections, practice tasks, and learning content.
+            </p>
 
-        <form onSubmit={handleSubmit} className="admin-login-form">
-          <label htmlFor="admin-password">Admin password</label>
+            <div className="completion-actions">
+              <Link to="/login" className="button button-primary">
+                Sign in
+              </Link>
 
-          <input
-            id="admin-password"
-            type="password"
-            value={password}
-            placeholder="Enter admin password"
-            onChange={(event) => {
-              setPassword(event.target.value);
-              setErrorMessage("");
-            }}
-          />
+              <Link to="/" className="button">
+                Back home
+              </Link>
+            </div>
+          </>
+        ) : (
+          <>
+            <p>
+              You are signed in, but this account does not have admin access.
+            </p>
 
-          {errorMessage && <p className="admin-login-error">{errorMessage}</p>}
+            <div className="completion-actions">
+              <Link to="/dashboard" className="button button-primary">
+                Go to dashboard
+              </Link>
 
-          <button type="submit" className="button button-primary">
-            Enter admin panel
-          </button>
-        </form>
-
-        <p className="admin-login-hint">
-          Local dev password is controlled by{" "}
-          <code>VITE_ADMIN_PASSWORD</code>.
-        </p>
+              <Link to="/" className="button">
+                Back home
+              </Link>
+            </div>
+          </>
+        )}
       </section>
     </main>
   );

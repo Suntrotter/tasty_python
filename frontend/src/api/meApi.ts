@@ -6,6 +6,7 @@ export interface BackendUserProfile {
   email: string | null;
   display_name: string | null;
   photo_url: string | null;
+  is_admin: boolean;
 }
 
 export async function fetchCurrentBackendUser(

@@ -6,7 +6,7 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy import select
 from sqlalchemy.orm import Session, joinedload, selectinload
 
-from app.core.admin_auth import require_admin_token
+from app.core.admin_auth import require_admin_user
 from app.db.database import get_db
 from app.models.lesson import LessonModel
 from app.models.lesson_content import (
@@ -39,7 +39,7 @@ from app.schemas.track import Track
 router = APIRouter(
     prefix="/api/admin",
     tags=["admin"],
-    dependencies=[Depends(require_admin_token)],
+    dependencies=[Depends(require_admin_user)],
 )
 
 

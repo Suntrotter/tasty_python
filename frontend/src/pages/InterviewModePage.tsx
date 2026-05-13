@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import CodeBlock from "../components/CodeBlock";
 import { fetchLessonContentBySlug } from "../api/lessonContentApi";

@@ -227,7 +227,7 @@ function TracksPage() {
   ).length;
 
   const hasCompletedTracks =
-    Boolean(tracksSummary) && tracksSummary.completedTracks.length > 0;
+  (tracksSummary?.completedTracks.length ?? 0) > 0;
 
   return (
     <main className="page">

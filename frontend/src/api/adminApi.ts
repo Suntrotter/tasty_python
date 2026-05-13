@@ -1,7 +1,4 @@
-import {
-  getAdminAuthHeaders,
-  logoutAdmin,
-} from "../features/admin/adminAuth";
+import { firebaseAuth } from "../firebase/firebase";
 import type { LessonBlock, LessonBlockType } from "../types/lessonBlock";
 import type {
   LessonContent,
@@ -177,13 +174,17 @@ interface BackendLessonContent {
   sections: BackendLessonSection[];
 }
 
-function buildAdminHeaders(headers?: HeadersInit) {
+async function buildAdminHeaders(headers?: HeadersInit) {
   const nextHeaders = new Headers(headers);
-  const adminHeaders = getAdminAuthHeaders();
+  const user = firebaseAuth.currentUser;
 
-  Object.entries(adminHeaders).forEach(([key, value]) => {
-    nextHeaders.set(key, value);
-  });
+  if (!user) {
+    throw new Error("Admin access requires a signed-in user.");
+  }
+
+  const idToken = await user.getIdToken(true);
+
+  nextHeaders.set("Authorization", `Bearer ${idToken}`);
 
   return nextHeaders;
 }
@@ -199,8 +200,6 @@ function mapLessonBlock(block: BackendLessonBlock): LessonBlock {
 }
 
 function handleUnauthorizedAdminRequest() {
-  logoutAdmin();
-
   const currentPath = window.location.pathname + window.location.search;
   const redirectUrl = `/admin-login?from=${encodeURIComponent(currentPath)}`;
 
@@ -213,12 +212,12 @@ async function adminFetch(
 ): Promise<Response> {
   const response = await fetch(input, {
     ...init,
-    headers: buildAdminHeaders(init.headers),
+    headers: await buildAdminHeaders(init.headers),
   });
 
-  if (response.status === 401) {
+  if (response.status === 401 || response.status === 403) {
     handleUnauthorizedAdminRequest();
-    throw new Error("Admin session expired. Please log in again.");
+    throw new Error("Admin access denied. Please sign in with an admin account.");
   }
 
   return response;

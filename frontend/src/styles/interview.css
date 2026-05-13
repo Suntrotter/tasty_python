@@ -14,7 +14,9 @@
 }
 
 .topic-button,
-.interview-toggle {
+.interview-toggle,
+.interview-small-button,
+.interview-mode-tab {
     border: 0;
     font: inherit;
     cursor: pointer;
@@ -34,18 +36,33 @@
     color: #fff8ed;
 }
 
+.interview-card-kicker {
+    margin: 0 0 8px;
+    color: #b45309;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+/* =========================
+   SUMMARY
+========================= */
+
 .interview-summary-card {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
-    margin-bottom: 28px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 18px;
 }
 
 .interview-summary-card>div {
-    padding: 24px;
+    padding: 22px;
     border-radius: 24px;
     background:
-        radial-gradient(circle at top right, rgba(221, 214, 254, 0.72), transparent 36%),
+        radial-gradient(circle at top right,
+            rgba(221, 214, 254, 0.68),
+            transparent 36%),
         #ffffff;
     border: 1px solid #ddd6fe;
     box-shadow: 0 16px 46px rgba(76, 29, 149, 0.08);
@@ -53,7 +70,7 @@
 
 .interview-summary-card h2 {
     margin: 0 0 8px;
-    font-size: 38px;
+    font-size: 36px;
     line-height: 1;
     letter-spacing: -0.05em;
 }
@@ -62,14 +79,223 @@
     margin-bottom: 0;
 }
 
-.interview-list {
+/* =========================
+   STATUS OVERVIEW
+========================= */
+
+.interview-status-overview {
+    display: grid;
+    gap: 14px;
+    margin-bottom: 26px;
+    padding: 22px;
+    border-radius: 26px;
+    background:
+        radial-gradient(circle at top right,
+            rgba(255, 226, 173, 0.6),
+            transparent 34%),
+        #ffffff;
+    border: 1px solid #f0c98e;
+    box-shadow: 0 16px 46px rgba(120, 72, 24, 0.08);
+}
+
+.interview-status-overview-copy h2 {
+    margin: 0;
+    font-size: clamp(24px, 3vw, 34px);
+    line-height: 1;
+    letter-spacing: -0.045em;
+}
+
+.interview-status-bar {
+    display: flex;
+    width: 100%;
+    height: 14px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #fff2d4;
+}
+
+.interview-status-bar span {
+    display: block;
+    min-width: 0;
+    height: 100%;
+}
+
+.interview-status-bar-known {
+    background: #22c55e;
+}
+
+.interview-status-bar-review {
+    background: #f43f5e;
+}
+
+.interview-status-bar-new {
+    background: #f2d6aa;
+}
+
+.interview-status-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 18px;
+}
+
+.interview-status-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #6e6257;
+    font-size: 13px;
+    font-weight: 850;
+}
+
+.interview-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+}
+
+.interview-dot-known {
+    background: #22c55e;
+}
+
+.interview-dot-review {
+    background: #f43f5e;
+}
+
+.interview-dot-new {
+    background: #f2d6aa;
+}
+
+/* =========================
+   MODE TABS
+========================= */
+
+.interview-mode-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 30px;
+}
+
+.interview-mode-tab {
+    display: grid;
+    gap: 8px;
+    min-height: 112px;
+    padding: 18px;
+    border-radius: 24px;
+    background: #ffffff;
+    border: 1px solid #f0c98e;
+    color: #241f1c;
+    text-align: left;
+    box-shadow: 0 14px 40px rgba(120, 72, 24, 0.07);
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        border-color 0.18s ease,
+        background 0.18s ease;
+}
+
+.interview-mode-tab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 48px rgba(120, 72, 24, 0.12);
+}
+
+.interview-mode-tab span {
+    font-size: 18px;
+    font-weight: 950;
+    letter-spacing: -0.035em;
+}
+
+.interview-mode-tab small {
+    color: #6e6257;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.45;
+}
+
+.interview-mode-tab-active {
+    background:
+        radial-gradient(circle at top right,
+            rgba(255, 226, 173, 0.75),
+            transparent 38%),
+        #241f1c;
+    border-color: #241f1c;
+    color: #fff8ed;
+}
+
+.interview-mode-tab-active small {
+    color: #ffe2ad;
+}
+
+/* =========================
+   VIEW SECTIONS
+========================= */
+
+.interview-view-section {
     display: grid;
     gap: 20px;
 }
 
+.interview-view-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.interview-view-header h2 {
+    margin: 0 0 8px;
+    font-size: clamp(30px, 4vw, 46px);
+    line-height: 0.98;
+    letter-spacing: -0.055em;
+}
+
+.interview-view-header p:last-child {
+    margin-bottom: 0;
+}
+
+.interview-small-button {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 18px;
+    border-radius: 999px;
+    background: #241f1c;
+    color: #fff8ed;
+    font-size: 14px;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.interview-small-button:hover:not(:disabled) {
+    background: #3a302a;
+}
+
+.interview-small-button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* =========================
+   QUESTION CARDS
+========================= */
+
+.interview-list {
+    display: grid;
+    gap: 18px;
+}
+
+.interview-list-compact {
+    gap: 14px;
+}
+
 .interview-card {
+    min-width: 0;
     background:
-        radial-gradient(circle at top right, rgba(221, 214, 254, 0.72), transparent 34%),
+        radial-gradient(circle at top right,
+            rgba(221, 214, 254, 0.72),
+            transparent 34%),
         #ffffff;
     border: 1px solid #ddd6fe;
     border-radius: 26px;
@@ -89,6 +315,7 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 10px;
+    min-width: 0;
 }
 
 .interview-card-meta>span:last-child {
@@ -160,19 +387,9 @@
     gap: 12px;
 }
 
-@media (max-width: 780px) {
-    .interview-summary-card {
-        grid-template-columns: 1fr;
-    }
-
-    .interview-card-header {
-        flex-direction: column;
-    }
-}
-
-.interview-summary-card {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-}
+/* =========================
+   QUESTION STATUS
+========================= */
 
 .interview-status-pill {
     display: inline-flex;
@@ -203,6 +420,10 @@
 .interview-card-review {
     border-color: #fecdd3;
 }
+
+/* =========================
+   SELF CHECK
+========================= */
 
 .interview-self-check {
     display: flex;
@@ -253,14 +474,107 @@
     color: #ffffff;
 }
 
-@media (max-width: 780px) {
-    .interview-summary-card {
-        grid-template-columns: 1fr;
-    }
+/* =========================
+   BY LESSON
+========================= */
 
-    .interview-self-check {
+.interview-lesson-groups {
+    display: grid;
+    gap: 14px;
+}
+
+.interview-lesson-group {
+    overflow: hidden;
+    border: 1px solid #f0c98e;
+    border-radius: 26px;
+    background: #fffdf8;
+    box-shadow: 0 14px 40px rgba(120, 72, 24, 0.08);
+}
+
+.interview-lesson-group summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 20px 24px;
+    cursor: pointer;
+    list-style: none;
+}
+
+.interview-lesson-group summary::-webkit-details-marker {
+    display: none;
+}
+
+.interview-lesson-group summary span {
+    display: grid;
+    gap: 4px;
+}
+
+.interview-lesson-group summary strong {
+    font-size: 22px;
+    letter-spacing: -0.035em;
+}
+
+.interview-lesson-group summary small {
+    color: #6e6257;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.interview-lesson-group summary b {
+    display: inline-flex;
+    min-height: 34px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: #241f1c;
+    color: #fff8ed;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.interview-lesson-group[open] summary {
+    border-bottom: 1px solid #f2d6aa;
+}
+
+.interview-lesson-group .interview-list {
+    padding: 20px 24px 24px;
+}
+
+/* =========================
+   SHOW MORE
+========================= */
+
+.interview-show-more {
+    display: flex;
+    justify-content: center;
+    margin-top: 6px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1000px) {
+
+    .interview-summary-card,
+    .interview-mode-tabs {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 780px) {
+
+    .interview-card-header,
+    .interview-self-check,
+    .interview-view-header {
         align-items: flex-start;
         flex-direction: column;
+    }
+
+    .interview-small-button {
+        width: 100%;
     }
 }
 
@@ -287,12 +601,18 @@
         font-size: 14px;
     }
 
-    .interview-summary-card {
+    .interview-summary-card,
+    .interview-mode-tabs {
         grid-template-columns: 1fr;
         gap: 14px;
     }
 
-    .interview-summary-card>div {
+    .interview-mode-tab {
+        min-height: auto;
+    }
+
+    .interview-summary-card>div,
+    .interview-status-overview {
         padding: 20px;
         border-radius: 22px;
     }
@@ -300,11 +620,6 @@
     .interview-card {
         padding: 20px;
         border-radius: 24px;
-    }
-
-    .interview-card-header {
-        align-items: flex-start;
-        flex-direction: column;
     }
 
     .interview-card-meta {
@@ -330,11 +645,6 @@
         border-radius: 20px;
     }
 
-    .interview-self-check {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
     .interview-self-check div {
         width: 100%;
     }
@@ -348,6 +658,16 @@
         width: 100%;
         text-align: center;
     }
+
+    .interview-lesson-group summary {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 18px 20px;
+    }
+
+    .interview-lesson-group .interview-list {
+        padding: 18px 20px 20px;
+    }
 }
 
 @media (max-width: 430px) {
@@ -357,7 +677,8 @@
     }
 
     .interview-card,
-    .interview-summary-card>div {
+    .interview-summary-card>div,
+    .interview-status-overview {
         padding-left: 18px;
         padding-right: 18px;
     }

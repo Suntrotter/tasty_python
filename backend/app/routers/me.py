@@ -15,6 +15,7 @@ def user_to_response(user: UserModel) -> dict:
         "email": user.email,
         "display_name": user.display_name,
         "photo_url": user.photo_url,
+        "is_admin": user.is_admin,
     }
 
 

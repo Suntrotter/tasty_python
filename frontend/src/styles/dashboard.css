@@ -4,26 +4,50 @@
 
 .progress-intro {
     max-width: 820px;
+    margin-bottom: 34px;
 }
+
+.progress-intro h1 {
+    max-width: 900px;
+}
+
+.progress-signin-card {
+    margin-top: 28px;
+}
+
+/* =========================
+   CURRENT PATH HERO
+========================= */
 
 .progress-hero-card {
     display: grid;
-    grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.6fr);
+    grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr);
     gap: 24px;
     align-items: stretch;
+
     margin-bottom: 24px;
     padding: 32px;
     border-radius: 30px;
+
     background:
-        radial-gradient(circle at top right, rgba(250, 204, 21, 0.26), transparent 34%),
-        radial-gradient(circle at bottom left, rgba(220, 252, 231, 0.72), transparent 38%),
+        radial-gradient(circle at top right,
+            rgba(250, 204, 21, 0.24),
+            transparent 34%),
+        radial-gradient(circle at bottom left,
+            rgba(220, 252, 231, 0.78),
+            transparent 38%),
         #ffffff;
     border: 1px solid #f0c98e;
     box-shadow: 0 24px 70px rgba(120, 72, 24, 0.12);
 }
 
+.progress-hero-copy {
+    min-width: 0;
+}
+
 .progress-hero-card h2 {
     margin: 0 0 12px;
+
     font-size: clamp(34px, 5vw, 58px);
     line-height: 0.98;
     letter-spacing: -0.06em;
@@ -31,6 +55,7 @@
 
 .progress-card-kicker {
     margin: 0 0 8px;
+
     color: #b45309;
     font-size: 12px;
     font-weight: 900;
@@ -38,86 +63,41 @@
     text-transform: uppercase;
 }
 
-.progress-ring-card {
+.progress-next-inline {
     display: grid;
-    place-items: center;
-    align-content: center;
-    gap: 14px;
-    padding: 24px;
-    border-radius: 26px;
-    background: rgba(255, 248, 237, 0.88);
-    border: 1px solid #f2d6aa;
-    text-align: center;
-}
+    gap: 4px;
 
-.progress-ring-card p {
-    margin: 0;
-    max-width: 260px;
-    font-weight: 800;
-}
+    max-width: 720px;
+    margin-top: 22px;
+    padding: 18px 20px;
+    border: 1px solid #bfdbfe;
+    border-radius: 22px;
 
-.progress-ring {
-    --progress: 0%;
-    width: 164px;
-    height: 164px;
-    display: grid;
-    place-items: center;
-    border-radius: 999px;
     background:
-        radial-gradient(circle, #ffffff 58%, transparent 60%),
-        conic-gradient(#22c55e var(--progress), #f1e2c5 0);
-    box-shadow: 0 18px 40px rgba(120, 72, 24, 0.12);
+        radial-gradient(circle at top right,
+            rgba(219, 234, 254, 0.8),
+            transparent 34%),
+        rgba(255, 255, 255, 0.78);
 }
 
-.progress-ring span {
-    font-size: 34px;
-    font-weight: 950;
-    letter-spacing: -0.05em;
+.progress-next-inline strong {
     color: #241f1c;
+    font-size: 22px;
+    line-height: 1.12;
+    letter-spacing: -0.035em;
 }
 
-.progress-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 18px;
-    margin-bottom: 34px;
+.progress-next-inline span {
+    color: #4b5563;
 }
 
-.progress-card {
-    padding: 24px;
-    border-radius: 24px;
-    background: #ffffff;
-    border: 1px solid #f0c98e;
-    box-shadow: 0 16px 46px rgba(120, 72, 24, 0.09);
-}
-
-.progress-card h2 {
-    margin: 0 0 8px;
-    font-size: 34px;
-    line-height: 1;
-    letter-spacing: -0.05em;
-}
-
-.progress-card p:last-child {
-    margin-bottom: 0;
-}
-
-.progress-section {
-    margin-top: 34px;
-}
-
-.progress-section-header {
+.progress-hero-actions {
     display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 18px;
-    margin-bottom: 16px;
-}
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
 
-.progress-section-header h2 {
-    margin: 0;
-    font-size: clamp(28px, 4vw, 42px);
-    letter-spacing: -0.05em;
+    margin-top: 22px;
 }
 
 .progress-secondary-link {
@@ -130,117 +110,119 @@
     text-decoration: underline;
 }
 
-.next-lesson-card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    padding: 24px;
-    border-radius: 24px;
-    background:
-        radial-gradient(circle at top right, rgba(219, 234, 254, 0.95), transparent 34%),
-        #ffffff;
-    border: 1px solid #bfdbfe;
-    box-shadow: 0 16px 46px rgba(30, 64, 175, 0.08);
-    color: inherit;
-    text-decoration: none;
-}
+/* =========================
+   PROGRESS RING
+========================= */
 
-.next-lesson-card h3 {
-    margin: 0 0 8px;
-    font-size: 26px;
-    letter-spacing: -0.04em;
-}
-
-.next-lesson-card p {
-    margin-bottom: 0;
-}
-
-.next-lesson-card>span {
-    flex: 0 0 auto;
-    color: #1d4ed8;
-    font-weight: 900;
-}
-
-.completed-lessons-list {
+.progress-ring-card {
     display: grid;
+    place-items: center;
+    align-content: center;
     gap: 14px;
-}
 
-.completed-lesson-card {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    background: #ffffff;
-    border: 1px solid #bbf7d0;
-    border-radius: 20px;
-    padding: 18px 20px;
-    color: inherit;
-    text-decoration: none;
-    box-shadow: 0 14px 40px rgba(120, 72, 24, 0.08);
-}
-
-.completed-lesson-card span {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    flex: 0 0 auto;
-    border-radius: 999px;
-    background: #dcfce7;
-    color: #166534;
-    font-weight: 900;
-}
-
-.completed-lesson-card strong {
-    display: block;
-    margin-bottom: 4px;
-}
-
-.completed-lesson-card p {
-    margin: 0;
-}
-
-.empty-progress-card {
     padding: 24px;
-    border-radius: 24px;
-    background: #fff7e6;
-    border: 1px dashed #f0c98e;
-}
+    border-radius: 26px;
 
-.empty-progress-card h3 {
-    margin-top: 0;
-    font-size: 24px;
-    letter-spacing: -0.03em;
-}
-
-.empty-progress-card p {
-    margin-bottom: 0;
-}
-
-.progress-storage-note {
-    margin-top: 34px;
-    color: #8a6a4b;
-    font-size: 14px;
+    background: rgba(255, 248, 237, 0.88);
+    border: 1px solid #f2d6aa;
     text-align: center;
 }
 
-@media (max-width: 900px) {
-    .progress-hero-card {
-        grid-template-columns: 1fr;
-    }
+.progress-ring-card p {
+    max-width: 260px;
+    margin: 0;
 
-    .progress-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .progress-section-header,
-    .next-lesson-card {
-        align-items: flex-start;
-        flex-direction: column;
-    }
+    font-weight: 850;
 }
+
+.progress-ring {
+    --progress: 0%;
+
+    display: grid;
+    width: 164px;
+    height: 164px;
+    place-items: center;
+
+    border-radius: 999px;
+
+    background:
+        radial-gradient(circle, #ffffff 58%, transparent 60%),
+        conic-gradient(#22c55e var(--progress), #f1e2c5 0);
+    box-shadow: 0 18px 40px rgba(120, 72, 24, 0.12);
+}
+
+.progress-ring span {
+    color: #241f1c;
+    font-size: 34px;
+    font-weight: 950;
+    letter-spacing: -0.05em;
+}
+
+/* =========================
+   COMPACT SNAPSHOT
+========================= */
+
+.progress-snapshot {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+
+    margin-bottom: 34px;
+}
+
+.progress-card {
+    min-width: 0;
+    padding: 20px;
+    border-radius: 24px;
+
+    background:
+        radial-gradient(circle at top right,
+            rgba(255, 226, 173, 0.48),
+            transparent 34%),
+        #ffffff;
+    border: 1px solid #f0c98e;
+    box-shadow: 0 16px 46px rgba(120, 72, 24, 0.08);
+}
+
+.progress-card h2 {
+    margin: 0 0 8px;
+
+    font-size: 34px;
+    line-height: 1;
+    letter-spacing: -0.05em;
+}
+
+.progress-card p:last-child {
+    margin-bottom: 0;
+}
+
+/* =========================
+   SECTIONS
+========================= */
+
+.progress-section {
+    margin-top: 34px;
+}
+
+.progress-section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 18px;
+
+    margin-bottom: 16px;
+}
+
+.progress-section-header h2 {
+    margin: 0;
+
+    font-size: clamp(28px, 4vw, 42px);
+    letter-spacing: -0.05em;
+}
+
+/* =========================
+   REVIEW TOPICS
+========================= */
 
 .review-topic-list {
     display: grid;
@@ -252,19 +234,25 @@
     align-items: center;
     justify-content: space-between;
     gap: 18px;
+
     padding: 22px;
     border-radius: 24px;
+
     background:
-        radial-gradient(circle at top right, rgba(254, 202, 202, 0.76), transparent 34%),
+        radial-gradient(circle at top right,
+            rgba(254, 202, 202, 0.76),
+            transparent 34%),
         #ffffff;
     border: 1px solid #fecdd3;
     box-shadow: 0 16px 46px rgba(159, 18, 57, 0.08);
+
     color: inherit;
     text-decoration: none;
 }
 
 .review-topic-card h3 {
     margin: 0 0 8px;
+
     font-size: 24px;
     letter-spacing: -0.04em;
 }
@@ -277,32 +265,23 @@
     display: inline-flex;
     width: 72px;
     height: 72px;
+    flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-    flex: 0 0 auto;
+
     border-radius: 999px;
+
     background: #ffe4e6;
     color: #9f1239;
+
     font-size: 22px;
     font-weight: 950;
     letter-spacing: -0.05em;
 }
 
-.empty-progress-card-success {
-    background: #ecfdf5;
-    border-color: #bbf7d0;
-}
-
-.empty-progress-card-success h3 {
-    color: #166534;
-}
-
-@media (max-width: 760px) {
-    .review-topic-card {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-}
+/* =========================
+   INTERVIEW REVIEW
+========================= */
 
 .interview-review-list {
     display: grid;
@@ -314,19 +293,25 @@
     align-items: center;
     justify-content: space-between;
     gap: 18px;
+
     padding: 22px;
     border-radius: 24px;
+
     background:
-        radial-gradient(circle at top right, rgba(221, 214, 254, 0.76), transparent 34%),
+        radial-gradient(circle at top right,
+            rgba(221, 214, 254, 0.76),
+            transparent 34%),
         #ffffff;
     border: 1px solid #ddd6fe;
     box-shadow: 0 16px 46px rgba(76, 29, 149, 0.08);
+
     color: inherit;
     text-decoration: none;
 }
 
 .interview-review-card h3 {
     margin: 0 0 8px;
+
     font-size: 24px;
     letter-spacing: -0.04em;
 }
@@ -337,11 +322,171 @@
 
 .interview-review-card>span {
     flex: 0 0 auto;
+
     color: #6d28d9;
     font-weight: 900;
 }
 
+/* =========================
+   COMPLETED LESSONS DETAILS
+========================= */
+
+.progress-details {
+    margin-top: 34px;
+    border: 1px solid #f0c98e;
+    border-radius: 28px;
+
+    background: #fffdf8;
+    box-shadow: 0 16px 46px rgba(120, 72, 24, 0.08);
+}
+
+.progress-details summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    padding: 20px 24px;
+
+    cursor: pointer;
+    list-style: none;
+    font-weight: 950;
+}
+
+.progress-details summary::-webkit-details-marker {
+    display: none;
+}
+
+.progress-details summary span {
+    font-size: 20px;
+    letter-spacing: -0.025em;
+}
+
+.progress-details summary strong {
+    display: inline-flex;
+    min-width: 34px;
+    min-height: 34px;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 999px;
+
+    background: #241f1c;
+    color: #fff8ed;
+
+    font-size: 14px;
+}
+
+.progress-details[open] {
+    padding-bottom: 22px;
+}
+
+.progress-details[open] summary {
+    margin-bottom: 4px;
+    border-bottom: 1px solid #f2d6aa;
+}
+
+.completed-lessons-list {
+    display: grid;
+    gap: 14px;
+
+    padding: 20px 24px 0;
+}
+
+.completed-lesson-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+
+    padding: 18px 20px;
+    border-radius: 20px;
+
+    background: #ffffff;
+    border: 1px solid #bbf7d0;
+    box-shadow: 0 14px 40px rgba(120, 72, 24, 0.08);
+
+    color: inherit;
+    text-decoration: none;
+}
+
+.completed-lesson-card span {
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 999px;
+
+    background: #dcfce7;
+    color: #166534;
+
+    font-weight: 900;
+}
+
+.completed-lesson-card strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.completed-lesson-card p {
+    margin: 0;
+}
+
+/* =========================
+   EMPTY STATES
+========================= */
+
+.empty-progress-card {
+    padding: 24px;
+    border: 1px dashed #f0c98e;
+    border-radius: 24px;
+
+    background: #fff7e6;
+}
+
+.progress-details .empty-progress-card {
+    margin: 20px 24px 0;
+}
+
+.empty-progress-card h3 {
+    margin-top: 0;
+
+    font-size: 24px;
+    letter-spacing: -0.03em;
+}
+
+.empty-progress-card p {
+    margin-bottom: 0;
+}
+
+.empty-progress-card-success {
+    background: #ecfdf5;
+    border-color: #bbf7d0;
+}
+
+.empty-progress-card-success h3 {
+    color: #166534;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1000px) {
+    .progress-snapshot {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
 @media (max-width: 900px) {
+    .progress-hero-card {
+        grid-template-columns: 1fr;
+    }
+
+    .progress-section-header,
+    .review-topic-card,
     .interview-review-card {
         align-items: flex-start;
         flex-direction: column;
@@ -355,6 +500,10 @@
         padding-right: 18px;
     }
 
+    .progress-intro {
+        margin-bottom: 28px;
+    }
+
     .progress-hero-card {
         padding: 24px 20px;
         border-radius: 26px;
@@ -362,6 +511,11 @@
 
     .progress-hero-card h2 {
         font-size: clamp(36px, 12vw, 56px);
+    }
+
+    .progress-next-inline {
+        padding: 16px;
+        border-radius: 20px;
     }
 
     .progress-ring {
@@ -373,8 +527,7 @@
         font-size: 30px;
     }
 
-    .progress-grid {
-        grid-template-columns: 1fr;
+    .progress-snapshot {
         gap: 14px;
     }
 
@@ -388,12 +541,9 @@
     }
 
     .progress-section-header {
-        align-items: flex-start;
-        flex-direction: column;
         gap: 10px;
     }
 
-    .next-lesson-card,
     .review-topic-card,
     .interview-review-card,
     .completed-lesson-card {
@@ -408,6 +558,42 @@
     }
 }
 
+@media (max-width: 560px) {
+    .progress-snapshot {
+        grid-template-columns: 1fr;
+    }
+
+    .progress-hero-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .progress-hero-actions .button,
+    .progress-hero-actions .progress-secondary-link {
+        width: 100%;
+    }
+
+    .progress-hero-actions .progress-secondary-link {
+        text-align: center;
+    }
+
+    .progress-ring-card {
+        padding: 20px;
+    }
+
+    .progress-details summary {
+        padding: 18px 20px;
+    }
+
+    .completed-lessons-list {
+        padding: 18px 20px 0;
+    }
+
+    .progress-details .empty-progress-card {
+        margin: 18px 20px 0;
+    }
+}
+
 @media (max-width: 430px) {
     .progress-page {
         padding-left: 14px;
@@ -416,7 +602,6 @@
 
     .progress-hero-card,
     .progress-card,
-    .next-lesson-card,
     .review-topic-card,
     .interview-review-card,
     .completed-lesson-card,

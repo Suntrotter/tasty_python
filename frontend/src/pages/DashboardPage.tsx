@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
-import { lessons } from "../data/lessons";
+import { getLessonsByTrackSlug, lessons } from "../data/lessons";
 import { tracks } from "../data/tracks";
 import { useAuth } from "../features/auth/AuthContext";
 import { getInterviewQuestionsToReview } from "../features/interview/interviewProgress";
@@ -8,18 +8,24 @@ import { getAllLessonPracticeStats } from "../features/practice/practiceProgress
 import { useLessonProgress } from "../features/progress/useLessonProgress";
 
 const REVIEW_THRESHOLD = 70;
+const CURRENT_TRACK_SLUG = "python-core";
+
+function getPluralLabel(count: number, singular: string, plural: string) {
+  return count === 1 ? singular : plural;
+}
 
 function DashboardPage() {
   const { currentUser, isAuthLoading } = useAuth();
 
-  const {
-    completedLessonSlugs,
-    completedLessonsCount,
-    progressSource,
-    isProgressLoading,
-  } = useLessonProgress();
+  const { completedLessonSlugs, progressSource, isProgressLoading } =
+    useLessonProgress();
 
-  const publishedLessons = lessons.filter(
+  const currentTrack = tracks.find((track) => track.slug === CURRENT_TRACK_SLUG);
+  const currentTrackLessons = currentTrack
+    ? getLessonsByTrackSlug(currentTrack.slug)
+    : lessons;
+
+  const publishedLessons = currentTrackLessons.filter(
     (lesson) => lesson.status === "published"
   );
 
@@ -43,8 +49,6 @@ function DashboardPage() {
     totalPublishedLessons > 0
       ? Math.round((completedLessons.length / totalPublishedLessons) * 100)
       : 0;
-
-  const currentTrack = tracks.find((track) => track.slug === "python-core");
 
   const practiceStats = getAllLessonPracticeStats()
     .map((stat) => {
@@ -88,6 +92,9 @@ function DashboardPage() {
       new Date(firstQuestion.updatedAt).getTime()
   );
 
+  const reviewQueueCount =
+    reviewTopics.length + interviewQuestionsToReview.length;
+
   const isCheckingProgress = isAuthLoading || isProgressLoading;
 
   return (
@@ -97,16 +104,16 @@ function DashboardPage() {
         <h1>Keep going, one Python bite at a time.</h1>
 
         <p>
-          Track completed lessons, continue where you left off, and return to
-          topics that need more practice.
+          Continue your current track, review weak spots, and keep completed
+          lessons tucked away for later.
         </p>
 
         {!currentUser && !isAuthLoading && (
-          <div className="empty-progress-card">
-            <h3>Sign in to save your progress.</h3>
+          <div className="empty-progress-card progress-signin-card">
+            <h3>Sign in to keep your progress across devices.</h3>
             <p>
-              You can still explore lessons, but authenticated progress is saved
-              only after signing in.
+              You can still explore lessons as a guest, but account progress is
+              available after signing in.
             </p>
 
             <div className="hero-actions">
@@ -121,12 +128,6 @@ function DashboardPage() {
           </div>
         )}
 
-        {currentUser && progressSource === "backend" && (
-          <p className="home-progress-note">
-            Progress is saved to your account.
-          </p>
-        )}
-
         {currentUser && progressSource === "local" && (
           <p className="api-notice">
             Backend progress is not available right now. Showing local progress.
@@ -135,31 +136,65 @@ function DashboardPage() {
       </section>
 
       <section className="progress-hero-card">
-        <div>
+        <div className="progress-hero-copy">
           <p className="progress-card-kicker">Current path</p>
           <h2>{currentTrack?.title ?? "Python Core"}</h2>
 
           <p>
-            Start with the essentials: variables, types, simple operations,
-            strings, and the small ideas that make Python feel clear.
+            {currentTrack?.description ??
+              "Start with the essential Python ideas every junior developer should explain clearly."}
           </p>
 
-          {nextLesson ? (
-            <Link
-              to={`/lessons/${nextLesson.slug}`}
-              className="button button-primary"
-            >
-              {completedLessons.length > 0 ? "Continue learning" : "Start lesson"}
+          <div className="progress-next-inline">
+            <p className="progress-card-kicker">
+              {nextLesson ? "Next lesson" : "Current status"}
+            </p>
+
+            {nextLesson ? (
+              <>
+                <strong>{nextLesson.title}</strong>
+                <span>{nextLesson.shortDescription}</span>
+              </>
+            ) : allPublishedLessonsCompleted ? (
+              <>
+                <strong>All available lessons are complete.</strong>
+                <span>
+                  You can review completed lessons or practice interview
+                  answers.
+                </span>
+              </>
+            ) : (
+              <>
+                <strong>No published lesson is waiting right now.</strong>
+                <span>New lessons will appear as the curriculum grows.</span>
+              </>
+            )}
+          </div>
+
+          <div className="progress-hero-actions">
+            {nextLesson ? (
+              <Link
+                to={`/lessons/${nextLesson.slug}`}
+                className="button button-primary"
+              >
+                {completedLessons.length > 0
+                  ? "Continue learning"
+                  : "Start lesson"}
+              </Link>
+            ) : allPublishedLessonsCompleted ? (
+              <Link to="/interview-mode" className="button button-primary">
+                Practice interview answers
+              </Link>
+            ) : (
+              <Link to="/tracks" className="button button-primary">
+                View roadmap
+              </Link>
+            )}
+
+            <Link to="/tracks" className="progress-secondary-link">
+              View full roadmap →
             </Link>
-          ) : allPublishedLessonsCompleted ? (
-            <Link to="/tracks" className="button button-primary">
-              Review lessons
-            </Link>
-          ) : (
-            <Link to="/tracks" className="button button-primary">
-              Choose a track
-            </Link>
-          )}
+          </div>
         </div>
 
         <div className="progress-ring-card">
@@ -175,23 +210,37 @@ function DashboardPage() {
           </div>
 
           <p>
-            {completedLessons.length} of {totalPublishedLessons} available
-            lessons completed
+            {completedLessons.length} of {totalPublishedLessons} available{" "}
+            {getPluralLabel(totalPublishedLessons, "lesson", "lessons")}{" "}
+            completed
           </p>
         </div>
       </section>
 
-      <section className="progress-grid">
+      <section className="progress-snapshot" aria-label="Progress snapshot">
         <article className="progress-card">
           <p className="progress-card-kicker">Completed</p>
-          <h2>{isCheckingProgress ? "..." : completedLessonsCount}</h2>
+          <h2>{isCheckingProgress ? "..." : completedLessons.length}</h2>
           <p>
-            Lesson{completedLessonsCount === 1 ? "" : "s"} marked as completed.
+            {getPluralLabel(
+              completedLessons.length,
+              "Lesson completed in this track.",
+              "Lessons completed in this track."
+            )}
           </p>
         </article>
 
         <article className="progress-card">
-          <p className="progress-card-kicker">Practice accuracy</p>
+          <p className="progress-card-kicker">Track progress</p>
+          <h2>{isCheckingProgress ? "..." : `${progressPercent}%`}</h2>
+          <p>
+            {completedLessons.length} of {totalPublishedLessons} available{" "}
+            {getPluralLabel(totalPublishedLessons, "lesson", "lessons")} done.
+          </p>
+        </article>
+
+        <article className="progress-card">
+          <p className="progress-card-kicker">First-attempt accuracy</p>
           <h2>{practiceAccuracy === null ? "—" : `${practiceAccuracy}%`}</h2>
           <p>
             {totalPracticeAttempts > 0
@@ -201,76 +250,14 @@ function DashboardPage() {
         </article>
 
         <article className="progress-card">
-          <p className="progress-card-kicker">Practice review</p>
-          <h2>{reviewTopics.length}</h2>
+          <p className="progress-card-kicker">Review queue</p>
+          <h2>{reviewQueueCount}</h2>
           <p>
-            Lesson{reviewTopics.length === 1 ? "" : "s"} below{" "}
-            {REVIEW_THRESHOLD}% first-attempt accuracy.
+            {reviewQueueCount === 0
+              ? "No review items waiting right now."
+              : "Practice topics and interview questions waiting for review."}
           </p>
         </article>
-
-        <article className="progress-card">
-          <p className="progress-card-kicker">Interview review</p>
-          <h2>{interviewQuestionsToReview.length}</h2>
-          <p>
-            Question{interviewQuestionsToReview.length === 1 ? "" : "s"} marked
-            for later review.
-          </p>
-        </article>
-      </section>
-
-      <section className="progress-section">
-        <div className="progress-section-header">
-          <div>
-            <p className="eyebrow">
-              {allPublishedLessonsCompleted ? "Review" : "Continue"}
-            </p>
-            <h2>
-              {allPublishedLessonsCompleted
-                ? "You completed all available lessons"
-                : "Your next lesson"}
-            </h2>
-          </div>
-
-          <Link to="/tracks" className="progress-secondary-link">
-            View all tracks →
-          </Link>
-        </div>
-
-        {nextLesson ? (
-          <Link to={`/lessons/${nextLesson.slug}`} className="next-lesson-card">
-            <div>
-              <p className="progress-card-kicker">Next step</p>
-              <h3>{nextLesson.title}</h3>
-              <p>{nextLesson.shortDescription}</p>
-            </div>
-
-            <span>Open lesson →</span>
-          </Link>
-        ) : allPublishedLessonsCompleted ? (
-          <div className="next-lesson-card">
-            <div>
-              <p className="progress-card-kicker">Course complete</p>
-              <h3>Every published lesson is complete.</h3>
-              <p>
-                You can review previous lessons or keep practicing interview
-                explanations.
-              </p>
-            </div>
-
-            <Link to="/interview-mode" className="button button-secondary">
-              Practice interview answers
-            </Link>
-          </div>
-        ) : (
-          <div className="next-lesson-card">
-            <div>
-              <p className="progress-card-kicker">All caught up</p>
-              <h3>No published lesson is waiting right now.</h3>
-              <p>New lessons will appear here as the curriculum grows.</p>
-            </div>
-          </div>
-        )}
       </section>
 
       <section className="progress-section">
@@ -363,13 +350,11 @@ function DashboardPage() {
         )}
       </section>
 
-      <section className="progress-section">
-        <div className="progress-section-header">
-          <div>
-            <p className="eyebrow">Finished</p>
-            <h2>Completed lessons</h2>
-          </div>
-        </div>
+      <details className="progress-details">
+        <summary>
+          <span>Completed lessons</span>
+          <strong>{completedLessons.length}</strong>
+        </summary>
 
         {completedLessons.length > 0 ? (
           <div className="completed-lessons-list">
@@ -397,7 +382,7 @@ function DashboardPage() {
             </p>
           </div>
         )}
-      </section>
+      </details>
     </main>
   );
 }

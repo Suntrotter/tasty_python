@@ -2758,3 +2758,229 @@
     font-size: 15px;
     line-height: 1;
 }
+
+.lesson-callout.lesson-callout-memory-hook {
+    padding: 24px 28px;
+    border-radius: 20px;
+    border: 1px solid rgba(222, 139, 32, 0.42);
+    background:
+        radial-gradient(circle at 0% 0%, rgba(255, 247, 195, 0.95), transparent 34%),
+        linear-gradient(135deg, rgba(255, 249, 223, 0.98), rgba(255, 236, 178, 0.78), rgba(238, 255, 226, 0.5));
+    box-shadow: 0 18px 44px rgba(84, 50, 12, 0.08);
+}
+
+.lesson-callout.lesson-callout-memory-hook .lesson-callout-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 12px;
+    color: #3a230f;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.lesson-callout.lesson-callout-memory-hook .lesson-callout-icon {
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    border-radius: 999px;
+    background: #1f1a17;
+    color: #ffd66b;
+    font-size: 14px;
+    line-height: 1;
+    box-shadow: 0 8px 18px rgba(31, 26, 23, 0.18);
+}
+
+.lesson-callout.lesson-callout-memory-hook .lesson-markdown {
+    margin: 0;
+}
+
+.lesson-callout.lesson-callout-memory-hook .lesson-markdown p {
+    margin: 0;
+    color: #6f390f;
+    font-weight: 700;
+    line-height: 1.65;
+}
+
+.lesson-callout.lesson-callout-memory-hook .lesson-markdown p+p {
+    margin-top: 8px;
+}
+
+.lesson-callout.lesson-callout-memory-hook code {
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.65);
+    padding: 2px 6px;
+}
+
+/* =========================================================
+   METAPHOR SECTION — ADMIN/BLOCK-BASED ALIGNMENT PATCH
+   Keeps text, callouts, memory hooks, and images on one shared width.
+   ========================================================= */
+
+.lesson-section-metaphor {
+    --metaphor-content-width: 880px;
+}
+
+/* Legacy direct content + new admin/block-based content */
+.lesson-section-metaphor .lesson-section-header,
+.lesson-section-metaphor>p,
+.lesson-section-metaphor>.lesson-inline-image,
+.lesson-section-metaphor>.lesson-code-card,
+.lesson-section-metaphor>.lesson-items,
+.lesson-section-metaphor>.lesson-accordion-list,
+.lesson-section-metaphor>.output-box,
+.lesson-section-metaphor>.lesson-block-list,
+.lesson-section-metaphor .lesson-block,
+.lesson-section-metaphor .lesson-markdown,
+.lesson-section-metaphor .lesson-callout,
+.lesson-section-metaphor .lesson-block-image {
+    width: min(100%, var(--metaphor-content-width));
+    max-width: min(100%, var(--metaphor-content-width));
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* The admin renderer usually wraps content in this list */
+.lesson-section-metaphor>.lesson-block-list {
+    display: grid;
+    gap: clamp(16px, 2vw, 24px);
+    margin-top: 0;
+}
+
+/* Remove the old 820px text limit inside metaphor sections */
+.lesson-section-metaphor .lesson-markdown {
+    font-size: clamp(16px, 1.08vw, 17px);
+    line-height: 1.72;
+}
+
+.lesson-section-metaphor .lesson-markdown p {
+    max-width: none;
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+.lesson-section-metaphor .lesson-markdown> :last-child {
+    margin-bottom: 0;
+}
+
+/* Callouts should align with the image too */
+.lesson-section-metaphor .lesson-callout {
+    padding: clamp(16px, 2vw, 22px) clamp(18px, 2.5vw, 24px);
+    border-radius: 20px;
+}
+
+.lesson-section-metaphor .lesson-callout p {
+    max-width: none;
+}
+
+.lesson-section-metaphor .lesson-callout p:last-child {
+    margin-bottom: 0;
+}
+
+/* Image rhythm inside metaphor sections */
+.lesson-section-metaphor .lesson-inline-image,
+.lesson-section-metaphor .lesson-block-image {
+    margin-top: clamp(18px, 2.5vw, 24px);
+    margin-bottom: clamp(22px, 3vw, 32px);
+    border-radius: 26px;
+}
+
+.lesson-section-metaphor .lesson-inline-image img,
+.lesson-section-metaphor .lesson-block-image img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Keep the memory hook aligned with the same visual column */
+.lesson-section-metaphor .lesson-items {
+    width: min(100%, var(--metaphor-content-width));
+    max-width: min(100%, var(--metaphor-content-width));
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Mobile: the shared column becomes full width inside the card */
+@media (max-width: 760px) {
+    .lesson-section-metaphor {
+        --metaphor-content-width: 100%;
+    }
+
+    .lesson-section-metaphor .lesson-markdown {
+        font-size: 16px;
+        line-height: 1.68;
+    }
+
+    .lesson-section-metaphor .lesson-callout {
+        padding: 16px 18px;
+        border-radius: 18px;
+    }
+
+    .lesson-section-metaphor .lesson-inline-image,
+    .lesson-section-metaphor .lesson-block-image {
+        margin-top: 18px;
+        margin-bottom: 24px;
+        border-radius: 22px;
+    }
+
+    .lesson-section-metaphor .lesson-inline-image img,
+    .lesson-section-metaphor .lesson-block-image img {
+        aspect-ratio: 4 / 3;
+    }
+}
+
+@media (max-width: 430px) {
+    .lesson-section-metaphor .lesson-callout {
+        padding: 14px 16px;
+    }
+
+    .lesson-section-metaphor .lesson-markdown {
+        font-size: 15.5px;
+    }
+
+    .lesson-section-metaphor .lesson-inline-image,
+    .lesson-section-metaphor .lesson-block-image {
+        margin-top: 16px;
+        margin-bottom: 22px;
+        border-radius: 20px;
+    }
+}
+
+/* =========================================================
+   MEMORY HOOK — TITLE / BODY CONTRAST
+   ========================================================= */
+
+.lesson-section-metaphor .lesson-callout h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin: 0 0 14px;
+    color: var(--lesson-text);
+    font-size: 16px;
+    font-weight: 950;
+    letter-spacing: -0.02em;
+}
+
+.lesson-section-metaphor .lesson-callout h3+p,
+.lesson-section-metaphor .lesson-callout h3~p {
+    color: var(--lesson-accent-dark);
+    font-weight: 650;
+    line-height: 1.65;
+}
+
+.lesson-section-metaphor .lesson-callout h3~p strong {
+    color: var(--lesson-accent-dark);
+    font-weight: 950;
+}
+
+.lesson-section-metaphor .lesson-callout h3~p code {
+    background: rgba(255, 226, 173, 0.72);
+    color: var(--lesson-accent-dark);
+    font-weight: 900;
+}

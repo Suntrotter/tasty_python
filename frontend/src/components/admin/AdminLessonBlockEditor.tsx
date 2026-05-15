@@ -180,86 +180,70 @@ function getDefaultBlockData(type: LessonBlockType): Record<string, unknown> {
   switch (type) {
     case "rich_text":
       return {
-        markdown:
-          "Some objects are **mutable**.\n\nExamples:\n\n- `list`\n- `dict`\n- `set`",
+        markdown: "",
       };
 
     case "code":
       return {
         language: "python",
-        title: "Python",
-        code: 'snacks = ["apple"]\nsnacks.append("cake")\nprint(snacks)',
+        title: "",
+        code: "",
       };
 
     case "callout":
       return {
-        tone: "danger",
-        title: "Trap 1: Thinking strings can be changed in place",
-        markdown: "Wrong mental model:",
+        tone: "info",
+        title: "",
+        markdown: "",
         codeLanguage: "python",
-        codeTitle: "Python",
-        code: 'word = "cake"\nword[0] = "b"',
-        afterMarkdown:
-          "This will cause an error because strings are immutable.\n\nYou cannot change one character inside a string.",
+        codeTitle: "",
+        code: "",
+        afterMarkdown: "",
       };
 
-        case "image":
-          return {
-            imageUrl: "",
-            imageAlt: "",
-            caption: "",
-          };
+    case "image":
+      return {
+        imageUrl: "",
+        imageAlt: "",
+        caption: "",
+      };
 
     case "table":
       return {
-        headers: ["Concept", "Meaning"],
-        rows: [
-          ["Mutable", "Can be changed in place"],
-          ["Immutable", "Cannot be changed in place"],
-        ],
+        headers: [],
+        rows: [],
       };
 
     case "practice_single":
       return {
-        question: "What does this code do?",
-        code: 'tea = "mint"',
-        options: [
-          { key: "A", text: "Compares tea and mint" },
-          { key: "B", text: "Assigns mint to tea" },
-        ],
-        correctAnswer: "B",
-        explanation:
-          "The `=` operator assigns the value on the right to the name on the left.",
+        question: "",
+        code: "",
+        options: [],
+        correctAnswer: "",
+        explanation: "",
       };
 
     case "practice_multi":
       return {
-        question: "Which types are mutable?",
-        options: [
-          { key: "A", text: "list" },
-          { key: "B", text: "str" },
-          { key: "C", text: "dict" },
-          { key: "D", text: "set" },
-        ],
-        correctAnswers: ["A", "C", "D"],
-        explanation: "`list`, `dict`, and `set` are mutable.",
+        question: "",
+        code: "",
+        options: [],
+        correctAnswers: [],
+        explanation: "",
       };
 
     case "practice_code":
       return {
-        task: "Replace the empty strings with the correct answers.",
-        starterCode:
-          'answers = {\n    "list": "",\n    "str": "",\n}\n\nfor name, answer in answers.items():\n    print(f"{name}: {answer}")',
-        expectedOutput: "list: mutable\nstr: immutable",
-        explanation:
-          "`list` is mutable because it can be changed in place. `str` is immutable.",
+        task: "",
+        starterCode: "",
+        expectedOutput: "",
+        explanation: "",
       };
 
     case "accordion":
       return {
-        title: "Why does this happen?",
-        markdown:
-          "Python names point to objects. Some objects can change; others cannot.",
+        title: "",
+        markdown: "",
       };
 
     default:
@@ -279,7 +263,7 @@ function getFormFromBlock(block: LessonBlock): BlockFormState {
     case "code":
       return {
         language: getStringValue(data, "language") || "python",
-        title: getStringValue(data, "title") || "Python",
+        title: getStringValue(data, "title"),
         code: getStringValue(data, "code"),
       };
 
@@ -289,7 +273,7 @@ function getFormFromBlock(block: LessonBlock): BlockFormState {
         title: getStringValue(data, "title"),
         markdown: getStringValue(data, "markdown"),
         codeLanguage: getStringValue(data, "codeLanguage") || "python",
-        codeTitle: getStringValue(data, "codeTitle") || "Python",
+        codeTitle: getStringValue(data, "codeTitle"),
         code: getStringValue(data, "code"),
         afterMarkdown: getStringValue(data, "afterMarkdown"),
       };
@@ -361,7 +345,7 @@ function buildBlockData(
     case "code":
       return {
         language: form.language || "python",
-        title: form.title || "Python",
+        title: form.title ?? "",
         code: form.code ?? "",
       };
 
@@ -371,7 +355,7 @@ function buildBlockData(
         title: form.title ?? "",
         markdown: form.markdown ?? "",
         codeLanguage: form.codeLanguage || "python",
-        codeTitle: form.codeTitle || "Python",
+        codeTitle: form.codeTitle ?? "",
         code: form.code ?? "",
         afterMarkdown: form.afterMarkdown ?? "",
       };
@@ -619,6 +603,7 @@ function SortableBlockCard({
                 value={form.code ?? ""}
                 onChange={handleInputChange}
                 rows={8}
+                placeholder={`flavor = "strawberry"\nprint(flavor)`}
               />
             </label>
           </>
@@ -729,6 +714,7 @@ function SortableBlockCard({
                 name="imageAlt"
                 value={form.imageAlt ?? ""}
                 onChange={handleInputChange}
+                placeholder="Describe the image for screen readers"
               />
             </label>
 
@@ -739,6 +725,7 @@ function SortableBlockCard({
                 value={form.caption ?? ""}
                 onChange={handleInputChange}
                 rows={3}
+                placeholder="Optional short caption under the image"
               />
             </label>
           </>
@@ -781,6 +768,7 @@ function SortableBlockCard({
                 value={form.question ?? ""}
                 onChange={handleInputChange}
                 rows={4}
+                placeholder="What does this code do?"
               />
             </label>
 
@@ -791,6 +779,7 @@ function SortableBlockCard({
                 value={form.code ?? ""}
                 onChange={handleInputChange}
                 rows={5}
+                placeholder={`tea = "mint"`}
               />
             </label>
 
@@ -822,6 +811,7 @@ function SortableBlockCard({
                 value={form.explanation ?? ""}
                 onChange={handleInputChange}
                 rows={4}
+                placeholder="Explain why the selected answer is correct."
               />
             </label>
           </>
@@ -837,6 +827,7 @@ function SortableBlockCard({
                 value={form.question ?? ""}
                 onChange={handleInputChange}
                 rows={4}
+                placeholder="Which options are correct?"
               />
             </label>
 
@@ -847,6 +838,7 @@ function SortableBlockCard({
                 value={form.code ?? ""}
                 onChange={handleInputChange}
                 rows={5}
+                placeholder={`items = ["apple", "cake"]`}
               />
             </label>
 
@@ -878,6 +870,7 @@ function SortableBlockCard({
                 value={form.explanation ?? ""}
                 onChange={handleInputChange}
                 rows={4}
+                placeholder="Explain why the selected answer is correct."
               />
             </label>
           </>
@@ -893,6 +886,7 @@ function SortableBlockCard({
                 value={form.task ?? ""}
                 onChange={handleInputChange}
                 rows={4}
+                placeholder="Write the task the learner should complete."
               />
             </label>
 
@@ -903,6 +897,8 @@ function SortableBlockCard({
                 value={form.starterCode ?? ""}
                 onChange={handleInputChange}
                 rows={8}
+                placeholder={`# Write starter code here
+`}
               />
             </label>
 
@@ -913,6 +909,7 @@ function SortableBlockCard({
                 value={form.expectedOutput ?? ""}
                 onChange={handleInputChange}
                 rows={4}
+                placeholder="Expected output here"
               />
             </label>
 
@@ -923,6 +920,7 @@ function SortableBlockCard({
                 value={form.explanation ?? ""}
                 onChange={handleInputChange}
                 rows={4}
+                placeholder="Explain why the selected answer is correct."
               />
             </label>
           </>
@@ -937,6 +935,7 @@ function SortableBlockCard({
                 name="title"
                 value={form.title ?? ""}
                 onChange={handleInputChange}
+                placeholder="Why does this happen?"
               />
             </label>
 
@@ -947,6 +946,7 @@ function SortableBlockCard({
                 value={form.markdown ?? ""}
                 onChange={handleInputChange}
                 rows={6}
+                placeholder="Add the hidden explanation here."
               />
             </label>
           </>

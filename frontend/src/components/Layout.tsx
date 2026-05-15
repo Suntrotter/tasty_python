@@ -6,7 +6,6 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import { isAdminLoggedIn, logoutAdmin } from "../features/admin/adminAuth";
 import { useAuth } from "../features/auth/AuthContext";
 import SiteFooter from "./SiteFooter";
 
@@ -14,14 +13,14 @@ function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
 
-const {
-  currentUser,
-  backendUser,
-  isAuthLoading,
-  isBackendUserLoading,
-  isAuthenticated,
-  logout,
-} = useAuth();
+  const {
+    currentUser,
+    backendUser,
+    isAuthLoading,
+    isBackendUserLoading,
+    isAuthenticated,
+    logout,
+  } = useAuth();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -30,18 +29,15 @@ const {
 
   const isLessonPage = location.pathname.startsWith("/lessons/");
 
-  const showAdminBar = isAdminArea && isAdminLoggedIn();
+  const isAdmin = backendUser?.is_admin === true;
+
+  const showAdminBar = isAdminArea && isAdmin;
 
   const showHeaderCta = !isLessonPage && !isAdminArea && !isAuthenticated;
 
   useEffect(() => {
     setIsMenuOpen(false);
   }, [location.pathname]);
-
-  function handleAdminLogout() {
-    logoutAdmin();
-    navigate("/", { replace: true });
-  }
 
   async function handleUserLogout() {
     await logout();
@@ -116,6 +112,12 @@ const {
             <NavLink to="/interview-mode" onClick={closeMenu}>
               Interview Mode
             </NavLink>
+
+            {isAdmin && (
+              <NavLink to="/admin" onClick={closeMenu}>
+                Admin
+              </NavLink>
+            )}
           </nav>
 
           <div className="header-actions">
@@ -177,7 +179,7 @@ const {
             <span>Managing Tasty Python content</span>
           </div>
 
-          <button type="button" onClick={handleAdminLogout}>
+          <button type="button" onClick={handleUserLogout}>
             Log out
           </button>
         </div>

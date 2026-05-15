@@ -475,3 +475,10 @@
         width: 100%;
     }
 }
+
+.admin-field-hint {
+    margin: 6px 0 0;
+    font-size: 0.78rem;
+    line-height: 1.4;
+    color: rgba(74, 50, 29, 0.68);
+}

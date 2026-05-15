@@ -1,0 +1,98 @@
+/* =========================================================
+   CODE BLOCKS
+   ========================================================= */
+
+.lesson-code-card {
+    overflow: hidden;
+    margin: 28px 0;
+    border-radius: 24px;
+    background: #1e1e1e;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 18px 48px rgba(36, 31, 28, 0.22);
+}
+
+.lesson-code-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 44px;
+    padding: 0 14px;
+    background: #252526;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lesson-code-toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.lesson-code-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 999px;
+}
+
+.lesson-code-dot-red {
+    background: #ff5f57;
+}
+
+.lesson-code-dot-yellow {
+    background: #ffbd2e;
+}
+
+.lesson-code-dot-green {
+    background: #28c840;
+}
+
+.lesson-code-title {
+    margin-left: 8px;
+    color: #f5f5f5;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+}
+
+.lesson-code-copy {
+    border: 0;
+    border-radius: 999px;
+    padding: 7px 12px;
+    background: #fff2d4;
+    color: #241f1c;
+    font-size: 12px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.lesson-code-copy:hover {
+    background: #ffe2ad;
+}
+
+.lesson-code-editor {
+    background: #1e1e1e;
+}
+
+.lesson-code-card-output {
+    background: #0f172a;
+    border: 1px solid rgba(96, 165, 250, 0.22);
+    box-shadow: 0 18px 48px rgba(15, 23, 42, 0.28);
+}
+
+.lesson-code-card-output .lesson-code-toolbar {
+    background: #0b1220;
+    border-bottom: 1px solid rgba(96, 165, 250, 0.16);
+}
+
+.lesson-code-card-output .lesson-code-title {
+    color: #dbeafe;
+}
+
+.lesson-code-card-output .lesson-code-editor {
+    background: #0f172a;
+}
+
+.output-box {
+    margin-top: 18px;
+}

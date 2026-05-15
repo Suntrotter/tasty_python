@@ -1,0 +1,132 @@
+/* =========================================================
+   TRACK / LESSON LIST CARDS
+   ========================================================= */
+
+.lesson-list {
+    display: grid;
+    gap: 18px;
+}
+
+.lesson-card {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.lesson-card-clickable {
+    cursor: pointer;
+}
+
+.lesson-card-static {
+    cursor: default;
+    opacity: 0.78;
+}
+
+.lesson-card-main {
+    flex: 1;
+}
+
+.lesson-card-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.lesson-order,
+.lesson-meta {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--lesson-muted);
+}
+
+.lesson-status-icon {
+    display: inline-block;
+    margin-right: 4px;
+}
+
+.lesson-card-footer {
+    min-width: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.lesson-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 0 14px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.lesson-action-published {
+    background: var(--lesson-text);
+    color: var(--lesson-bg);
+}
+
+.lesson-action-in_progress {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.lesson-action-coming_soon {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.lesson-action-planned {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.lesson-action-premium {
+    background: #fce7f3;
+    color: #9d174d;
+}
+
+.lesson-card-published {
+    border-color: #bbf7d0;
+}
+
+.lesson-card-in_progress {
+    border-color: #fde68a;
+}
+
+.lesson-card-coming_soon {
+    border-color: #bfdbfe;
+}
+
+.lesson-card-planned {
+    border-style: dashed;
+}
+
+.lesson-card-premium {
+    border-color: #fbcfe8;
+}
+
+.lesson-card-completed {
+    border-color: #86efac;
+    background: #f0fdf4;
+}
+
+.completed-badge,
+.lesson-action-completed {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.completed-badge {
+    display: inline-flex;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 800;
+}

@@ -1,0 +1,47 @@
+/* =========================================================
+   ITEMS / TRAPS / ANSWERS
+   ========================================================= */
+
+.lesson-items {
+    display: grid;
+    gap: var(--lesson-inner-gap);
+    margin-top: 28px;
+}
+
+.lesson-item {
+    position: relative;
+    padding: 26px;
+    border-radius: var(--lesson-radius-md);
+    background: color-mix(in srgb, var(--lesson-card-soft) 76%, white);
+    border: 1px solid var(--lesson-border-soft);
+    box-shadow: 0 12px 34px rgba(120, 72, 24, 0.06);
+}
+
+.lesson-item h3 {
+    margin-top: 0;
+    font-size: 23px;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+}
+
+.lesson-item-danger {
+    background:
+        linear-gradient(145deg, rgba(255, 238, 236, 0.96), rgba(255, 255, 255, 0.98)),
+        var(--lesson-card-bg);
+    border-color: #efb4ae;
+}
+
+.lesson-item-danger h3 {
+    color: var(--lesson-danger-text);
+}
+
+.lesson-item-success {
+    background:
+        linear-gradient(145deg, rgba(236, 253, 245, 0.96), rgba(255, 255, 255, 0.98)),
+        var(--lesson-card-bg);
+    border-color: #b7e4c7;
+}
+
+.lesson-item-success h3 {
+    color: var(--lesson-success-text);
+}

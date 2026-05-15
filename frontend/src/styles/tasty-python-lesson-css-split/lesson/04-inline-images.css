@@ -1,0 +1,30 @@
+/* =========================================================
+   INLINE IMAGES
+   ========================================================= */
+
+.lesson-inline-image {
+    overflow: hidden;
+    width: min(100%, 920px);
+    margin: 28px auto 34px;
+    border-radius: 28px;
+    background: var(--lesson-card-warm);
+    border: 1px solid var(--lesson-border-soft);
+    box-shadow: var(--lesson-shadow-soft);
+}
+
+.lesson-inline-image img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+}
+
+.lesson-inline-image-section {
+    margin-top: 8px;
+}
+
+.lesson-inline-image-coding {
+    width: min(100%, 820px);
+    margin-top: 16px;
+    margin-bottom: 28px;
+}

@@ -53,7 +53,6 @@ function LessonCompletionButton({
   const {
     isLessonCompleted,
     isProgressLoading,
-    progressSource,
     toggleLessonCompletion,
   } = useLessonProgress();
 
@@ -67,32 +66,6 @@ function LessonCompletionButton({
   const kicker = completionKicker || defaultCompletionText.kicker;
   const title = completionTitle || defaultCompletionText.title;
   const body = completionBody || defaultCompletionText.body;
-
-  const isCheckingProgress = isAuthLoading || isProgressLoading;
-
-  function getProgressMessage() {
-    if (isCheckingProgress) {
-      return "Checking your progress...";
-    }
-
-    if (!currentUser) {
-      return completed
-        ? "Marked locally on this device. Sign in to save progress across devices."
-        : "You can mark this lesson locally, but sign in to save progress across devices.";
-    }
-
-    if (progressSource === "backend") {
-      return completed
-        ? "Saved to your account."
-        : "Your progress will be saved to your account.";
-    }
-
-    if (progressSource === "local") {
-      return "Backend progress is not available right now. Changes are saved locally on this device.";
-    }
-
-    return "Progress is being prepared.";
-  }
 
   async function handleToggleCompletion() {
     setIsUpdating(true);
@@ -120,8 +93,6 @@ function LessonCompletionButton({
         <h2>{title}</h2>
 
         {renderCompletionBody(body)}
-
-        <p className="completion-progress-note">{getProgressMessage()}</p>
 
         {!currentUser && !isAuthLoading && (
           <div className="completion-auth-actions">

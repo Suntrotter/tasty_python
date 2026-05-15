@@ -1,0 +1,150 @@
+/* =========================================================
+   LESSON THEME SYSTEM
+   Default theme: Cozy Café
+   To try another theme, add a class to LessonPage:
+   lesson-theme-notebook / lesson-theme-forest / lesson-theme-berry / lesson-theme-midnight
+   ========================================================= */
+
+.lesson-page {
+    --lesson-page-max: 1080px;
+
+    --lesson-bg: #fff8ed;
+    --lesson-card-bg: #ffffff;
+    --lesson-card-soft: #fffaf1;
+    --lesson-card-warm: #fff7e6;
+
+    --lesson-text: #241f1c;
+    --lesson-muted: #7c4a1d;
+
+    --lesson-border: #f0c98e;
+    --lesson-border-soft: #f2d6aa;
+
+    --lesson-accent: #c85b00;
+    --lesson-accent-dark: #7c2d12;
+    --lesson-accent-soft: #fff2d4;
+
+    --lesson-success-bg: #dcfce7;
+    --lesson-success-border: #22c55e;
+    --lesson-success-text: #166534;
+
+    --lesson-danger-bg: #ffe4e6;
+    --lesson-danger-border: #ef4444;
+    --lesson-danger-text: #9f1239;
+
+    --lesson-info-bg: #eff6ff;
+    --lesson-info-border: #93c5fd;
+    --lesson-info-text: #1e3a8a;
+
+    --lesson-shadow-soft: 0 16px 46px rgba(120, 72, 24, 0.08);
+    --lesson-shadow-medium: 0 24px 70px rgba(120, 72, 24, 0.12);
+    --lesson-shadow-strong: 0 28px 84px rgba(120, 72, 24, 0.16);
+
+    --lesson-radius-lg: 32px;
+    --lesson-radius-md: 24px;
+    --lesson-radius-sm: 18px;
+
+    --lesson-section-gap: 52px;
+    --lesson-inner-gap: 24px;
+
+    max-width: var(--lesson-page-max);
+}
+
+/* Clean, professional, portfolio-friendly */
+.lesson-page.lesson-theme-notebook {
+    --lesson-bg: #f8fafc;
+    --lesson-card-bg: #ffffff;
+    --lesson-card-soft: #f1f5f9;
+    --lesson-card-warm: #f8fafc;
+
+    --lesson-text: #0f172a;
+    --lesson-muted: #475569;
+
+    --lesson-border: #cbd5e1;
+    --lesson-border-soft: #dbe3ee;
+
+    --lesson-accent: #2563eb;
+    --lesson-accent-dark: #1d4ed8;
+    --lesson-accent-soft: #dbeafe;
+
+    --lesson-shadow-soft: 0 16px 44px rgba(15, 23, 42, 0.07);
+    --lesson-shadow-medium: 0 24px 70px rgba(15, 23, 42, 0.1);
+    --lesson-shadow-strong: 0 28px 84px rgba(15, 23, 42, 0.14);
+}
+
+/* Calm green, fresh and educational */
+.lesson-page.lesson-theme-forest {
+    --lesson-bg: #f4fbf6;
+    --lesson-card-bg: #ffffff;
+    --lesson-card-soft: #f0fdf4;
+    --lesson-card-warm: #ecfdf5;
+
+    --lesson-text: #14261c;
+    --lesson-muted: #3f5f46;
+
+    --lesson-border: #b7e4c7;
+    --lesson-border-soft: #ccebd6;
+
+    --lesson-accent: #15803d;
+    --lesson-accent-dark: #14532d;
+    --lesson-accent-soft: #dcfce7;
+
+    --lesson-shadow-soft: 0 16px 44px rgba(20, 83, 45, 0.07);
+    --lesson-shadow-medium: 0 24px 70px rgba(20, 83, 45, 0.1);
+    --lesson-shadow-strong: 0 28px 84px rgba(20, 83, 45, 0.14);
+}
+
+/* Playful pastel, softer and more creative */
+.lesson-page.lesson-theme-berry {
+    --lesson-bg: #fff7fb;
+    --lesson-card-bg: #ffffff;
+    --lesson-card-soft: #fdf2f8;
+    --lesson-card-warm: #fff1f7;
+
+    --lesson-text: #2e1065;
+    --lesson-muted: #7e22ce;
+
+    --lesson-border: #f9a8d4;
+    --lesson-border-soft: #fbcfe8;
+
+    --lesson-accent: #7c3aed;
+    --lesson-accent-dark: #5b21b6;
+    --lesson-accent-soft: #ede9fe;
+
+    --lesson-shadow-soft: 0 16px 44px rgba(124, 58, 237, 0.07);
+    --lesson-shadow-medium: 0 24px 70px rgba(124, 58, 237, 0.1);
+    --lesson-shadow-strong: 0 28px 84px rgba(124, 58, 237, 0.14);
+}
+
+/* Darker premium code-school mood */
+.lesson-page.lesson-theme-midnight {
+    --lesson-bg: #111827;
+    --lesson-card-bg: #1f2937;
+    --lesson-card-soft: #273449;
+    --lesson-card-warm: #1e293b;
+
+    --lesson-text: #f9fafb;
+    --lesson-muted: #cbd5e1;
+
+    --lesson-border: #374151;
+    --lesson-border-soft: #4b5563;
+
+    --lesson-accent: #fbbf24;
+    --lesson-accent-dark: #facc15;
+    --lesson-accent-soft: #3b2f12;
+
+    --lesson-success-bg: #064e3b;
+    --lesson-success-border: #34d399;
+    --lesson-success-text: #d1fae5;
+
+    --lesson-danger-bg: #7f1d1d;
+    --lesson-danger-border: #f87171;
+    --lesson-danger-text: #fee2e2;
+
+    --lesson-info-bg: #172554;
+    --lesson-info-border: #60a5fa;
+    --lesson-info-text: #dbeafe;
+
+    --lesson-shadow-soft: 0 16px 44px rgba(0, 0, 0, 0.22);
+    --lesson-shadow-medium: 0 24px 70px rgba(0, 0, 0, 0.28);
+    --lesson-shadow-strong: 0 28px 84px rgba(0, 0, 0, 0.36);
+}

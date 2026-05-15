@@ -9,6 +9,7 @@ import {
   deleteLessonSectionItem,
   importLessonMarkdown,
   updateLessonContentBasics,
+  updateLessonMetadata,
   updateLessonSection,
   updateLessonSectionItem,
   updateLessonStatus,
@@ -61,6 +62,9 @@ function AdminLessonDetailPage() {
   const [statusMessage, setStatusMessage] = useState("");
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
+  const [metadataMessage, setMetadataMessage] = useState("");
+  const [isUpdatingMetadata, setIsUpdatingMetadata] = useState(false);
+
   const [contentMessage, setContentMessage] = useState("");
   const [isUpdatingContent, setIsUpdatingContent] = useState(false);
 
@@ -86,6 +90,14 @@ function AdminLessonDetailPage() {
 
   const [tableMessage, setTableMessage] = useState("");
   const [isSavingTable, setIsSavingTable] = useState(false);
+
+  const [metadataForm, setMetadataForm] = useState({
+    title: "",
+    shortDescription: "",
+    order: "",
+    difficulty: "",
+    estimatedTime: "",
+  });
 
   const [contentForm, setContentForm] = useState({
     title: "",
@@ -207,6 +219,20 @@ function AdminLessonDetailPage() {
   }, [lessonSlug]);
 
   useEffect(() => {
+    if (!lesson) {
+      return;
+    }
+
+    setMetadataForm({
+      title: lesson.title,
+      shortDescription: lesson.shortDescription,
+      order: String(lesson.order),
+      difficulty: lesson.difficulty,
+      estimatedTime: lesson.estimatedTime,
+    });
+  }, [lesson]);
+
+  useEffect(() => {
     if (lessonContent) {
       setContentForm({
         title: lessonContent.title,
@@ -310,6 +336,60 @@ function AdminLessonDetailPage() {
       imageAlt: firstEntry.item.imageAlt ?? "",
     });
   }, [lessonContent]);
+
+  function handleMetadataInputChange(
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) {
+    const { name, value } = event.target;
+
+    setMetadataForm((currentForm) => ({
+      ...currentForm,
+      [name]: value,
+    }));
+  }
+
+  async function handleMetadataSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!lesson) {
+      return;
+    }
+
+    const parsedOrder = Number(metadataForm.order);
+
+    if (!Number.isInteger(parsedOrder) || parsedOrder < 1) {
+      setMetadataMessage("Order must be a positive whole number.");
+      return;
+    }
+
+    if (!metadataForm.title.trim()) {
+      setMetadataMessage("Lesson title is required.");
+      return;
+    }
+
+    setIsUpdatingMetadata(true);
+    setMetadataMessage("");
+
+    try {
+      const updatedLesson = await updateLessonMetadata(lesson.slug, {
+        title: metadataForm.title.trim(),
+        shortDescription: metadataForm.shortDescription.trim(),
+        order: parsedOrder,
+        difficulty: metadataForm.difficulty.trim(),
+        estimatedTime: metadataForm.estimatedTime.trim(),
+      });
+
+      setLesson(updatedLesson);
+      setMetadataMessage("Lesson metadata updated successfully.");
+      setErrorMessage("");
+    } catch {
+      setMetadataMessage(
+        "Could not update lesson metadata through the backend. Make sure the API is running."
+      );
+    } finally {
+      setIsUpdatingMetadata(false);
+    }
+  }
 
   async function handleStatusChange(newStatus: LessonStatus) {
     if (!lesson) {
@@ -1209,6 +1289,87 @@ function AdminLessonDetailPage() {
         ) : (
           <p>No sections yet.</p>
         )}
+      </section>
+
+      <section className="admin-edit-panel">
+        <h2>Edit lesson metadata</h2>
+
+        <p className="admin-help-text">
+          Update the lesson card and roadmap details: title, description, order,
+          difficulty, and estimated time. The slug stays unchanged.
+        </p>
+
+        <form className="admin-form" onSubmit={handleMetadataSubmit}>
+          <label>
+            Lesson title
+            <input
+              name="title"
+              value={metadataForm.title}
+              onChange={handleMetadataInputChange}
+              placeholder="Variables and Assignment"
+            />
+          </label>
+
+          <label>
+            Short description
+            <textarea
+              name="shortDescription"
+              value={metadataForm.shortDescription}
+              onChange={handleMetadataInputChange}
+              rows={4}
+              placeholder="A short lesson card description shown on tracks and admin pages."
+            />
+          </label>
+
+          <div className="admin-form-row admin-form-row-three">
+            <label>
+              Order
+              <input
+                name="order"
+                type="number"
+                min="1"
+                value={metadataForm.order}
+                onChange={handleMetadataInputChange}
+                placeholder="1"
+              />
+            </label>
+
+            <label>
+              Difficulty
+              <input
+                name="difficulty"
+                value={metadataForm.difficulty}
+                onChange={handleMetadataInputChange}
+                placeholder="Foundation"
+              />
+              <p className="admin-field-hint">
+                Suggested labels: Foundation, Core, Applied, Challenge.
+              </p>
+            </label>
+
+            <label>
+              Estimated time
+              <input
+                name="estimatedTime"
+                value={metadataForm.estimatedTime}
+                onChange={handleMetadataInputChange}
+                placeholder="10–15 min"
+              />
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            className="button button-primary"
+            disabled={isUpdatingMetadata}
+          >
+            {isUpdatingMetadata ? "Saving..." : "Save lesson metadata"}
+          </button>
+
+          {metadataMessage && (
+            <p className="admin-status-message">{metadataMessage}</p>
+          )}
+        </form>
       </section>
 
       <section className="admin-edit-panel">

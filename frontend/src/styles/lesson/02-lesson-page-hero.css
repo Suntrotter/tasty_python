@@ -1,0 +1,386 @@
+/* =========================================================
+   LESSON PAGE STRUCTURE
+   ========================================================= */
+
+.lesson-page {
+    color: var(--lesson-text);
+}
+
+.lesson-hero {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: var(--lesson-section-gap);
+    padding: 46px;
+    border-radius: var(--lesson-radius-lg);
+    background:
+        radial-gradient(circle at 84% 20%, rgba(255, 226, 173, 0.72), transparent 30%),
+        radial-gradient(circle at 10% 90%, rgba(232, 241, 215, 0.78), transparent 34%),
+        linear-gradient(135deg, #fffdf8 0%, #ffffff 48%, #fff7e6 100%);
+    border: 1px solid var(--lesson-border);
+    box-shadow: var(--lesson-shadow-medium);
+}
+
+.lesson-hero::before {
+    content: "";
+    position: absolute;
+    inset: 18px;
+    border-radius: calc(var(--lesson-radius-lg) - 10px);
+    background-image:
+        radial-gradient(circle, rgba(200, 91, 0, 0.12) 1px, transparent 1px);
+    background-size: 22px 22px;
+    opacity: 0.34;
+    pointer-events: none;
+}
+
+.lesson-hero__content {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+    gap: 36px;
+    align-items: center;
+}
+
+.lesson-hero__main {
+    min-width: 0;
+}
+
+.lesson-hero h1 {
+    max-width: 760px;
+    margin-top: 10px;
+    margin-bottom: 22px;
+}
+
+.lesson-hero__meta-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.lesson-hero__meta-list span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: rgba(255, 226, 173, 0.72);
+    border: 1px solid rgba(240, 201, 142, 0.9);
+    color: var(--lesson-accent-dark);
+    font-size: 13px;
+    font-weight: 900;
+    text-transform: lowercase;
+}
+
+.lesson-hero__goal {
+    max-width: 760px;
+    margin-bottom: 0;
+}
+
+/* Right visual card */
+
+.lesson-hero__visual {
+    overflow: hidden;
+    border-radius: 30px;
+    background: #241f1c;
+    border: 1px solid rgba(36, 31, 28, 0.14);
+    box-shadow: 0 24px 56px rgba(36, 31, 28, 0.18);
+    transform: rotate(1.2deg);
+}
+
+.lesson-hero__visual-top {
+    display: flex;
+    gap: 8px;
+    padding: 14px 16px;
+    background: #2f2925;
+}
+
+.lesson-hero__visual-top span {
+    width: 11px;
+    height: 11px;
+    border-radius: 999px;
+}
+
+.lesson-hero__visual-top span:nth-child(1) {
+    background: #ff6b57;
+}
+
+.lesson-hero__visual-top span:nth-child(2) {
+    background: #f6b44b;
+}
+
+.lesson-hero__visual-top span:nth-child(3) {
+    background: #8aa35f;
+}
+
+.lesson-hero__visual-body {
+    padding: 24px;
+    background:
+        radial-gradient(circle at top right, rgba(230, 138, 46, 0.26), transparent 36%),
+        #241f1c;
+    color: #fff8ed;
+}
+
+.lesson-hero__visual-kicker {
+    margin: 0 0 8px;
+    color: #f6b44b;
+    font-size: 12px;
+    font-weight: 950;
+    letter-spacing: 0.11em;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.lesson-hero__visual h2 {
+    margin: 0 0 18px;
+    color: #ffffff;
+    font-size: 30px;
+    line-height: 1;
+    letter-spacing: -0.05em;
+}
+
+.lesson-hero__code-card {
+    display: grid;
+    gap: 10px;
+    margin: 18px 0;
+}
+
+.lesson-hero__code-card code {
+    display: block;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: rgba(255, 248, 237, 0.09);
+    border: 1px solid rgba(255, 248, 237, 0.12);
+    color: #fff8ed;
+    font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace;
+    font-size: 14px;
+}
+
+.lesson-hero__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+.lesson-hero__chips span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: #fff2d4;
+    color: #7c2d12;
+    font-size: 12px;
+    font-weight: 950;
+}
+
+/* Hero visual tones */
+
+.lesson-hero__visual--green {
+    background: #18251b;
+}
+
+.lesson-hero__visual--green .lesson-hero__visual-top {
+    background: #203225;
+}
+
+.lesson-hero__visual--green .lesson-hero__visual-body {
+    background:
+        radial-gradient(circle at top right, rgba(138, 163, 95, 0.34), transparent 36%),
+        #18251b;
+}
+
+.lesson-hero__visual--green .lesson-hero__visual-kicker {
+    color: #cfe8a9;
+}
+
+.lesson-hero__visual--green .lesson-hero__chips span {
+    background: #e8f1d7;
+    color: #2f4a24;
+}
+
+.lesson-hero__visual--blue {
+    background: #172033;
+}
+
+.lesson-hero__visual--blue .lesson-hero__visual-top {
+    background: #202b42;
+}
+
+.lesson-hero__visual--blue .lesson-hero__visual-body {
+    background:
+        radial-gradient(circle at top right, rgba(147, 197, 253, 0.28), transparent 36%),
+        #172033;
+}
+
+.lesson-hero__visual--blue .lesson-hero__visual-kicker {
+    color: #93c5fd;
+}
+
+.lesson-hero__visual--blue .lesson-hero__chips span {
+    background: #dbeafe;
+    color: #1e3a8a;
+}
+
+.lesson-hero__visual--berry {
+    background: #2a1830;
+}
+
+.lesson-hero__visual--berry .lesson-hero__visual-top {
+    background: #39203f;
+}
+
+.lesson-hero__visual--berry .lesson-hero__visual-body {
+    background:
+        radial-gradient(circle at top right, rgba(249, 168, 212, 0.28), transparent 36%),
+        #2a1830;
+}
+
+.lesson-hero__visual--berry .lesson-hero__visual-kicker {
+    color: #f9a8d4;
+}
+
+.lesson-hero__visual--berry .lesson-hero__chips span {
+    background: #fce7f3;
+    color: #831843;
+}
+
+/* Hero visual variants */
+
+.lesson-hero__visual--ingredient-board {
+    transform: rotate(-1deg);
+}
+
+.lesson-hero__visual--recipe-card {
+    transform: rotate(1deg);
+}
+
+.lesson-hero__visual--terminal-card {
+    transform: rotate(0deg);
+}
+
+.lesson-hero__recipe-card {
+    display: grid;
+    gap: 10px;
+    margin: 18px 0;
+}
+
+.lesson-hero__recipe-row {
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    gap: 10px;
+    align-items: center;
+}
+
+.lesson-hero__recipe-row span {
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: #fff2d4;
+    color: #7c2d12;
+    font-size: 13px;
+    font-weight: 950;
+}
+
+.lesson-hero__recipe-row code {
+    display: block;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: rgba(255, 248, 237, 0.09);
+    border: 1px dashed rgba(255, 248, 237, 0.22);
+    color: #fff8ed;
+    font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace;
+    font-size: 14px;
+}
+
+.lesson-hero__ingredient-board {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin: 18px 0;
+}
+
+.lesson-hero__ingredient-note {
+    min-height: 72px;
+    padding: 13px;
+    border-radius: 16px;
+    background: #fff2d4;
+    color: #3b2a1f;
+    font-size: 13px;
+    font-weight: 900;
+    line-height: 1.35;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
+.lesson-hero__ingredient-note:nth-child(3) {
+    grid-column: 1 / -1;
+}
+
+.lesson-hero__terminal-card {
+    display: grid;
+    gap: 9px;
+    margin: 18px 0;
+    padding: 16px;
+    border-radius: 18px;
+    background:
+        radial-gradient(circle at top right, rgba(147, 197, 253, 0.12), transparent 38%),
+        #0f172a;
+    border: 1px solid rgba(147, 197, 253, 0.2);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+.lesson-hero__terminal-card code {
+    display: block;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #dbeafe;
+    font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.lesson-hero__terminal-card code span {
+    color: #f6b44b;
+    font-weight: 900;
+}
+
+.lesson-hero__meta-list .lesson-meta-pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 900;
+    text-transform: none;
+}
+
+.lesson-hero__meta-list .lesson-meta-pill-foundation {
+    background: rgba(255, 238, 174, 0.75);
+    border: 1px solid rgba(214, 132, 34, 0.32);
+    color: #8a3f08;
+}
+
+.lesson-hero__meta-list .lesson-meta-pill-core {
+    background: rgba(219, 249, 224, 0.85);
+    border: 1px solid rgba(77, 194, 116, 0.32);
+    color: #276735;
+}
+
+.lesson-hero__meta-list .lesson-meta-pill-applied {
+    background: rgba(222, 239, 255, 0.85);
+    border: 1px solid rgba(93, 147, 204, 0.3);
+    color: #245477;
+}
+
+.lesson-hero__meta-list .lesson-meta-pill-challenge {
+    background: rgba(247, 225, 255, 0.85);
+    border: 1px solid rgba(157, 94, 189, 0.3);
+    color: #66327d;
+}

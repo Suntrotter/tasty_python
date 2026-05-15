@@ -11,7 +11,7 @@ LessonStatus = Literal[
     "coming_soon",
 ]
 
-LessonDifficulty = Literal["beginner", "easy", "medium"]
+LessonDifficulty = str
 
 
 class LessonPreview(BaseModel):

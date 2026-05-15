@@ -1,0 +1,33 @@
+/* =========================================================
+   MEMORY HOOK — TITLE / BODY CONTRAST
+   ========================================================= */
+
+.lesson-section-metaphor .lesson-callout h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin: 0 0 14px;
+    color: var(--lesson-text);
+    font-size: 16px;
+    font-weight: 950;
+    letter-spacing: -0.02em;
+}
+
+.lesson-section-metaphor .lesson-callout h3+p,
+.lesson-section-metaphor .lesson-callout h3~p {
+    color: var(--lesson-accent-dark);
+    font-weight: 650;
+    line-height: 1.65;
+}
+
+.lesson-section-metaphor .lesson-callout h3~p strong {
+    color: var(--lesson-accent-dark);
+    font-weight: 950;
+}
+
+.lesson-section-metaphor .lesson-callout h3~p code {
+    background: rgba(255, 226, 173, 0.72);
+    color: var(--lesson-accent-dark);
+    font-weight: 900;
+}

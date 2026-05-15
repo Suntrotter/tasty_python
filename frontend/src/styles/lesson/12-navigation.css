@@ -1,0 +1,63 @@
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+.lesson-navigation {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: var(--lesson-section-gap);
+}
+
+.lesson-nav-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 118px;
+    padding: 24px;
+    border-radius: var(--lesson-radius-md);
+    background: var(--lesson-card-bg);
+    border: 1px solid var(--lesson-border-soft);
+    box-shadow: var(--lesson-shadow-soft);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lesson-nav-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--lesson-shadow-medium);
+}
+
+.lesson-nav-card span {
+    margin-bottom: 8px;
+    color: var(--lesson-accent);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.lesson-nav-card strong {
+    font-size: 17px;
+    line-height: 1.35;
+}
+
+.lesson-nav-card-disabled {
+    opacity: 0.55;
+}
+
+.lesson-nav-card-disabled:hover {
+    transform: none;
+    box-shadow: var(--lesson-shadow-soft);
+}
+
+.coming-soon-box {
+    max-width: 720px;
+}
+
+.progress-source-label {
+    margin-top: 8px;
+    margin-bottom: 0;
+    color: var(--lesson-muted);
+    font-size: 14px;
+    font-weight: 800;
+}

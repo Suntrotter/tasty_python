@@ -1,0 +1,60 @@
+/* =========================================================
+   ACCORDIONS
+   ========================================================= */
+
+.lesson-accordion-list {
+    display: grid;
+    gap: 22px;
+    margin-top: 28px;
+}
+
+.lesson-accordion {
+    overflow: hidden;
+    border-radius: var(--lesson-radius-md);
+    background: color-mix(in srgb, var(--lesson-card-soft) 74%, white);
+    border: 1px solid var(--lesson-border-soft);
+    box-shadow: 0 12px 34px rgba(120, 72, 24, 0.06);
+}
+
+.lesson-accordion summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 24px;
+    cursor: pointer;
+    list-style: none;
+}
+
+.lesson-accordion summary::-webkit-details-marker {
+    display: none;
+}
+
+.lesson-accordion[open] summary {
+    border-bottom: 1px solid var(--lesson-border-soft);
+    background: color-mix(in srgb, var(--lesson-accent-soft) 46%, transparent);
+}
+
+.lesson-accordion-title {
+    color: var(--lesson-text);
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+}
+
+.lesson-accordion-toggle {
+    flex: 0 0 auto;
+    border-radius: 999px;
+    padding: 9px 14px;
+    background: var(--lesson-text);
+    color: var(--lesson-bg);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.lesson-accordion-content {
+    padding: 24px;
+}

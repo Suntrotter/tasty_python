@@ -714,7 +714,6 @@ function SortableBlockCard({
                 name="imageAlt"
                 value={form.imageAlt ?? ""}
                 onChange={handleInputChange}
-                placeholder="Describe the image for screen readers"
               />
             </label>
 
@@ -725,7 +724,6 @@ function SortableBlockCard({
                 value={form.caption ?? ""}
                 onChange={handleInputChange}
                 rows={3}
-                placeholder="Optional short caption under the image"
               />
             </label>
           </>
@@ -768,7 +766,6 @@ function SortableBlockCard({
                 value={form.question ?? ""}
                 onChange={handleInputChange}
                 rows={4}
-                placeholder="What does this code do?"
               />
             </label>
 
@@ -779,7 +776,6 @@ function SortableBlockCard({
                 value={form.code ?? ""}
                 onChange={handleInputChange}
                 rows={5}
-                placeholder={`tea = "mint"`}
               />
             </label>
 
@@ -811,7 +807,6 @@ function SortableBlockCard({
                 value={form.explanation ?? ""}
                 onChange={handleInputChange}
                 rows={4}
-                placeholder="Explain why the selected answer is correct."
               />
             </label>
           </>
@@ -827,7 +822,6 @@ function SortableBlockCard({
                 value={form.question ?? ""}
                 onChange={handleInputChange}
                 rows={4}
-                placeholder="Which options are correct?"
               />
             </label>
 
@@ -838,7 +832,6 @@ function SortableBlockCard({
                 value={form.code ?? ""}
                 onChange={handleInputChange}
                 rows={5}
-                placeholder={`items = ["apple", "cake"]`}
               />
             </label>
 
@@ -870,7 +863,6 @@ function SortableBlockCard({
                 value={form.explanation ?? ""}
                 onChange={handleInputChange}
                 rows={4}
-                placeholder="Explain why the selected answer is correct."
               />
             </label>
           </>
@@ -886,7 +878,6 @@ function SortableBlockCard({
                 value={form.task ?? ""}
                 onChange={handleInputChange}
                 rows={4}
-                placeholder="Write the task the learner should complete."
               />
             </label>
 
@@ -897,8 +888,6 @@ function SortableBlockCard({
                 value={form.starterCode ?? ""}
                 onChange={handleInputChange}
                 rows={8}
-                placeholder={`# Write starter code here
-`}
               />
             </label>
 
@@ -909,7 +898,6 @@ function SortableBlockCard({
                 value={form.expectedOutput ?? ""}
                 onChange={handleInputChange}
                 rows={4}
-                placeholder="Expected output here"
               />
             </label>
 
@@ -920,7 +908,6 @@ function SortableBlockCard({
                 value={form.explanation ?? ""}
                 onChange={handleInputChange}
                 rows={4}
-                placeholder="Explain why the selected answer is correct."
               />
             </label>
           </>
@@ -935,7 +922,6 @@ function SortableBlockCard({
                 name="title"
                 value={form.title ?? ""}
                 onChange={handleInputChange}
-                placeholder="Why does this happen?"
               />
             </label>
 
@@ -946,7 +932,6 @@ function SortableBlockCard({
                 value={form.markdown ?? ""}
                 onChange={handleInputChange}
                 rows={6}
-                placeholder="Add the hidden explanation here."
               />
             </label>
           </>

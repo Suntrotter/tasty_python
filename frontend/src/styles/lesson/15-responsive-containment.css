@@ -1,0 +1,548 @@
+/* =========================================================
+   RESPONSIVE + FINAL CONTAINMENT SYSTEM
+   ========================================================= */
+
+/* Global anti-overflow rules for all lesson content */
+.lesson-page {
+    width: min(100%, var(--lesson-page-max));
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: clamp(10px, 3vw, 24px);
+    padding-right: clamp(10px, 3vw, 24px);
+    box-sizing: border-box;
+}
+
+.lesson-hero,
+.lesson-section {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.lesson-hero *,
+.lesson-section * {
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+.lesson-section>*,
+.lesson-practice-exercise>*,
+.lesson-question-box>*,
+.lesson-item>*,
+.lesson-callout>* {
+    max-width: 100%;
+}
+
+.lesson-block-list,
+.lesson-block,
+.lesson-markdown,
+.lesson-callout,
+.lesson-item,
+.lesson-practice-list,
+.lesson-practice-exercise,
+.lesson-question-box,
+.lesson-choice-list,
+.lesson-choice-button,
+.lesson-code-card,
+.python-runner,
+.table-wrapper,
+.lesson-inline-image {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+}
+
+.lesson-code-card,
+.python-runner,
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.lesson-code-editor,
+.python-runner-editor,
+.monaco-editor,
+.monaco-editor .overflow-guard {
+    min-width: 0 !important;
+    max-width: 100% !important;
+}
+
+.lesson-section p,
+.lesson-section li,
+.lesson-markdown,
+.lesson-markdown p,
+.lesson-markdown li,
+.lesson-question-box p,
+.lesson-practice-exercise p,
+.lesson-callout p,
+.lesson-item p {
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+.lesson-section code,
+.lesson-markdown code,
+.lesson-question-box code,
+.lesson-practice-exercise code,
+.lesson-callout code,
+.lesson-item code {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.lesson-section .lesson-code-card {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.lesson-section .lesson-code-card pre {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+/* Consistent rounded top stripe */
+.lesson-section::before {
+    top: 0;
+    left: clamp(10px, 2vw, 18px);
+    right: clamp(10px, 2vw, 18px);
+    height: clamp(5px, 0.6vw, 7px);
+    border-radius: 999px;
+    pointer-events: none;
+}
+
+.lesson-section {
+    padding-top: clamp(34px, 4vw, 46px);
+}
+
+/* Playful hero visual tilt for the terminal-card variant */
+.lesson-hero .lesson-hero__visual.lesson-hero__visual--terminal-card {
+    transform: rotate(-6deg) translate(8px, -6px) scale(1.02);
+    transform-origin: center;
+}
+
+/* Responsive image rhythm */
+.lesson-inline-image {
+    margin-top: clamp(18px, 3vw, 32px);
+    margin-bottom: clamp(22px, 3.5vw, 38px);
+}
+
+.lesson-section-metaphor .lesson-inline-image,
+.lesson-section-code_example .lesson-inline-image,
+.lesson-practice-exercise .lesson-inline-image {
+    margin-top: clamp(18px, 3vw, 30px);
+    margin-bottom: clamp(22px, 3vw, 34px);
+}
+
+@media (max-width: 1100px) {
+    .lesson-section {
+        padding-left: clamp(20px, 4vw, 36px);
+        padding-right: clamp(20px, 4vw, 36px);
+    }
+}
+
+@media (max-width: 900px) {
+    .lesson-page {
+        width: 100%;
+        max-width: 100%;
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .lesson-hero,
+    .lesson-section {
+        width: 100%;
+        max-width: 100%;
+        padding-left: 28px;
+        padding-right: 28px;
+        border-radius: 28px;
+    }
+
+    .lesson-hero {
+        padding-top: 28px;
+        padding-bottom: 28px;
+    }
+
+    .lesson-hero__content {
+        grid-template-columns: 1fr;
+    }
+
+    .lesson-hero__visual {
+        max-width: 460px;
+    }
+
+    .lesson-hero .lesson-hero__visual.lesson-hero__visual--terminal-card {
+        transform: rotate(-3deg) translateY(-2px);
+    }
+
+    .lesson-section-header {
+        flex-direction: column;
+    }
+
+    .image-prompt-list,
+    .lesson-image-grid,
+    .lesson-navigation {
+        grid-template-columns: 1fr;
+    }
+
+    .python-runner-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .python-runner-output-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .lesson-section-code_example,
+    .lesson-section-trap_zone {
+        padding-left: 28px;
+        padding-right: 28px;
+    }
+
+    .lesson-section-trap_zone .lesson-item-danger,
+    .lesson-section-trap_zone .lesson-item-success {
+        padding: 24px;
+    }
+}
+
+@media (max-width: 760px) {
+    .lesson-page {
+        padding-left: 18px;
+        padding-right: 18px;
+        --lesson-section-gap: 36px;
+    }
+
+    .lesson-hero {
+        padding: 26px 22px;
+        border-radius: 26px;
+    }
+
+    .lesson-hero h1 {
+        font-size: clamp(38px, 12vw, 58px);
+        line-height: 0.96;
+        letter-spacing: -0.065em;
+    }
+
+    .lesson-hero__meta-list {
+        gap: 8px;
+    }
+
+    .lesson-hero__meta-list span {
+        min-height: 30px;
+        font-size: 12px;
+    }
+
+    .lesson-hero__visual-body {
+        padding: 20px;
+    }
+
+    .lesson-hero__visual h2 {
+        font-size: 26px;
+    }
+
+    .lesson-section {
+        padding-top: 34px;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-bottom: 24px;
+        border-radius: 26px;
+    }
+
+    .lesson-section::before {
+        left: 12px;
+        right: 12px;
+        height: 5px;
+    }
+
+    .lesson-section-code_example,
+    .lesson-section-trap_zone {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .lesson-section h2 {
+        font-size: clamp(28px, 9vw, 42px);
+    }
+
+    .lesson-section-header {
+        gap: 12px;
+    }
+
+    .lesson-section-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        font-size: 22px;
+    }
+
+    .lesson-section-metaphor {
+        --metaphor-content-width: 100%;
+    }
+
+    .lesson-section-metaphor .lesson-inline-image img {
+        aspect-ratio: 4 / 3;
+    }
+
+    .lesson-section-metaphor .lesson-item:last-child {
+        padding: 68px 20px 22px;
+    }
+
+    .lesson-section-metaphor .lesson-item:last-child::before {
+        top: 20px;
+        left: 20px;
+    }
+
+    .lesson-inline-image,
+    .lesson-section-metaphor .lesson-inline-image,
+    .lesson-section-code_example .lesson-inline-image,
+    .lesson-practice-exercise .lesson-inline-image {
+        width: 100%;
+        margin-top: 20px;
+        margin-bottom: 26px;
+        border-radius: 22px;
+    }
+
+    .lesson-code-card {
+        margin: 22px 0;
+        border-radius: 18px;
+    }
+
+    .lesson-code-toolbar {
+        min-height: 42px;
+        padding: 0 12px;
+    }
+
+    .lesson-code-title {
+        font-size: 12px;
+    }
+
+    .lesson-code-copy {
+        padding: 6px 10px;
+        font-size: 11px;
+    }
+
+    .lesson-practice-exercise,
+    .lesson-item,
+    .lesson-accordion-content,
+    .lesson-question-box {
+        padding: 20px;
+        border-radius: 20px;
+    }
+
+    .lesson-section-trap_zone .lesson-item-danger,
+    .lesson-section-trap_zone .lesson-item-success {
+        padding: 20px;
+    }
+
+    .lesson-practice-exercise h3,
+    .lesson-item h3 {
+        font-size: 22px;
+        line-height: 1.08;
+    }
+
+    .lesson-choice-button {
+        padding: 13px 14px;
+        border-radius: 16px;
+    }
+
+    .lesson-choice-key {
+        width: 28px;
+        height: 28px;
+    }
+
+    .lesson-accordion summary {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .lesson-accordion-toggle {
+        align-self: flex-start;
+    }
+
+    .python-runner {
+        border-radius: 22px;
+    }
+
+    .python-runner-header {
+        padding: 16px;
+    }
+
+    .python-runner-output-grid {
+        padding: 14px;
+    }
+
+    .python-runner-output-card {
+        min-height: 100px;
+        padding: 14px;
+    }
+
+    .completion-celebration {
+        border-radius: 26px;
+    }
+
+    .completion-image-wrap img {
+        max-height: none;
+    }
+
+    .completion-content {
+        padding: 26px 20px;
+    }
+
+    .completion-celebration h2 {
+        font-size: clamp(32px, 10vw, 48px);
+    }
+
+    .completion-actions {
+        width: 100%;
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .completion-actions .button,
+    .completion-actions .completion-small-link {
+        display: flex;
+        width: 100%;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+}
+
+@media (max-width: 760px) and (min-width: 561px) {
+    .python-runner-actions {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .python-runner-actions button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    .lesson-page {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .lesson-hero,
+    .lesson-section {
+        padding-left: clamp(12px, 4vw, 18px);
+        padding-right: clamp(12px, 4vw, 18px);
+    }
+
+    .lesson-section p,
+    .lesson-section li,
+    .lesson-markdown,
+    .lesson-markdown p,
+    .lesson-markdown li {
+        overflow-wrap: anywhere;
+    }
+}
+
+@media (max-width: 560px) {
+    .lesson-hero .lesson-hero__visual.lesson-hero__visual--terminal-card {
+        transform: none;
+    }
+
+    .python-runner-actions {
+        width: 100%;
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .python-runner-actions button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 430px) {
+
+    .page.lesson-page,
+    .lesson-page {
+        width: 100%;
+        max-width: 100%;
+        padding-left: 10px;
+        padding-right: 10px;
+        overflow-x: visible;
+    }
+
+    .lesson-hero,
+    .lesson-section {
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 14px;
+        padding-right: 14px;
+        box-sizing: border-box;
+        overflow: visible;
+    }
+
+    .lesson-section {
+        padding-top: 32px;
+    }
+
+    .lesson-section::before {
+        left: 10px;
+        right: 10px;
+    }
+
+    .lesson-inline-image,
+    .lesson-section-metaphor .lesson-inline-image,
+    .lesson-section-code_example .lesson-inline-image,
+    .lesson-practice-exercise .lesson-inline-image {
+        margin-top: 18px;
+        margin-bottom: 22px;
+    }
+
+    .lesson-choice-button {
+        gap: 10px;
+    }
+
+    .python-runner-output-card pre {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 390px) {
+
+    .page.lesson-page,
+    .lesson-page {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .lesson-hero,
+    .lesson-section {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .lesson-practice-exercise,
+    .lesson-question-box,
+    .lesson-item,
+    .lesson-callout,
+    .lesson-accordion {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+}
+
+.completion-progress-note {
+    width: fit-content;
+    margin: 18px 0 0;
+    padding: 10px 14px;
+    border: 1px solid var(--lesson-border-soft);
+    border-radius: 999px;
+    background: var(--lesson-card-soft);
+    color: var(--lesson-muted);
+    font-size: 14px;
+    font-weight: 900;
+}

@@ -15,7 +15,7 @@ LessonStatus = Literal[
     "coming_soon",
 ]
 
-LessonDifficulty = Literal["beginner", "easy", "medium"]
+LessonDifficulty = str
 
 TrackStatus = Literal["planned", "in_progress", "published"]
 

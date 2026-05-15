@@ -1,0 +1,157 @@
+/* =========================================================
+   PRACTICE
+   ========================================================= */
+
+.lesson-practice-list {
+    display: grid;
+    gap: 28px;
+    margin-top: 30px;
+}
+
+.lesson-practice-exercise {
+    padding: 30px;
+    border-radius: 28px;
+    background:
+        linear-gradient(145deg, color-mix(in srgb, var(--lesson-card-soft) 76%, white), var(--lesson-card-bg)),
+        var(--lesson-card-bg);
+    border: 1px solid var(--lesson-border-soft);
+    box-shadow: 0 14px 38px rgba(120, 72, 24, 0.07);
+}
+
+.lesson-practice-exercise h3 {
+    margin-top: 0;
+    margin-bottom: 22px;
+    font-size: 25px;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+}
+
+.lesson-question-box {
+    margin: 22px 0;
+    padding: 22px;
+    border-radius: 20px;
+    background: var(--lesson-card-warm);
+    border: 1px solid var(--lesson-border-soft);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55);
+}
+
+.lesson-question-box p {
+    max-width: none;
+}
+
+.lesson-question-box p:last-child {
+    margin-bottom: 0;
+}
+
+.lesson-choice-list {
+    display: grid;
+    gap: 14px;
+    margin-top: 22px;
+}
+
+.lesson-choice-button {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    width: 100%;
+    padding: 16px 18px;
+    border-radius: 20px;
+    border: 1px solid var(--lesson-border-soft);
+    background: color-mix(in srgb, var(--lesson-card-bg) 92%, white);
+    color: var(--lesson-text);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition:
+        transform 0.16s ease,
+        border-color 0.16s ease,
+        background 0.16s ease,
+        box-shadow 0.16s ease;
+}
+
+.lesson-choice-button:hover {
+    transform: translateY(-1px);
+    border-color: var(--lesson-accent);
+    box-shadow: 0 10px 26px rgba(120, 72, 24, 0.1);
+}
+
+.lesson-choice-key {
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    border-radius: 999px;
+    background: var(--lesson-text);
+    color: var(--lesson-bg);
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.lesson-choice-button-selected {
+    border-color: var(--lesson-accent);
+    background: var(--lesson-accent-soft);
+}
+
+.lesson-choice-button-correct {
+    border-color: var(--lesson-success-border);
+    background: var(--lesson-success-bg);
+}
+
+.lesson-choice-button-correct .lesson-choice-key {
+    background: var(--lesson-success-text);
+    color: white;
+}
+
+.lesson-choice-button-wrong {
+    border-color: var(--lesson-danger-border);
+    background: var(--lesson-danger-bg);
+}
+
+.lesson-choice-button-wrong .lesson-choice-key {
+    background: var(--lesson-danger-text);
+    color: white;
+}
+
+.lesson-choice-feedback {
+    margin: 18px 0 0;
+    padding: 14px 16px;
+    border-radius: 18px;
+    font-weight: 800;
+}
+
+.lesson-choice-feedback-correct {
+    background: var(--lesson-success-bg);
+    color: var(--lesson-success-text);
+    border: 1px solid var(--lesson-success-border);
+}
+
+.lesson-choice-feedback-wrong {
+    background: var(--lesson-danger-bg);
+    color: var(--lesson-danger-text);
+    border: 1px solid var(--lesson-danger-border);
+}
+
+.lesson-practice-coding-task {
+    border-color: var(--lesson-info-border);
+    background:
+        linear-gradient(145deg, color-mix(in srgb, var(--lesson-info-bg) 70%, white), var(--lesson-card-bg)),
+        var(--lesson-card-bg);
+}
+
+.lesson-explanation-control {
+    margin-top: 20px;
+}
+
+.lesson-explanation-box {
+    margin-top: 16px;
+    padding: 20px 22px;
+    border: 1px solid var(--lesson-border-soft);
+    border-radius: 20px;
+    background: var(--lesson-card-soft);
+}
+
+.lesson-explanation-box p:last-child {
+    margin-bottom: 0;
+}

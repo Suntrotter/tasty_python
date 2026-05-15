@@ -1,0 +1,317 @@
+/* =========================================================
+   SECTION-SPECIFIC POLISH
+   Small refinements for block-based lessons
+   ========================================================= */
+
+.lesson-section,
+.lesson-block-anchor {
+    scroll-margin-top: 120px;
+}
+
+/* Interview Spot polish */
+
+.lesson-section-interview .lesson-accordion {
+    background:
+        linear-gradient(135deg, #fffaf1 0%, #fffdf8 100%);
+    border-color: rgba(240, 201, 142, 0.95);
+    box-shadow: 0 12px 34px rgba(120, 72, 24, 0.06);
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        border-color 0.18s ease;
+}
+
+.lesson-section-interview .lesson-accordion:hover {
+    transform: translateY(-1px);
+    border-color: #e6b86f;
+    box-shadow: 0 16px 42px rgba(120, 72, 24, 0.1);
+}
+
+.lesson-section-interview .lesson-accordion summary {
+    background:
+        radial-gradient(circle at top left, rgba(255, 226, 173, 0.45), transparent 32%),
+        transparent;
+}
+
+.lesson-section-interview .lesson-accordion-title {
+    color: #241f1c;
+    font-size: 20px;
+    font-weight: 950;
+}
+
+.lesson-section-interview .lesson-accordion[open] summary {
+    background:
+        radial-gradient(circle at top left, rgba(255, 226, 173, 0.7), transparent 34%),
+        #fff7e6;
+}
+
+.lesson-section-interview .lesson-accordion-content {
+    background: #fffdf8;
+}
+
+.lesson-section-interview .lesson-accordion-answer-label {
+    color: #c85b00;
+}
+
+.lesson-callout .code-window,
+.lesson-callout .code-block,
+.lesson-callout pre {
+    margin-top: 22px;
+    margin-bottom: 22px;
+}
+
+.lesson-callout-danger h3 {
+    color: var(--lesson-danger-text);
+}
+
+.lesson-callout-success h3 {
+    color: var(--lesson-success-text);
+}
+
+.lesson-callout-info h3 {
+    color: var(--lesson-info-text);
+}
+
+/* Trap Zone polish */
+
+.lesson-section-trap_zone .lesson-items {
+    gap: 20px;
+}
+
+/* Keep wrong/correct pairs visually connected */
+.lesson-section-trap_zone .lesson-item-danger+.lesson-item-success {
+    margin-top: -4px;
+}
+
+/* Add more breathing room before the next trap pair */
+.lesson-section-trap_zone .lesson-item-success+.lesson-item-danger {
+    margin-top: 18px;
+}
+
+/* Make red/green cards feel more intentional */
+.lesson-section-trap_zone .lesson-item-danger,
+.lesson-section-trap_zone .lesson-item-success {
+    padding: 30px;
+    border-radius: 26px;
+}
+
+/* Stronger trap title */
+.lesson-section-trap_zone .lesson-item-danger h3,
+.lesson-section-trap_zone .lesson-item-success h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+    font-size: 23px;
+}
+
+/* Add visual scanning icons */
+.lesson-section-trap_zone .lesson-item-danger h3::before {
+    content: "✕";
+    display: inline-flex;
+    width: 26px;
+    height: 26px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: var(--lesson-danger-text);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 950;
+}
+
+.lesson-section-trap_zone .lesson-item-success h3::before {
+    content: "✓";
+    display: inline-flex;
+    width: 26px;
+    height: 26px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: var(--lesson-success-text);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 950;
+}
+
+/* Slightly tighter code blocks inside trap cards */
+.lesson-section-trap_zone .lesson-code-card {
+    margin-top: 18px;
+    margin-bottom: 22px;
+}
+
+/* Make trap explanations easier to read */
+.lesson-section-trap_zone .lesson-item p {
+    max-width: none;
+}
+
+.lesson-section-trap_zone .lesson-item p:last-child {
+    margin-bottom: 0;
+}
+
+/* Warning callout works nicely as final trap takeaway */
+.lesson-section-trap_zone .lesson-callout-warning {
+    margin-top: 28px;
+    background:
+        radial-gradient(circle at top right, rgba(246, 180, 75, 0.22), transparent 34%),
+        #fff7d8;
+    border-color: #f0c98e;
+    box-shadow: 0 16px 42px rgba(120, 72, 24, 0.1);
+}
+
+.lesson-section-trap_zone .lesson-callout-warning h3 {
+    color: #7c2d12;
+}
+
+/* Trap Zone readability polish */
+
+.lesson-section-trap_zone .lesson-item-danger p {
+    color: var(--lesson-text);
+}
+
+.lesson-section-trap_zone .lesson-item-success p {
+    color: var(--lesson-text);
+}
+
+.lesson-section-trap_zone .lesson-item-danger h3 {
+    color: var(--lesson-danger-text);
+}
+
+.lesson-section-trap_zone .lesson-item-success h3 {
+    color: var(--lesson-success-text);
+}
+
+/* Trap Zone icon alignment fix */
+
+.lesson-section-trap_zone .lesson-section-icon {
+    font-size: 0;
+}
+
+.lesson-section-trap_zone .lesson-section-icon::before {
+    content: "⚠";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 28px;
+    height: 28px;
+
+    color: #c85b00;
+    font-size: 27px;
+    line-height: 1;
+    font-family: Arial, sans-serif;
+
+    transform: translateY(-1px);
+}
+
+/* Practice section polish */
+
+.lesson-practice-exercise .lesson-choice-list+button,
+.lesson-practice-exercise .lesson-choice-list+.button,
+.lesson-practice-exercise .lesson-choice-list+.lesson-check-button {
+    margin-top: 20px;
+}
+
+.lesson-practice-exercise .lesson-choice-list+button,
+.lesson-practice-exercise .lesson-choice-list+.button,
+.lesson-practice-exercise .lesson-choice-list+.lesson-check-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 44px;
+    padding: 0 22px;
+    border: 0;
+    border-radius: 999px;
+
+    background: var(--lesson-accent);
+    color: #ffffff;
+
+    font: inherit;
+    font-size: 14px;
+    font-weight: 950;
+
+    cursor: pointer;
+    box-shadow: 0 12px 26px rgba(200, 91, 0, 0.22);
+    transition:
+        background 0.18s ease,
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.lesson-practice-exercise .lesson-choice-list+button:hover,
+.lesson-practice-exercise .lesson-choice-list+.button:hover,
+.lesson-practice-exercise .lesson-choice-list+.lesson-check-button:hover {
+    background: var(--lesson-accent-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 16px 34px rgba(200, 91, 0, 0.28);
+}
+
+.lesson-section-cheat_sheet table code {
+    background: var(--lesson-accent-soft);
+    color: var(--lesson-accent-dark);
+    padding: 2px 7px;
+    border-radius: 8px;
+    font-weight: 800;
+}
+
+
+/* Cheat Sheet polish */
+
+.lesson-section-cheat_sheet td:first-child {
+    font-weight: 850;
+    color: var(--lesson-accent-dark);
+}
+
+.lesson-section-cheat_sheet th {
+    font-weight: 950;
+}
+
+.lesson-section-cheat_sheet .table-wrapper {
+    margin-top: 28px;
+}
+
+/* Coding practice final image polish */
+
+.lesson-practice-coding-task .lesson-inline-image,
+.lesson-practice-coding-task .lesson-inline-image-coding {
+    margin-top: 32px;
+    margin-bottom: 0;
+    width: min(100%, 760px);
+    border-radius: 24px;
+}
+
+/* Completion section polish */
+
+.completion-content {
+    padding: 42px 46px 44px;
+}
+
+.completion-actions {
+    margin-top: 30px;
+    gap: 18px;
+}
+
+.completion-actions .button {
+    box-shadow: 0 12px 26px rgba(36, 31, 28, 0.16);
+}
+
+.completion-small-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 42px;
+}
+
+/* Completion action polish */
+
+.completion-actions .button:nth-child(2) {
+    background: var(--lesson-accent);
+    color: #ffffff;
+    box-shadow: 0 12px 26px rgba(200, 91, 0, 0.22);
+}
+
+.completion-actions .button:nth-child(2):hover {
+    background: var(--lesson-accent-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 16px 34px rgba(200, 91, 0, 0.28);
+}

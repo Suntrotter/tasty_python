@@ -1,0 +1,160 @@
+.completion-auth-actions {
+    margin-top: 10px;
+}
+
+.completion-auth-link {
+    color: var(--lesson-accent-dark);
+    font-size: 15px;
+    font-weight: 900;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.admin-structure-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 18px 0;
+}
+
+.admin-structure-stats span {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: 8px 12px;
+    border: 1px solid #efd4ad;
+    border-radius: 999px;
+    background: #fff7e8;
+    color: #6e6257;
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.admin-structure-stats .admin-structure-warning {
+    border-color: #f0b7a4;
+    background: #fff0ea;
+    color: #a94624;
+}
+
+.admin-block-summary-list {
+    display: grid;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.admin-block-summary-list h4 {
+    margin: 0 0 4px;
+}
+
+.admin-block-summary-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 14px 16px;
+    border: 1px solid #efd4ad;
+    border-radius: 18px;
+    background: #fffdf8;
+}
+
+.admin-block-summary-row div {
+    display: grid;
+    gap: 4px;
+}
+
+.admin-block-summary-row strong {
+    text-transform: capitalize;
+}
+
+.admin-block-summary-row span {
+    color: #6e6257;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.admin-block-summary-row code {
+    align-self: center;
+    white-space: nowrap;
+}
+
+.admin-legacy-summary {
+    margin-top: 18px;
+    padding: 16px;
+    border: 1px dashed #d8b98f;
+    border-radius: 18px;
+    background: #fff7e8;
+}
+
+.lesson-callout-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.lesson-callout-icon {
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.75);
+    font-size: 15px;
+    line-height: 1;
+}
+
+.lesson-callout.lesson-callout-memory-hook {
+    padding: 24px 28px;
+    border-radius: 20px;
+    border: 1px solid rgba(222, 139, 32, 0.42);
+    background:
+        radial-gradient(circle at 0% 0%, rgba(255, 247, 195, 0.95), transparent 34%),
+        linear-gradient(135deg, rgba(255, 249, 223, 0.98), rgba(255, 236, 178, 0.78), rgba(238, 255, 226, 0.5));
+    box-shadow: 0 18px 44px rgba(84, 50, 12, 0.08);
+}
+
+.lesson-callout.lesson-callout-memory-hook .lesson-callout-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 12px;
+    color: #3a230f;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.lesson-callout.lesson-callout-memory-hook .lesson-callout-icon {
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    border-radius: 999px;
+    background: #1f1a17;
+    color: #ffd66b;
+    font-size: 14px;
+    line-height: 1;
+    box-shadow: 0 8px 18px rgba(31, 26, 23, 0.18);
+}
+
+.lesson-callout.lesson-callout-memory-hook .lesson-markdown {
+    margin: 0;
+}
+
+.lesson-callout.lesson-callout-memory-hook .lesson-markdown p {
+    margin: 0;
+    color: #6f390f;
+    font-weight: 700;
+    line-height: 1.65;
+}
+
+.lesson-callout.lesson-callout-memory-hook .lesson-markdown p+p {
+    margin-top: 8px;
+}
+
+.lesson-callout.lesson-callout-memory-hook code {
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.65);
+    padding: 2px 6px;
+}

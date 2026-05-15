@@ -19,6 +19,28 @@ const defaultHeroVisual: HeroVisual = {
   chips: ["names", "values", "reassignment"],
 };
 
+function getDifficultyClassName(difficulty: string) {
+  const normalizedDifficulty = difficulty.trim().toLowerCase();
+
+  if (normalizedDifficulty === "foundation") {
+    return "lesson-meta-pill-foundation";
+  }
+
+  if (normalizedDifficulty === "core") {
+    return "lesson-meta-pill-core";
+  }
+
+  if (normalizedDifficulty === "applied") {
+    return "lesson-meta-pill-applied";
+  }
+
+  if (normalizedDifficulty === "challenge") {
+    return "lesson-meta-pill-challenge";
+  }
+
+  return "";
+}
+
 function LessonHero({
   order,
   title,
@@ -29,6 +51,7 @@ function LessonHero({
   visual = defaultHeroVisual,
 }: LessonHeroProps) {
   const visualTone = visual.tone ?? "warm";
+  const conceptLabel = visual.chips?.[0] || "interview mental model";
 
   return (
     <section className="lesson-hero">
@@ -39,9 +62,17 @@ function LessonHero({
           <h1>{title}</h1>
 
           <div className="lesson-hero__meta-list">
-            <span>{difficulty}</span>
-            <span>{estimatedTime}</span>
-            <span>Python basics</span>
+            <span
+              className={`lesson-meta-pill ${getDifficultyClassName(
+                difficulty
+              )}`}
+            >
+              {difficulty}
+            </span>
+
+            <span className="lesson-meta-pill">{estimatedTime}</span>
+
+            <span className="lesson-meta-pill">{conceptLabel}</span>
           </div>
 
           <p className="lesson-hero__goal">{goal}</p>

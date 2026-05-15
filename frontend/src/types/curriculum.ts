@@ -7,7 +7,7 @@ export type LessonStatus =
 
 export type TrackStatus = "planned" | "in_progress" | "published";
 
-export type LessonDifficulty = "beginner" | "easy" | "medium";
+export type LessonDifficulty = string;
 
 export interface Track {
   slug: string;

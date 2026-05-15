@@ -1,0 +1,80 @@
+/* =========================================================
+   COMPLETION
+   ========================================================= */
+
+.completion-box {
+    margin-top: var(--lesson-section-gap);
+    margin-bottom: 32px;
+}
+
+.completion-celebration {
+    display: grid;
+    gap: 0;
+    overflow: hidden;
+    padding: 0;
+    border-radius: var(--lesson-radius-lg);
+    background:
+        radial-gradient(circle at top right, color-mix(in srgb, var(--lesson-accent-soft) 70%, transparent), transparent 34%),
+        var(--lesson-card-bg);
+    border: 1px solid var(--lesson-border);
+    box-shadow: var(--lesson-shadow-medium);
+}
+
+.completion-image-wrap {
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    background:
+        radial-gradient(circle at top right, rgba(255, 226, 173, 0.55), transparent 34%),
+        #fff7e6;
+}
+
+.completion-image-wrap img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    object-fit: contain;
+}
+
+.completion-content {
+    padding: 38px;
+}
+
+.completion-celebration h2 {
+    margin: 0 0 18px;
+    font-size: clamp(32px, 5vw, 52px);
+    line-height: 0.98;
+    letter-spacing: -0.055em;
+}
+
+.completion-celebration p {
+    max-width: 780px;
+}
+
+.completion-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    margin-top: 28px;
+}
+
+.completion-small-link {
+    color: var(--lesson-accent-dark);
+    font-weight: 900;
+    text-decoration: none;
+}
+
+.completion-small-link:hover {
+    text-decoration: underline;
+}
+
+.completion-box-done {
+    border-color: var(--lesson-success-border);
+    background: var(--lesson-success-bg);
+}
+
+.completion-box-done .completion-kicker {
+    color: var(--lesson-success-text);
+}

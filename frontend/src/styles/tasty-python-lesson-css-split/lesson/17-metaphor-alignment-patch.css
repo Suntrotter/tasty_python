@@ -1,0 +1,135 @@
+/* =========================================================
+   METAPHOR SECTION — ADMIN/BLOCK-BASED ALIGNMENT PATCH
+   Keeps text, callouts, memory hooks, and images on one shared width.
+   ========================================================= */
+
+.lesson-section-metaphor {
+    --metaphor-content-width: 880px;
+}
+
+/* Legacy direct content + new admin/block-based content */
+.lesson-section-metaphor .lesson-section-header,
+.lesson-section-metaphor>p,
+.lesson-section-metaphor>.lesson-inline-image,
+.lesson-section-metaphor>.lesson-code-card,
+.lesson-section-metaphor>.lesson-items,
+.lesson-section-metaphor>.lesson-accordion-list,
+.lesson-section-metaphor>.output-box,
+.lesson-section-metaphor>.lesson-block-list,
+.lesson-section-metaphor .lesson-block,
+.lesson-section-metaphor .lesson-markdown,
+.lesson-section-metaphor .lesson-callout,
+.lesson-section-metaphor .lesson-block-image {
+    width: min(100%, var(--metaphor-content-width));
+    max-width: min(100%, var(--metaphor-content-width));
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* The admin renderer usually wraps content in this list */
+.lesson-section-metaphor>.lesson-block-list {
+    display: grid;
+    gap: clamp(16px, 2vw, 24px);
+    margin-top: 0;
+}
+
+/* Remove the old 820px text limit inside metaphor sections */
+.lesson-section-metaphor .lesson-markdown {
+    font-size: clamp(16px, 1.08vw, 17px);
+    line-height: 1.72;
+}
+
+.lesson-section-metaphor .lesson-markdown p {
+    max-width: none;
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+.lesson-section-metaphor .lesson-markdown> :last-child {
+    margin-bottom: 0;
+}
+
+/* Callouts should align with the image too */
+.lesson-section-metaphor .lesson-callout {
+    padding: clamp(16px, 2vw, 22px) clamp(18px, 2.5vw, 24px);
+    border-radius: 20px;
+}
+
+.lesson-section-metaphor .lesson-callout p {
+    max-width: none;
+}
+
+.lesson-section-metaphor .lesson-callout p:last-child {
+    margin-bottom: 0;
+}
+
+/* Image rhythm inside metaphor sections */
+.lesson-section-metaphor .lesson-inline-image,
+.lesson-section-metaphor .lesson-block-image {
+    margin-top: clamp(18px, 2.5vw, 24px);
+    margin-bottom: clamp(22px, 3vw, 32px);
+    border-radius: 26px;
+}
+
+.lesson-section-metaphor .lesson-inline-image img,
+.lesson-section-metaphor .lesson-block-image img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Keep the memory hook aligned with the same visual column */
+.lesson-section-metaphor .lesson-items {
+    width: min(100%, var(--metaphor-content-width));
+    max-width: min(100%, var(--metaphor-content-width));
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Mobile: the shared column becomes full width inside the card */
+@media (max-width: 760px) {
+    .lesson-section-metaphor {
+        --metaphor-content-width: 100%;
+    }
+
+    .lesson-section-metaphor .lesson-markdown {
+        font-size: 16px;
+        line-height: 1.68;
+    }
+
+    .lesson-section-metaphor .lesson-callout {
+        padding: 16px 18px;
+        border-radius: 18px;
+    }
+
+    .lesson-section-metaphor .lesson-inline-image,
+    .lesson-section-metaphor .lesson-block-image {
+        margin-top: 18px;
+        margin-bottom: 24px;
+        border-radius: 22px;
+    }
+
+    .lesson-section-metaphor .lesson-inline-image img,
+    .lesson-section-metaphor .lesson-block-image img {
+        aspect-ratio: 4 / 3;
+    }
+}
+
+@media (max-width: 430px) {
+    .lesson-section-metaphor .lesson-callout {
+        padding: 14px 16px;
+    }
+
+    .lesson-section-metaphor .lesson-markdown {
+        font-size: 15.5px;
+    }
+
+    .lesson-section-metaphor .lesson-inline-image,
+    .lesson-section-metaphor .lesson-block-image {
+        margin-top: 16px;
+        margin-bottom: 22px;
+        border-radius: 20px;
+    }
+}

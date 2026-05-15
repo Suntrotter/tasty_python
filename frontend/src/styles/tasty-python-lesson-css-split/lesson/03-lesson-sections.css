@@ -1,0 +1,221 @@
+/* =========================================================
+   LESSON SECTIONS
+   ========================================================= */
+
+.lesson-section {
+    position: relative;
+    overflow: visible;
+    margin-top: var(--lesson-section-gap);
+    padding: 40px;
+    border-radius: var(--lesson-radius-lg);
+    background:
+        radial-gradient(circle at top right, color-mix(in srgb, var(--lesson-accent-soft) 42%, transparent), transparent 36%),
+        var(--lesson-card-bg);
+    border: 1px solid var(--lesson-border);
+    box-shadow: var(--lesson-shadow-soft);
+}
+
+.lesson-section::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 7px;
+    background: linear-gradient(90deg,
+            var(--lesson-accent),
+            color-mix(in srgb, var(--lesson-accent) 50%, #facc15),
+            color-mix(in srgb, var(--lesson-accent) 35%, #84cc16));
+}
+
+.lesson-section-header {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    margin-bottom: 28px;
+}
+
+.lesson-section-icon {
+    display: inline-flex;
+    width: 50px;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    border-radius: 18px;
+    background: var(--lesson-accent-soft);
+    border: 1px solid var(--lesson-border);
+    font-size: 25px;
+    box-shadow: 0 10px 28px rgba(120, 72, 24, 0.08);
+}
+
+.lesson-section-kicker,
+.output-label,
+.lesson-question-label,
+.lesson-accordion-answer-label,
+.completion-kicker {
+    margin: 0 0 8px;
+    color: var(--lesson-accent);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.lesson-section h2 {
+    margin: 0;
+    font-size: clamp(28px, 4vw, 42px);
+    line-height: 1;
+    letter-spacing: -0.045em;
+}
+
+.lesson-section p {
+    max-width: 820px;
+}
+
+/* Section moods */
+
+.lesson-section-metaphor {
+    --metaphor-content-width: 880px;
+
+    background:
+        radial-gradient(circle at top right, rgba(254, 215, 170, 0.5), transparent 34%),
+        radial-gradient(circle at bottom left, rgba(232, 241, 215, 0.55), transparent 38%),
+        var(--lesson-card-bg);
+}
+
+/* Replace the generic/random metaphor icon visually */
+.lesson-section-metaphor .lesson-section-icon {
+    font-size: 0;
+}
+
+.lesson-section-metaphor .lesson-section-icon::before {
+    content: "🥣";
+    font-size: 25px;
+}
+
+/* Make the whole metaphor section read as one aligned learning block */
+.lesson-section-metaphor .lesson-section-header,
+.lesson-section-metaphor>p,
+.lesson-section-metaphor>.lesson-inline-image,
+.lesson-section-metaphor>.lesson-code-card,
+.lesson-section-metaphor>.lesson-items,
+.lesson-section-metaphor>.lesson-accordion-list,
+.lesson-section-metaphor>.output-box {
+    width: min(100%, var(--metaphor-content-width));
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.lesson-section-metaphor>p {
+    max-width: var(--metaphor-content-width);
+}
+
+/* Make the visual important, but not gigantic */
+.lesson-section-metaphor .lesson-inline-image {
+    margin-top: 20px;
+    margin-bottom: 30px;
+    border-radius: 26px;
+    box-shadow: 0 18px 50px rgba(120, 72, 24, 0.1);
+}
+
+.lesson-section-metaphor .lesson-inline-image img {
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Improve text rhythm inside the metaphor explanation */
+.lesson-section-metaphor>p {
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 17px;
+    line-height: 1.72;
+}
+
+/* Make the first explanatory line feel like context */
+.lesson-section-metaphor>p:first-of-type {
+    margin-top: 8px;
+    padding: 16px 18px;
+    border-radius: 20px;
+    background: rgba(255, 242, 212, 0.58);
+    border: 1px solid rgba(240, 201, 142, 0.7);
+    color: var(--lesson-accent-dark);
+    font-weight: 800;
+}
+
+/* Make the memory hook brighter and more memorable */
+.lesson-section-metaphor .lesson-items {
+    margin-top: 24px;
+}
+
+.lesson-section-metaphor .lesson-item:last-child {
+    overflow: hidden;
+    padding: 24px 26px 24px 72px;
+    background:
+        radial-gradient(circle at top right, rgba(246, 180, 75, 0.26), transparent 34%),
+        linear-gradient(135deg, #fff7d8 0%, #fffdf8 100%);
+    border: 1px solid #f0c98e;
+    box-shadow: 0 16px 42px rgba(120, 72, 24, 0.1);
+}
+
+.lesson-section-metaphor .lesson-item:last-child::before {
+    content: "💡";
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    display: inline-flex;
+    width: 34px;
+    height: 34px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: #241f1c;
+    color: #fff8ed;
+    font-size: 18px;
+}
+
+.lesson-section-metaphor .lesson-item:last-child h3 {
+    color: #7c2d12;
+}
+
+.lesson-section-metaphor .lesson-item:last-child p {
+    max-width: none;
+    margin-bottom: 0;
+    font-weight: 700;
+}
+
+.lesson-section-code_example {
+    background:
+        radial-gradient(circle at top left, rgba(219, 234, 254, 0.75), transparent 36%),
+        var(--lesson-card-bg);
+}
+
+
+.lesson-section-interview {
+    background:
+        radial-gradient(circle at top right, rgba(221, 214, 254, 0.68), transparent 34%),
+        var(--lesson-card-bg);
+}
+
+.lesson-section-trap_zone {
+    background:
+        radial-gradient(circle at top right, rgba(254, 202, 202, 0.66), transparent 34%),
+        var(--lesson-card-bg);
+}
+
+.lesson-section-practice {
+    background:
+        radial-gradient(circle at top left, rgba(220, 252, 231, 0.72), transparent 36%),
+        var(--lesson-card-bg);
+}
+
+.lesson-section-cheat_sheet {
+    background:
+        radial-gradient(circle at top right, rgba(254, 249, 195, 0.72), transparent 36%),
+        var(--lesson-card-bg);
+}
+
+.lesson-section-answer_key {
+    background:
+        radial-gradient(circle at top left, rgba(209, 250, 229, 0.72), transparent 36%),
+        var(--lesson-card-bg);
+}

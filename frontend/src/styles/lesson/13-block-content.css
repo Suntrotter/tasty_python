@@ -1,0 +1,119 @@
+/* =========================================================
+   BLOCK-BASED CONTENT
+   ========================================================= */
+
+.lesson-block-list {
+    display: grid;
+    gap: 26px;
+    margin-top: 28px;
+}
+
+.lesson-block {
+    max-width: 100%;
+}
+
+.lesson-markdown {
+    max-width: 820px;
+}
+
+.lesson-markdown> :first-child {
+    margin-top: 0;
+}
+
+.lesson-markdown> :last-child {
+    margin-bottom: 0;
+}
+
+.lesson-markdown ul,
+.lesson-markdown ol {
+    display: grid;
+    gap: 8px;
+    margin: 16px 0;
+    padding-left: 28px;
+    font-size: 18px;
+    line-height: 1.65;
+}
+
+.lesson-markdown li::marker {
+    color: var(--lesson-accent);
+    font-weight: 900;
+}
+
+.lesson-markdown strong {
+    color: var(--lesson-accent-dark);
+    font-weight: 900;
+}
+
+.lesson-markdown code {
+    background: var(--lesson-accent-soft);
+    color: var(--lesson-text);
+    padding: 2px 7px;
+    border-radius: 8px;
+    font-size: 0.92em;
+}
+
+.lesson-callout {
+    padding: 22px 24px;
+    border-radius: 24px;
+    border: 1px solid var(--lesson-border-soft);
+    background: var(--lesson-card-soft);
+    box-shadow: var(--lesson-shadow-soft);
+}
+
+.lesson-callout h3 {
+    margin-top: 0;
+}
+
+.lesson-callout-info {
+    background: var(--lesson-info-bg);
+    color: var(--lesson-info-text);
+    border-color: var(--lesson-info-border);
+}
+
+.lesson-callout-success {
+    background: var(--lesson-success-bg);
+    color: var(--lesson-success-text);
+    border-color: var(--lesson-success-border);
+}
+
+.lesson-callout-warning {
+    background: #fef3c7;
+    color: #92400e;
+    border-color: #fbbf24;
+}
+
+.lesson-callout-danger {
+    background: var(--lesson-danger-bg);
+    color: var(--lesson-danger-text);
+    border-color: var(--lesson-danger-border);
+}
+
+.lesson-block-image figcaption {
+    padding: 16px 18px;
+    background: var(--lesson-card-soft);
+    border-top: 1px solid var(--lesson-border-soft);
+}
+
+/* Main Code Example spacing polish */
+.lesson-section-code_example .lesson-block:has(.lesson-code-card) .lesson-code-card {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.lesson-section-code_example .lesson-block:has(.lesson-code-card:not(.lesson-code-card-output)) {
+    margin-top: 20px;
+}
+
+.lesson-section-code_example .lesson-block:has(.lesson-code-card:not(.lesson-code-card-output))+.lesson-block:has(.lesson-code-card-output) {
+    margin-top: -12px;
+}
+
+.lesson-section-code_example .lesson-code-card-output {
+    margin-bottom: 30px;
+}
+
+.lesson-section-code_example .lesson-inline-image {
+    margin-top: 32px;
+    margin-bottom: 34px;
+    width: min(100%, 820px);
+}

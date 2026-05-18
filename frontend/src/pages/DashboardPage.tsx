@@ -1,6 +1,10 @@
-import type { CSSProperties } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
-import { getLessonsByTrackSlug, lessons } from "../data/lessons";
+import {
+  fetchTracksSummary,
+  type TracksSummary,
+} from "../api/tracksSummaryApi";
+import { lessons } from "../data/lessons";
 import { tracks } from "../data/tracks";
 import { useAuth } from "../features/auth/AuthContext";
 import { getInterviewQuestionsToReview } from "../features/interview/interviewProgress";
@@ -14,46 +18,146 @@ function getPluralLabel(count: number, singular: string, plural: string) {
   return count === 1 ? singular : plural;
 }
 
+function getAllTracksFromSummary(summary: TracksSummary) {
+  return [
+    ...summary.completedTracks,
+    ...(summary.currentTrack ? [summary.currentTrack] : []),
+    ...summary.upNextTracks,
+    ...summary.moreTracks,
+  ];
+}
+
 function DashboardPage() {
   const { currentUser, isAuthLoading } = useAuth();
 
   const { completedLessonSlugs, progressSource, isProgressLoading } =
     useLessonProgress();
 
-  const currentTrack = tracks.find((track) => track.slug === CURRENT_TRACK_SLUG);
-  const currentTrackLessons = currentTrack
-    ? getLessonsByTrackSlug(currentTrack.slug)
-    : lessons;
+  const [tracksSummary, setTracksSummary] = useState<TracksSummary | null>(
+    null
+  );
+  const [isTracksSummaryLoading, setIsTracksSummaryLoading] = useState(false);
+  const [tracksSummaryError, setTracksSummaryError] = useState("");
 
-  const publishedLessons = currentTrackLessons.filter(
-    (lesson) => lesson.status === "published"
+  useEffect(() => {
+    let shouldIgnore = false;
+
+    async function loadTracksSummary() {
+      if (isAuthLoading) {
+        return;
+      }
+
+      if (!currentUser) {
+        setTracksSummary(null);
+        return;
+      }
+
+      setIsTracksSummaryLoading(true);
+      setTracksSummaryError("");
+
+      try {
+        const idToken = await currentUser.getIdToken();
+        const summary = await fetchTracksSummary(idToken);
+
+        if (!shouldIgnore) {
+          setTracksSummary(summary);
+        }
+      } catch {
+        if (!shouldIgnore) {
+          setTracksSummary(null);
+          setTracksSummaryError(
+            "Could not load your roadmap summary. Showing local progress data."
+          );
+        }
+      } finally {
+        if (!shouldIgnore) {
+          setIsTracksSummaryLoading(false);
+        }
+      }
+    }
+
+    loadTracksSummary();
+
+    return () => {
+      shouldIgnore = true;
+    };
+  }, [currentUser, isAuthLoading]);
+
+  const allSummaryTracks = useMemo(() => {
+    if (!tracksSummary) {
+      return [];
+    }
+
+    return getAllTracksFromSummary(tracksSummary);
+  }, [tracksSummary]);
+
+  const backendCurrentTrack =
+    tracksSummary?.currentTrack ??
+    allSummaryTracks.find(
+      (track) =>
+        track.readyLessonsCount > 0 &&
+        track.completedLessonsCount < track.readyLessonsCount
+    ) ??
+    allSummaryTracks.find((track) => track.readyLessonsCount > 0) ??
+    null;
+
+  const localCurrentTrack = tracks.find(
+    (track) => track.slug === CURRENT_TRACK_SLUG
   );
 
-  const completedLessons = publishedLessons.filter((lesson) =>
+  const localPublishedLessons = lessons.filter(
+    (lesson) =>
+      lesson.trackSlug === CURRENT_TRACK_SLUG && lesson.status === "published"
+  );
+
+  const localCompletedLessons = localPublishedLessons.filter((lesson) =>
     completedLessonSlugs.includes(lesson.slug)
   );
 
-  const totalPublishedLessons = publishedLessons.length;
+  const localNextLesson = localPublishedLessons.find(
+    (lesson) => !completedLessonSlugs.includes(lesson.slug)
+  );
+
+  const currentTrackTitle =
+    backendCurrentTrack?.title ?? localCurrentTrack?.title ?? "Python Core";
+
+  const currentTrackDescription =
+    backendCurrentTrack?.description ??
+    localCurrentTrack?.description ??
+    "Start with the essential Python ideas every junior developer should explain clearly.";
+
+  const completedLessonsCount =
+    backendCurrentTrack?.completedLessonsCount ?? localCompletedLessons.length;
+
+  const totalPublishedLessons =
+    backendCurrentTrack?.readyLessonsCount ?? localPublishedLessons.length;
+
+  const progressPercent =
+    backendCurrentTrack?.progressPercent ??
+    (totalPublishedLessons > 0
+      ? Math.round((completedLessonsCount / totalPublishedLessons) * 100)
+      : 0);
 
   const allPublishedLessonsCompleted =
     totalPublishedLessons > 0 &&
-    completedLessons.length >= totalPublishedLessons;
+    completedLessonsCount >= totalPublishedLessons;
 
-  const nextLesson = allPublishedLessonsCompleted
-    ? undefined
-    : publishedLessons.find(
-        (lesson) => !completedLessonSlugs.includes(lesson.slug)
-      );
+  const nextLessonCtaTo =
+    backendCurrentTrack?.ctaTo ??
+    (localNextLesson ? `/lessons/${localNextLesson.slug}` : "/tracks");
 
-  const progressPercent =
-    totalPublishedLessons > 0
-      ? Math.round((completedLessons.length / totalPublishedLessons) * 100)
-      : 0;
+  const nextLessonCtaLabel =
+    backendCurrentTrack?.ctaLabel ??
+    (completedLessonsCount > 0 ? "Continue learning" : "Start lesson");
+
+  const completedLessons = lessons.filter((lesson) =>
+    completedLessonSlugs.includes(lesson.slug)
+  );
 
   const practiceStats = getAllLessonPracticeStats()
     .map((stat) => {
-      const lesson = publishedLessons.find(
-        (publishedLesson) => publishedLesson.slug === stat.lessonSlug
+      const lesson = lessons.find(
+        (availableLesson) => availableLesson.slug === stat.lessonSlug
       );
 
       return {
@@ -95,7 +199,8 @@ function DashboardPage() {
   const reviewQueueCount =
     reviewTopics.length + interviewQuestionsToReview.length;
 
-  const isCheckingProgress = isAuthLoading || isProgressLoading;
+  const isCheckingProgress =
+    isAuthLoading || isProgressLoading || isTracksSummaryLoading;
 
   return (
     <main className="page progress-page">
@@ -133,34 +238,39 @@ function DashboardPage() {
             Backend progress is not available right now. Showing local progress.
           </p>
         )}
+
+        {tracksSummaryError && (
+          <p className="api-notice">{tracksSummaryError}</p>
+        )}
       </section>
 
       <section className="progress-hero-card">
         <div className="progress-hero-copy">
           <p className="progress-card-kicker">Current path</p>
-          <h2>{currentTrack?.title ?? "Python Core"}</h2>
+          <h2>{currentTrackTitle}</h2>
 
-          <p>
-            {currentTrack?.description ??
-              "Start with the essential Python ideas every junior developer should explain clearly."}
-          </p>
+          <p>{currentTrackDescription}</p>
 
           <div className="progress-next-inline">
             <p className="progress-card-kicker">
-              {nextLesson ? "Next lesson" : "Current status"}
+              {allPublishedLessonsCompleted ? "Current status" : "Next step"}
             </p>
 
-            {nextLesson ? (
-              <>
-                <strong>{nextLesson.title}</strong>
-                <span>{nextLesson.shortDescription}</span>
-              </>
-            ) : allPublishedLessonsCompleted ? (
+            {allPublishedLessonsCompleted ? (
               <>
                 <strong>All available lessons are complete.</strong>
                 <span>
                   You can review completed lessons or practice interview
                   answers.
+                </span>
+              </>
+            ) : totalPublishedLessons > 0 ? (
+              <>
+                <strong>Continue your current track.</strong>
+                <span>
+                  {completedLessonsCount} of {totalPublishedLessons} available{" "}
+                  {getPluralLabel(totalPublishedLessons, "lesson", "lessons")}{" "}
+                  completed.
                 </span>
               </>
             ) : (
@@ -172,18 +282,13 @@ function DashboardPage() {
           </div>
 
           <div className="progress-hero-actions">
-            {nextLesson ? (
-              <Link
-                to={`/lessons/${nextLesson.slug}`}
-                className="button button-primary"
-              >
-                {completedLessons.length > 0
-                  ? "Continue learning"
-                  : "Start lesson"}
-              </Link>
-            ) : allPublishedLessonsCompleted ? (
+            {allPublishedLessonsCompleted ? (
               <Link to="/interview-mode" className="button button-primary">
                 Practice interview answers
+              </Link>
+            ) : totalPublishedLessons > 0 ? (
+              <Link to={nextLessonCtaTo} className="button button-primary">
+                {nextLessonCtaLabel}
               </Link>
             ) : (
               <Link to="/tracks" className="button button-primary">
@@ -210,7 +315,7 @@ function DashboardPage() {
           </div>
 
           <p>
-            {completedLessons.length} of {totalPublishedLessons} available{" "}
+            {completedLessonsCount} of {totalPublishedLessons} available{" "}
             {getPluralLabel(totalPublishedLessons, "lesson", "lessons")}{" "}
             completed
           </p>
@@ -220,10 +325,10 @@ function DashboardPage() {
       <section className="progress-snapshot" aria-label="Progress snapshot">
         <article className="progress-card">
           <p className="progress-card-kicker">Completed</p>
-          <h2>{isCheckingProgress ? "..." : completedLessons.length}</h2>
+          <h2>{isCheckingProgress ? "..." : completedLessonsCount}</h2>
           <p>
             {getPluralLabel(
-              completedLessons.length,
+              completedLessonsCount,
               "Lesson completed in this track.",
               "Lessons completed in this track."
             )}
@@ -234,7 +339,7 @@ function DashboardPage() {
           <p className="progress-card-kicker">Track progress</p>
           <h2>{isCheckingProgress ? "..." : `${progressPercent}%`}</h2>
           <p>
-            {completedLessons.length} of {totalPublishedLessons} available{" "}
+            {completedLessonsCount} of {totalPublishedLessons} available{" "}
             {getPluralLabel(totalPublishedLessons, "lesson", "lessons")} done.
           </p>
         </article>
@@ -330,7 +435,9 @@ function DashboardPage() {
                 key={question.questionId}
               >
                 <div>
-                  <p className="progress-card-kicker">{question.lessonTitle}</p>
+                  <p className="progress-card-kicker">
+                    {question.lessonTitle}
+                  </p>
                   <h3>{question.question}</h3>
                   <p>Marked for review in Interview Mode.</p>
                 </div>
@@ -353,25 +460,34 @@ function DashboardPage() {
       <details className="progress-details">
         <summary>
           <span>Completed lessons</span>
-          <strong>{completedLessons.length}</strong>
+          <strong>{completedLessonSlugs.length}</strong>
         </summary>
 
-        {completedLessons.length > 0 ? (
+        {completedLessonSlugs.length > 0 ? (
           <div className="completed-lessons-list">
-            {completedLessons.map((lesson) => (
-              <Link
-                to={`/lessons/${lesson.slug}`}
-                className="completed-lesson-card"
-                key={lesson.slug}
-              >
-                <span>✓</span>
+            {completedLessonSlugs.map((lessonSlug) => {
+              const lesson = completedLessons.find(
+                (completedLesson) => completedLesson.slug === lessonSlug
+              );
 
-                <div>
-                  <strong>{lesson.title}</strong>
-                  <p>{lesson.shortDescription}</p>
-                </div>
-              </Link>
-            ))}
+              return (
+                <Link
+                  to={`/lessons/${lessonSlug}`}
+                  className="completed-lesson-card"
+                  key={lessonSlug}
+                >
+                  <span>✓</span>
+
+                  <div>
+                    <strong>{lesson?.title ?? lessonSlug}</strong>
+                    <p>
+                      {lesson?.shortDescription ??
+                        "Completed lesson saved in your account."}
+                    </p>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         ) : (
           <div className="empty-progress-card">

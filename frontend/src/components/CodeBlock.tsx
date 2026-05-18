@@ -19,12 +19,22 @@ function CodeBlock({
   const preparedCode = code.trimEnd();
   const isCopyable = variant === "code";
 
-  const editorHeight = useMemo(() => {
-    const lineCount = preparedCode.split("\n").length;
-    const calculatedHeight = lineCount * 24 + 56;
-
-    return Math.min(Math.max(calculatedHeight, 110), 420);
+  const lineCount = useMemo(() => {
+    return preparedCode.split(/\r?\n/).length;
   }, [preparedCode]);
+
+  const isCompact = lineCount <= 2;
+
+  const editorHeight = useMemo(() => {
+    const lineHeight = 24;
+    const verticalPadding = isCompact ? 34 : 56;
+    const minHeight = isCompact ? 64 : 110;
+    const maxHeight = 420;
+
+    const calculatedHeight = lineCount * lineHeight + verticalPadding;
+
+    return Math.min(Math.max(calculatedHeight, minHeight), maxHeight);
+  }, [lineCount, isCompact]);
 
   async function handleCopy() {
     if (!isCopyable) {
@@ -48,7 +58,11 @@ function CodeBlock({
   }
 
   return (
-    <div className={`lesson-code-card lesson-code-card-${variant}`}>
+    <div
+      className={`lesson-code-card lesson-code-card-${variant} ${
+        isCompact ? "lesson-code-card-compact" : ""
+      }`}
+    >
       <div className="lesson-code-toolbar">
         <div className="lesson-code-toolbar-left">
           <span className="lesson-code-dot lesson-code-dot-red" />

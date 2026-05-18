@@ -196,6 +196,18 @@ function isMainCodeExampleSection(section: LessonSection) {
   return section.title.toLowerCase() === "main code example";
 }
 
+function getLessonSectionDomId(section: LessonSection) {
+  if (section.type === "metaphor") {
+    return "lesson-start";
+  }
+
+  if (section.type === "practice") {
+    return "lesson-practice";
+  }
+
+  return `lesson-section-${section.id}`;
+}
+
 function getPracticeItemKey(
   sectionId: string,
   item: NonNullable<LessonSection["items"]>[number],
@@ -533,7 +545,9 @@ function MultiSelectExercise({
   function handleToggleAnswer(answer: string) {
     setSelectedAnswers((currentAnswers) => {
       if (currentAnswers.includes(answer)) {
-        return currentAnswers.filter((currentAnswer) => currentAnswer !== answer);
+        return currentAnswers.filter(
+          (currentAnswer) => currentAnswer !== answer
+        );
       }
 
       return [...currentAnswers, answer];
@@ -757,7 +771,7 @@ function LessonSectionRenderer({
   return (
     <section
       className={`lesson-section lesson-section-${section.type}`}
-      id={`lesson-section-${section.id}`}
+      id={getLessonSectionDomId(section)}
       data-lesson-scroll-anchor={`section-${section.id}`}
     >
       <div className="lesson-section-header">
@@ -779,14 +793,22 @@ function LessonSectionRenderer({
             {section.blocks
               ?.slice()
               .sort((firstBlock, secondBlock) => firstBlock.order - secondBlock.order)
-              .map((block) => {
+              .map((block, index) => {
                 const blockAnchor = `block-${block.id ?? block.key}`;
+
+                const blockAnchorClassName = [
+                  "lesson-block-anchor",
+                  `lesson-block-anchor-${block.type}`,
+                  `lesson-block-anchor-position-${index + 1}`,
+                ].join(" ");
 
                 return (
                   <div
-                    className="lesson-block-anchor"
+                    className={blockAnchorClassName}
                     id={`lesson-${blockAnchor}`}
                     data-lesson-scroll-anchor={blockAnchor}
+                    data-lesson-block-type={block.type}
+                    data-lesson-block-position={index + 1}
                     key={block.id ?? block.key}
                   >
                     <LessonBlockRenderer block={block} />

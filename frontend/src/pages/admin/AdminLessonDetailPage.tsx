@@ -1342,9 +1342,7 @@ function AdminLessonDetailPage() {
                 onChange={handleMetadataInputChange}
                 placeholder="Foundation"
               />
-              <p className="admin-field-hint">
-                Suggested labels: Foundation, Core, Applied, Challenge.
-              </p>
+              
             </label>
 
             <label>

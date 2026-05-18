@@ -13,6 +13,7 @@
         var(--lesson-card-bg);
     border: 1px solid var(--lesson-border);
     box-shadow: var(--lesson-shadow-soft);
+    scroll-margin-top: 140px;
 }
 
 .lesson-section::before {
@@ -20,6 +21,7 @@
     position: absolute;
     inset: 0 0 auto;
     height: 7px;
+    border-radius: var(--lesson-radius-lg) var(--lesson-radius-lg) 0 0;
     background: linear-gradient(90deg,
             var(--lesson-accent),
             color-mix(in srgb, var(--lesson-accent) 50%, #facc15),
@@ -71,7 +73,9 @@
     max-width: 820px;
 }
 
-/* Section moods */
+/* =========================================================
+   SECTION MOODS
+   ========================================================= */
 
 .lesson-section-metaphor {
     --metaphor-content-width: 880px;
@@ -99,31 +103,104 @@
 .lesson-section-metaphor>.lesson-code-card,
 .lesson-section-metaphor>.lesson-items,
 .lesson-section-metaphor>.lesson-accordion-list,
-.lesson-section-metaphor>.output-box {
+.lesson-section-metaphor>.output-box,
+.lesson-section-metaphor>.lesson-block-list {
     width: min(100%, var(--metaphor-content-width));
     margin-left: auto;
     margin-right: auto;
+}
+
+.lesson-section-metaphor .lesson-block-list {
+    display: grid;
+    gap: 20px;
 }
 
 .lesson-section-metaphor>p {
     max-width: var(--metaphor-content-width);
 }
 
-/* Make the visual important, but not gigantic */
+/* =========================================================
+   TASTY METAPHOR IMAGE
+   ========================================================= */
+
 .lesson-section-metaphor .lesson-inline-image {
+    position: relative;
+    overflow: hidden;
     margin-top: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 28px;
     border-radius: 26px;
     box-shadow: 0 18px 50px rgba(120, 72, 24, 0.1);
 }
 
 .lesson-section-metaphor .lesson-inline-image img {
+    display: block;
+    width: 100%;
     aspect-ratio: 16 / 10;
     object-fit: cover;
     object-position: center;
+    transition:
+        transform 260ms ease,
+        filter 260ms ease;
 }
 
-/* Improve text rhythm inside the metaphor explanation */
+.lesson-section-metaphor .lesson-inline-image::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(135deg,
+            rgba(255, 255, 255, 0.18),
+            transparent 34%,
+            rgba(138, 163, 95, 0.1));
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 260ms ease;
+}
+
+.lesson-section-metaphor .lesson-inline-image:hover img {
+    transform: scale(1.018);
+    filter: saturate(1.04);
+}
+
+.lesson-section-metaphor .lesson-inline-image:hover::after {
+    opacity: 1;
+}
+
+/* =========================================================
+   TASTY METAPHOR TEXT RHYTHM
+   ========================================================= */
+
+.lesson-section-metaphor .lesson-block-rich-text {
+    margin: 0;
+}
+
+.lesson-section-metaphor .lesson-markdown p {
+    max-width: var(--metaphor-content-width);
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 17px;
+    line-height: 1.72;
+}
+
+.lesson-section-metaphor .lesson-markdown p:last-child {
+    margin-bottom: 0;
+}
+
+.lesson-section-metaphor .lesson-markdown strong {
+    color: #7c2d12;
+    font-weight: 950;
+}
+
+.lesson-section-metaphor .lesson-markdown :not(pre)>code {
+    padding: 2px 6px;
+    border-radius: 7px;
+    background: rgba(255, 226, 173, 0.62);
+    color: #7c2d12;
+    font-size: 0.92em;
+    font-weight: 800;
+}
+
+/* Old non-block fallback */
 .lesson-section-metaphor>p {
     margin-top: 0;
     margin-bottom: 16px;
@@ -131,7 +208,6 @@
     line-height: 1.72;
 }
 
-/* Make the first explanatory line feel like context */
 .lesson-section-metaphor>p:first-of-type {
     margin-top: 8px;
     padding: 16px 18px;
@@ -142,7 +218,106 @@
     font-weight: 800;
 }
 
-/* Make the memory hook brighter and more memorable */
+/* =========================================================
+   METAPHOR HOOK CALLOUT
+   ========================================================= */
+
+.lesson-section-metaphor .lesson-callout-metaphor-hook {
+    position: relative;
+    margin: 0;
+    padding: 18px 22px 18px 68px;
+    border-radius: 20px;
+    background:
+        radial-gradient(circle at 30px 28px, rgba(246, 180, 75, 0.2), transparent 28px),
+        linear-gradient(135deg, #fff4c7 0%, #fffbea 100%);
+    border: 1px solid rgba(246, 180, 75, 0.86);
+    color: var(--lesson-accent-dark);
+    box-shadow: 0 12px 26px rgba(214, 95, 0, 0.08);
+}
+
+.lesson-section-metaphor .lesson-callout-metaphor-hook::before {
+    content: "🍯";
+    position: absolute;
+    top: 50%;
+    left: 22px;
+    display: inline-flex;
+    width: 34px;
+    height: 34px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: #241f1c;
+    color: #fff8ed;
+    font-size: 17px;
+    line-height: 1;
+    transform: translateY(-50%);
+}
+
+.lesson-section-metaphor .lesson-callout-metaphor-hook .lesson-markdown p {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.55;
+    font-weight: 950;
+    padding-left: 40px;
+}
+
+/* =========================================================
+   MEMORY HOOK
+   ========================================================= */
+
+.lesson-section-metaphor .lesson-callout-memory-hook {
+    margin-top: 8px;
+    padding: 24px 26px;
+    border-radius: 22px;
+    background:
+        radial-gradient(circle at top right, rgba(246, 180, 75, 0.26), transparent 34%),
+        linear-gradient(135deg, #fff7d8 0%, #fffdf8 100%);
+    border: 1px solid #f0c98e;
+    box-shadow: 0 16px 42px rgba(120, 72, 24, 0.1);
+    transition:
+        transform 180ms ease,
+        box-shadow 180ms ease;
+}
+
+.lesson-section-metaphor .lesson-callout-memory-hook:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 48px rgba(120, 72, 24, 0.13);
+}
+
+.lesson-section-metaphor .lesson-callout-memory-hook .lesson-callout-title {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin: 0 0 14px;
+    color: #7c2d12;
+}
+
+.lesson-section-metaphor .lesson-callout-memory-hook .lesson-callout-icon {
+    display: inline-flex;
+    width: 34px;
+    height: 34px;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    border-radius: 14px;
+    background: #241f1c;
+    color: #fff8ed;
+    font-size: 18px;
+}
+
+.lesson-section-metaphor .lesson-callout-memory-hook .lesson-markdown p {
+    max-width: none;
+    margin-bottom: 8px;
+    font-size: 16px;
+    line-height: 1.6;
+    font-weight: 750;
+}
+
+.lesson-section-metaphor .lesson-callout-memory-hook .lesson-markdown p:last-child {
+    margin-bottom: 0;
+}
+
+/* Old item-based fallback */
 .lesson-section-metaphor .lesson-items {
     margin-top: 24px;
 }
@@ -183,12 +358,15 @@
     font-weight: 700;
 }
 
+/* =========================================================
+   OTHER SECTION MOODS
+   ========================================================= */
+
 .lesson-section-code_example {
     background:
         radial-gradient(circle at top left, rgba(219, 234, 254, 0.75), transparent 36%),
         var(--lesson-card-bg);
 }
-
 
 .lesson-section-interview {
     background:
@@ -218,4 +396,1252 @@
     background:
         radial-gradient(circle at top left, rgba(209, 250, 229, 0.72), transparent 36%),
         var(--lesson-card-bg);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 720px) {
+    .lesson-section {
+        padding: 28px 20px;
+        scroll-margin-top: 110px;
+    }
+
+    .lesson-section-header {
+        gap: 12px;
+        margin-bottom: 22px;
+    }
+
+    .lesson-section-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 15px;
+        font-size: 22px;
+    }
+
+    .lesson-section-metaphor .lesson-section-icon::before {
+        font-size: 22px;
+    }
+
+    .lesson-section-metaphor .lesson-inline-image {
+        border-radius: 20px;
+    }
+
+    .lesson-section-metaphor .lesson-markdown p,
+    .lesson-section-metaphor>p {
+        font-size: 16px;
+        line-height: 1.68;
+    }
+
+    .lesson-section-metaphor .lesson-callout-metaphor-hook {
+        padding: 16px 18px 16px 54px;
+    }
+
+    .lesson-section-metaphor .lesson-callout-metaphor-hook::before {
+        top: 17px;
+        left: 18px;
+    }
+
+    .lesson-section-metaphor .lesson-callout-memory-hook {
+        padding: 22px 20px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .lesson-section-metaphor .lesson-inline-image img,
+    .lesson-section-metaphor .lesson-inline-image::after,
+    .lesson-section-metaphor .lesson-callout-memory-hook {
+        transition: none;
+    }
+
+    .lesson-section-metaphor .lesson-inline-image:hover img,
+    .lesson-section-metaphor .lesson-callout-memory-hook:hover {
+        transform: none;
+    }
+}
+
+/* =========================================================
+   METAPHOR HOOK CALLOUT — FINAL FIX
+   ========================================================= */
+
+.lesson-section-metaphor .lesson-callout-metaphor-hook {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+    position: relative;
+    margin: 0;
+    padding: 18px 22px;
+    border-radius: 20px;
+    background:
+        radial-gradient(circle at 30px 28px, rgba(246, 180, 75, 0.2), transparent 28px),
+        linear-gradient(135deg, #fff4c7 0%, #fffbea 100%);
+    border: 1px solid rgba(246, 180, 75, 0.86);
+    color: var(--lesson-accent-dark);
+    box-shadow: 0 12px 26px rgba(214, 95, 0, 0.08);
+}
+
+.lesson-section-metaphor .lesson-callout-metaphor-hook::before {
+    content: "🍯";
+    position: static;
+    display: inline-flex;
+    width: 34px;
+    height: 34px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: #241f1c;
+    color: #fff8ed;
+    font-size: 17px;
+    line-height: 1;
+    transform: none;
+}
+
+.lesson-section-metaphor .lesson-callout-metaphor-hook .lesson-markdown {
+    min-width: 0;
+}
+
+.lesson-section-metaphor .lesson-callout-metaphor-hook .lesson-markdown p {
+    margin: 0;
+    padding-left: 0;
+    font-size: 18px;
+    line-height: 1.55;
+    font-weight: 950;
+}
+
+/* Mobile version */
+
+@media (max-width: 720px) {
+    .lesson-section-metaphor .lesson-callout-metaphor-hook {
+        grid-template-columns: 32px minmax(0, 1fr);
+        gap: 11px;
+        padding: 16px 18px;
+    }
+
+    .lesson-section-metaphor .lesson-callout-metaphor-hook::before {
+        width: 32px;
+        height: 32px;
+        border-radius: 13px;
+        font-size: 16px;
+    }
+}
+
+/* =========================================================
+   SHORT THEORY SECTION — MARKDOWN-BASED FINAL FIX
+   ========================================================= */
+
+.lesson-section-theory {
+    background:
+        radial-gradient(circle at top left, rgba(219, 234, 254, 0.7), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(255, 242, 212, 0.55), transparent 36%),
+        var(--lesson-card-bg);
+}
+
+.lesson-section-theory .lesson-block-list {
+    display: grid;
+    gap: 26px;
+}
+
+.lesson-section-theory .lesson-block-rich-text {
+    margin: 0;
+}
+
+.lesson-section-theory .lesson-markdown p {
+    max-width: 780px;
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 16px;
+    line-height: 1.72;
+}
+
+.lesson-section-theory .lesson-markdown p:last-child {
+    margin-bottom: 0;
+}
+
+/* First rich-text block: definition */
+.lesson-section-theory .lesson-block-rich-text:first-of-type {
+    max-width: 780px;
+    padding: 16px 18px;
+    border-radius: 18px;
+    background:
+        linear-gradient(135deg, rgba(219, 234, 254, 0.72), rgba(255, 248, 237, 0.86));
+    border: 1px solid rgba(96, 165, 250, 0.34);
+    color: #17365d;
+    font-weight: 750;
+}
+
+/* Inline code as little labels */
+.lesson-section-theory .lesson-markdown :not(pre)>code {
+    padding: 2px 6px;
+    border-radius: 7px;
+    background: rgba(255, 226, 173, 0.62);
+    color: #7c2d12;
+    font-size: 0.92em;
+    font-weight: 800;
+}
+
+/* Markdown blockquote: the rule/explanation box */
+.lesson-section-theory .lesson-markdown blockquote {
+    max-width: 740px;
+    margin: 14px 0 0 24px;
+    padding: 14px 18px;
+    border-left: 4px solid rgba(214, 95, 0, 0.58);
+    border-radius: 0 16px 16px 0;
+    background: rgba(255, 242, 212, 0.52);
+    color: #4a321d;
+    font-weight: 750;
+}
+
+.lesson-section-theory .lesson-markdown blockquote p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.65;
+}
+
+/* Final rich-text block: conclusion */
+.lesson-section-theory .lesson-block-rich-text:last-of-type {
+    max-width: 780px;
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: rgba(232, 241, 215, 0.58);
+    border: 1px solid rgba(138, 163, 95, 0.34);
+    color: #2f4a24;
+    font-weight: 750;
+}
+
+/* But if there is only one rich-text block in the section, don't turn it green */
+.lesson-section-theory .lesson-block-rich-text:first-of-type:last-of-type {
+    background:
+        linear-gradient(135deg, rgba(219, 234, 254, 0.72), rgba(255, 248, 237, 0.86));
+    border: 1px solid rgba(96, 165, 250, 0.34);
+    color: #17365d;
+}
+
+/* Code blocks should have even spacing */
+.lesson-section-theory .lesson-block-code,
+.lesson-section-theory .lesson-code-card {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+@media (max-width: 720px) {
+    .lesson-section-theory .lesson-block-list {
+        gap: 22px;
+    }
+
+    .lesson-section-theory .lesson-markdown p,
+    .lesson-section-theory .lesson-markdown blockquote p {
+        font-size: 16px;
+        line-height: 1.68;
+    }
+
+    .lesson-section-theory .lesson-markdown blockquote {
+        margin-left: 0;
+    }
+}
+
+/* =========================================================
+   SHORT THEORY — WRAPPER-BASED FINAL FIX
+   ========================================================= */
+
+.lesson-section-theory {
+    background:
+        radial-gradient(circle at top left, rgba(219, 234, 254, 0.7), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(255, 242, 212, 0.55), transparent 36%),
+        var(--lesson-card-bg);
+}
+
+.lesson-section-theory .lesson-block-list {
+    display: grid;
+    gap: 26px;
+}
+
+/* Reset previous experimental rich-text styles inside theory */
+.lesson-section-theory .lesson-block-rich-text {
+    max-width: 780px;
+    margin: 0;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    color: var(--lesson-text) !important;
+    font-weight: 500 !important;
+}
+
+/* General theory text rhythm */
+.lesson-section-theory .lesson-markdown p {
+    max-width: 780px;
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 16px;
+    line-height: 1.72;
+}
+
+.lesson-section-theory .lesson-markdown p:last-child {
+    margin-bottom: 0;
+}
+
+/* Block 1: definition */
+.lesson-section-theory .lesson-block-anchor-position-1 .lesson-block-rich-text {
+    padding: 16px 18px !important;
+    border-radius: 18px;
+    background:
+        linear-gradient(135deg, rgba(219, 234, 254, 0.78), rgba(255, 248, 237, 0.9)) !important;
+    border: 1px solid rgba(96, 165, 250, 0.38) !important;
+    color: #17365d !important;
+    font-weight: 750 !important;
+}
+
+/* Block 3 and 5: explanatory cards */
+.lesson-section-theory .lesson-block-anchor-position-3 .lesson-block-rich-text,
+.lesson-section-theory .lesson-block-anchor-position-5 .lesson-block-rich-text {
+    padding: 16px 18px !important;
+    border-radius: 18px;
+    background: rgba(255, 253, 248, 0.72) !important;
+    border: 1px solid rgba(96, 165, 250, 0.22) !important;
+    color: var(--lesson-text) !important;
+    font-weight: 600 !important;
+}
+
+/* Inline code as small labels */
+.lesson-section-theory .lesson-markdown :not(pre)>code {
+    padding: 2px 6px;
+    border-radius: 7px;
+    background: rgba(255, 226, 173, 0.62);
+    color: #7c2d12;
+    font-size: 0.92em;
+    font-weight: 800;
+}
+
+/* Markdown blockquote: rule/explanation strips */
+.lesson-section-theory .lesson-markdown blockquote {
+    max-width: 740px;
+    margin: 14px 0 0 24px;
+    padding: 13px 16px;
+    border-left: 4px solid rgba(214, 95, 0, 0.62);
+    border-radius: 0 14px 14px 0;
+    background: rgba(255, 242, 212, 0.62);
+    color: #4a321d;
+}
+
+.lesson-section-theory .lesson-markdown blockquote p {
+    margin: 0;
+    color: #4a321d;
+    font-size: 16px;
+    line-height: 1.65;
+    font-weight: 800;
+}
+
+/* Final sentence inside block 5: soft conclusion */
+.lesson-section-theory .lesson-block-anchor-position-5 .lesson-markdown>p:last-child {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: rgba(232, 241, 215, 0.62);
+    border: 1px solid rgba(138, 163, 95, 0.34);
+    color: #2f4a24;
+    font-weight: 800;
+}
+
+/* Code blocks should stay visually dominant */
+.lesson-section-theory .lesson-code-card {
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+@media (max-width: 720px) {
+    .lesson-section-theory .lesson-block-list {
+        gap: 22px;
+    }
+
+    .lesson-section-theory .lesson-markdown p,
+    .lesson-section-theory .lesson-markdown blockquote p {
+        font-size: 16px;
+        line-height: 1.68;
+    }
+
+    .lesson-section-theory .lesson-markdown blockquote {
+        margin-left: 0;
+    }
+}
+
+/* =========================================================
+   MAIN CODE EXAMPLE — VISUAL POLISH
+   ========================================================= */
+
+.lesson-section-code_example {
+    --code-example-content-width: 880px;
+
+    background:
+        radial-gradient(circle at top left, rgba(219, 234, 254, 0.78), transparent 36%),
+        radial-gradient(circle at bottom right, rgba(255, 242, 212, 0.52), transparent 38%),
+        var(--lesson-card-bg);
+}
+
+.lesson-section-code_example .lesson-section-header,
+.lesson-section-code_example>.lesson-block-list {
+    width: min(100%, var(--code-example-content-width));
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.lesson-section-code_example .lesson-block-list {
+    display: grid;
+    gap: 26px;
+}
+
+/* Mission callout at the top */
+.lesson-section-code_example .lesson-block-anchor-position-1 .lesson-callout {
+    position: relative;
+    padding: 18px 20px 18px 64px;
+    border-radius: 20px;
+    background:
+        radial-gradient(circle at 26px 26px, rgba(96, 165, 250, 0.18), transparent 28px),
+        linear-gradient(135deg, rgba(219, 234, 254, 0.82), rgba(255, 248, 237, 0.92));
+    border: 1px solid rgba(96, 165, 250, 0.48);
+    color: #17365d;
+    box-shadow: 0 14px 30px rgba(36, 31, 28, 0.07);
+}
+
+.lesson-section-code_example .lesson-block-anchor-position-1 .lesson-callout::before {
+    content: "🎯";
+    position: absolute;
+    top: 18px;
+    left: 20px;
+    display: inline-flex;
+    width: 32px;
+    height: 32px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 13px;
+    background: #17365d;
+    color: #fff8ed;
+    font-size: 16px;
+}
+
+.lesson-section-code_example .lesson-block-anchor-position-1 .lesson-callout-title {
+    margin-bottom: 8px;
+    color: #1d4f91;
+}
+
+.lesson-section-code_example .lesson-block-anchor-position-1 .lesson-markdown p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.6;
+    font-weight: 700;
+}
+
+/* Code + output should feel like the central lab area */
+.lesson-section-code_example .lesson-block-code {
+    margin: 0;
+}
+
+.lesson-section-code_example .lesson-code-card {
+    margin: 0;
+    box-shadow: 0 22px 48px rgba(36, 31, 28, 0.14);
+}
+
+/* Output block: slightly smaller visual weight than main code */
+.lesson-section-code_example .lesson-block-anchor-position-3 .lesson-code-card {
+    box-shadow: 0 16px 34px rgba(36, 31, 28, 0.11);
+}
+
+.lesson-section-code_example .lesson-block-anchor-position-3 .lesson-code-card pre {
+    min-height: 96px;
+}
+
+/* “What happened here?” explanation */
+.lesson-section-code_example .lesson-block-rich-text {
+    max-width: 820px;
+    margin: 0;
+}
+
+.lesson-section-code_example .lesson-block-rich-text .lesson-markdown h2,
+.lesson-section-code_example .lesson-block-rich-text .lesson-markdown h3 {
+    margin-top: 0;
+    margin-bottom: 14px;
+    font-size: clamp(28px, 3.4vw, 38px);
+    line-height: 1;
+    letter-spacing: -0.045em;
+}
+
+.lesson-section-code_example .lesson-block-rich-text .lesson-markdown p {
+    max-width: 820px;
+    margin-top: 0;
+    margin-bottom: 14px;
+    font-size: 16px;
+    line-height: 1.72;
+}
+
+.lesson-section-code_example .lesson-block-rich-text .lesson-markdown p:last-child {
+    margin-bottom: 0;
+}
+
+.lesson-section-code_example .lesson-block-rich-text .lesson-markdown strong {
+    color: #7c2d12;
+    font-weight: 950;
+}
+
+.lesson-section-code_example .lesson-block-rich-text .lesson-markdown :not(pre)>code {
+    padding: 2px 6px;
+    border-radius: 7px;
+    background: rgba(255, 226, 173, 0.62);
+    color: #7c2d12;
+    font-size: 0.92em;
+    font-weight: 800;
+}
+
+/* Visual recap callout */
+.lesson-section-code_example .lesson-callout-info {
+    border-radius: 20px;
+    background:
+        linear-gradient(135deg, rgba(219, 234, 254, 0.72), rgba(255, 248, 237, 0.88));
+    border: 1px solid rgba(96, 165, 250, 0.42);
+    box-shadow: 0 14px 30px rgba(36, 31, 28, 0.06);
+}
+
+.lesson-section-code_example .lesson-callout-info .lesson-callout-title {
+    color: #1d4f91;
+}
+
+.lesson-section-code_example .lesson-callout-info .lesson-markdown p {
+    font-size: 16px;
+    line-height: 1.65;
+}
+
+/* Image after visual recap */
+.lesson-section-code_example .lesson-inline-image {
+    overflow: hidden;
+    border-radius: 26px;
+    box-shadow: 0 18px 46px rgba(120, 72, 24, 0.12);
+}
+
+.lesson-section-code_example .lesson-inline-image img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: center;
+    transition:
+        transform 260ms ease,
+        filter 260ms ease;
+}
+
+.lesson-section-code_example .lesson-inline-image:hover img {
+    transform: scale(1.018);
+    filter: saturate(1.04);
+}
+
+/* Final memory hook in main code example */
+.lesson-section-code_example .lesson-callout-memory-hook {
+    margin-top: 2px;
+    padding: 22px 24px;
+    border-radius: 22px;
+    background:
+        radial-gradient(circle at top right, rgba(246, 180, 75, 0.24), transparent 34%),
+        linear-gradient(135deg, #fff7d8 0%, #fffdf8 100%);
+    border: 1px solid #f0c98e;
+    box-shadow: 0 16px 38px rgba(120, 72, 24, 0.1);
+    transition:
+        transform 180ms ease,
+        box-shadow 180ms ease;
+}
+
+.lesson-section-code_example .lesson-callout-memory-hook:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 46px rgba(120, 72, 24, 0.13);
+}
+
+.lesson-section-code_example .lesson-callout-memory-hook .lesson-callout-title {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin: 0 0 14px;
+    color: #7c2d12;
+}
+
+.lesson-section-code_example .lesson-callout-memory-hook .lesson-callout-icon {
+    display: inline-flex;
+    width: 34px;
+    height: 34px;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    border-radius: 14px;
+    background: #241f1c;
+    color: #fff8ed;
+    font-size: 18px;
+}
+
+.lesson-section-code_example .lesson-callout-memory-hook .lesson-markdown p {
+    max-width: none;
+    margin-bottom: 8px;
+    font-size: 16px;
+    line-height: 1.6;
+    font-weight: 750;
+}
+
+.lesson-section-code_example .lesson-callout-memory-hook .lesson-markdown p:last-child {
+    margin-bottom: 0;
+}
+
+@media (max-width: 720px) {
+    .lesson-section-code_example {
+        --code-example-content-width: 100%;
+    }
+
+    .lesson-section-code_example .lesson-block-list {
+        gap: 22px;
+    }
+
+    .lesson-section-code_example .lesson-block-anchor-position-1 .lesson-callout {
+        padding: 16px 18px 16px 60px;
+    }
+
+    .lesson-section-code_example .lesson-block-anchor-position-1 .lesson-callout::before {
+        left: 18px;
+        width: 30px;
+        height: 30px;
+        border-radius: 12px;
+        font-size: 15px;
+    }
+
+    .lesson-section-code_example .lesson-block-rich-text .lesson-markdown p,
+    .lesson-section-code_example .lesson-callout-info .lesson-markdown p {
+        font-size: 16px;
+        line-height: 1.68;
+    }
+
+    .lesson-section-code_example .lesson-inline-image img {
+        aspect-ratio: 4 / 3;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .lesson-section-code_example .lesson-inline-image img,
+    .lesson-section-code_example .lesson-callout-memory-hook {
+        transition: none;
+    }
+
+    .lesson-section-code_example .lesson-inline-image:hover img,
+    .lesson-section-code_example .lesson-callout-memory-hook:hover {
+        transform: none;
+    }
+}
+
+/* =========================================================
+   INTERVIEW SPOT — ACCORDION POLISH
+   ========================================================= */
+
+.lesson-section-interview {
+    --interview-content-width: 880px;
+
+    background:
+        radial-gradient(circle at top right, rgba(221, 214, 254, 0.72), transparent 34%),
+        radial-gradient(circle at bottom left, rgba(255, 242, 212, 0.46), transparent 36%),
+        var(--lesson-card-bg);
+}
+
+.lesson-section-interview .lesson-section-header,
+.lesson-section-interview > .lesson-accordion-list,
+.lesson-section-interview > .lesson-block-list {
+    width: min(100%, var(--interview-content-width));
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.lesson-section-interview .lesson-accordion-list {
+    display: grid;
+    gap: 16px;
+}
+
+.lesson-section-interview .lesson-accordion {
+    overflow: hidden;
+    border-radius: 20px;
+    background: rgba(255, 253, 248, 0.82);
+    border: 1px solid rgba(214, 132, 34, 0.34);
+    box-shadow: 0 10px 24px rgba(36, 31, 28, 0.05);
+    transition:
+        transform 180ms ease,
+        box-shadow 180ms ease,
+        border-color 180ms ease,
+        background-color 180ms ease;
+}
+
+.lesson-section-interview .lesson-accordion:hover {
+    transform: translateY(-2px);
+    border-color: rgba(214, 132, 34, 0.56);
+    box-shadow: 0 16px 32px rgba(36, 31, 28, 0.08);
+}
+
+.lesson-section-interview .lesson-accordion[open] {
+    background:
+        linear-gradient(135deg, rgba(255, 248, 237, 0.94), rgba(245, 243, 255, 0.82));
+    border-color: rgba(139, 92, 246, 0.36);
+    box-shadow: 0 18px 38px rgba(36, 31, 28, 0.09);
+}
+
+.lesson-section-interview .lesson-accordion summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 16px;
+    align-items: center;
+    padding: 18px 20px;
+    cursor: pointer;
+    list-style: none;
+}
+
+.lesson-section-interview .lesson-accordion summary::-webkit-details-marker {
+    display: none;
+}
+
+.lesson-section-interview .lesson-accordion-title {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    color: #241f1c;
+    font-size: 16px;
+    font-weight: 950;
+    line-height: 1.35;
+}
+
+.lesson-section-interview .lesson-accordion-title::before {
+    content: "?";
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    border-radius: 999px;
+    background: rgba(221, 214, 254, 0.9);
+    color: #5b21b6;
+    font-size: 14px;
+    font-weight: 950;
+}
+
+.lesson-section-interview .lesson-accordion[open] .lesson-accordion-title::before {
+    content: "✓";
+    background: #241f1c;
+    color: #fff8ed;
+}
+
+.lesson-section-interview .lesson-accordion-toggle {
+    display: inline-flex;
+    min-height: 30px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: #241f1c;
+    color: #fff8ed;
+    font-size: 11px;
+    font-weight: 950;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition:
+        transform 160ms ease,
+        background-color 160ms ease;
+}
+
+.lesson-section-interview .lesson-accordion summary:hover .lesson-accordion-toggle {
+    transform: translateY(-1px);
+    background: #7c2d12;
+}
+
+.lesson-section-interview .lesson-accordion-content {
+    padding: 0 20px 20px 58px;
+    color: #3b2a1f;
+}
+
+.lesson-section-interview .lesson-accordion-content p {
+    max-width: 760px;
+    margin: 0;
+    padding: 16px 18px;
+    border-radius: 16px;
+    background: rgba(255, 248, 237, 0.86);
+    border: 1px solid rgba(214, 132, 34, 0.22);
+    font-size: 16px;
+    line-height: 1.68;
+}
+
+.lesson-section-interview .lesson-accordion-answer-label {
+    display: none;
+}
+
+@media (max-width: 720px) {
+    .lesson-section-interview {
+        --interview-content-width: 100%;
+    }
+
+    .lesson-section-interview .lesson-accordion summary {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 18px;
+    }
+
+    .lesson-section-interview .lesson-accordion-toggle {
+        width: fit-content;
+    }
+
+    .lesson-section-interview .lesson-accordion-content {
+        padding: 0 18px 18px;
+    }
+
+    .lesson-section-interview .lesson-accordion-content p {
+        font-size: 16px;
+        line-height: 1.68;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lesson-section-interview .lesson-accordion,
+    .lesson-section-interview .lesson-accordion-toggle {
+        transition: none;
+    }
+
+    .lesson-section-interview .lesson-accordion:hover,
+    .lesson-section-interview .lesson-accordion summary:hover .lesson-accordion-toggle {
+        transform: none;
+    }
+}
+
+/* =========================================================
+   INTERVIEW SPOT — ACCORDION POLISH
+   ========================================================= */
+
+.lesson-section-interview {
+    --interview-content-width: 880px;
+
+    background:
+        radial-gradient(circle at top right, rgba(221, 214, 254, 0.72), transparent 34%),
+        radial-gradient(circle at bottom left, rgba(255, 242, 212, 0.46), transparent 36%),
+        var(--lesson-card-bg);
+}
+
+.lesson-section-interview .lesson-section-header,
+.lesson-section-interview>.lesson-accordion-list,
+.lesson-section-interview>.lesson-block-list {
+    width: min(100%, var(--interview-content-width));
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.lesson-section-interview .lesson-accordion-list {
+    display: grid;
+    gap: 16px;
+}
+
+.lesson-section-interview .lesson-accordion {
+    overflow: hidden;
+    border-radius: 20px;
+    background: rgba(255, 253, 248, 0.82);
+    border: 1px solid rgba(214, 132, 34, 0.34);
+    box-shadow: 0 10px 24px rgba(36, 31, 28, 0.05);
+    transition:
+        transform 180ms ease,
+        box-shadow 180ms ease,
+        border-color 180ms ease,
+        background-color 180ms ease;
+}
+
+.lesson-section-interview .lesson-accordion:hover {
+    transform: translateY(-2px);
+    border-color: rgba(214, 132, 34, 0.56);
+    box-shadow: 0 16px 32px rgba(36, 31, 28, 0.08);
+}
+
+.lesson-section-interview .lesson-accordion[open] {
+    background:
+        linear-gradient(135deg, rgba(255, 248, 237, 0.94), rgba(245, 243, 255, 0.82));
+    border-color: rgba(139, 92, 246, 0.36);
+    box-shadow: 0 18px 38px rgba(36, 31, 28, 0.09);
+}
+
+.lesson-section-interview .lesson-accordion summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 16px;
+    align-items: center;
+    padding: 16px 20px;
+    cursor: pointer;
+    list-style: none;
+}
+
+.lesson-section-interview .lesson-accordion summary::-webkit-details-marker {
+    display: none;
+}
+
+.lesson-section-interview .lesson-accordion-title {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    color: #241f1c;
+    font-size: 16px;
+    font-weight: 950;
+    line-height: 1.35;
+}
+
+.lesson-section-interview .lesson-accordion-title::before {
+    content: "?";
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    border-radius: 999px;
+    background: rgba(221, 214, 254, 0.9);
+    color: #5b21b6;
+    font-size: 14px;
+    font-weight: 950;
+}
+
+.lesson-section-interview .lesson-accordion[open] .lesson-accordion-title::before {
+    content: "✓";
+    background: #241f1c;
+    color: #fff8ed;
+}
+
+.lesson-section-interview .lesson-accordion-toggle {
+    display: inline-flex;
+    min-height: 30px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: #241f1c;
+    color: #fff8ed;
+    font-size: 11px;
+    font-weight: 950;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition:
+        transform 160ms ease,
+        background-color 160ms ease;
+}
+
+.lesson-section-interview .lesson-accordion summary:hover .lesson-accordion-toggle {
+    transform: translateY(-1px);
+    background: #7c2d12;
+}
+
+.lesson-section-interview .lesson-accordion-content {
+    padding: 0 20px 20px 48px;
+    color: #3b2a1f;
+}
+
+.lesson-section-interview .lesson-accordion-content p {
+    max-width: 760px;
+    margin: 0;
+    padding: 16px 18px;
+    border-radius: 16px;
+    background: rgba(255, 248, 237, 0.86);
+    border: 1px solid rgba(214, 132, 34, 0.22);
+    font-size: 16px;
+    line-height: 1.68;
+}
+
+.lesson-section-interview .lesson-accordion-answer-label {
+    display: none;
+}
+
+@media (max-width: 720px) {
+    .lesson-section-interview {
+        --interview-content-width: 100%;
+    }
+
+    .lesson-section-interview .lesson-accordion summary {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 18px;
+    }
+
+    .lesson-section-interview .lesson-accordion-toggle {
+        width: fit-content;
+    }
+
+    .lesson-section-interview .lesson-accordion-content {
+        padding: 0 18px 18px;
+    }
+
+    .lesson-section-interview .lesson-accordion-content p {
+        font-size: 16px;
+        line-height: 1.68;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .lesson-section-interview .lesson-accordion,
+    .lesson-section-interview .lesson-accordion-toggle {
+        transition: none;
+    }
+
+    .lesson-section-interview .lesson-accordion:hover,
+    .lesson-section-interview .lesson-accordion summary:hover .lesson-accordion-toggle {
+        transform: none;
+    }
+}
+
+/* =========================================================
+   INTERVIEW SPOT — ANSWER AREA FINAL TUNING
+   ========================================================= */
+
+.lesson-section-interview .lesson-accordion-content {
+    padding: 6px 20px 20px 48px;
+    color: #3b2a1f;
+}
+
+.lesson-section-interview .lesson-accordion-content p {
+    max-width: 760px;
+    margin: 0;
+    padding: 14px 0 0;
+    border: none;
+    border-top: 1px solid rgba(214, 132, 34, 0.22);
+    border-radius: 0;
+    background: transparent;
+    font-size: 16px;
+    line-height: 1.68;
+}
+
+@media (max-width: 720px) {
+    .lesson-section-interview .lesson-accordion-content {
+        padding: 4px 18px 18px;
+    }
+
+    .lesson-section-interview .lesson-accordion-content p {
+        padding-top: 14px;
+    }
+}
+
+/* =========================================================
+   TRAP ZONE — DEBUGGING POLISH
+   ========================================================= */
+
+.lesson-section-trap_zone {
+    --trap-content-width: 880px;
+
+    background:
+        radial-gradient(circle at top right, rgba(254, 202, 202, 0.7), transparent 34%),
+        radial-gradient(circle at bottom left, rgba(255, 242, 212, 0.42), transparent 38%),
+        var(--lesson-card-bg);
+}
+
+.lesson-section-trap_zone .lesson-section-header,
+.lesson-section-trap_zone>.lesson-items,
+.lesson-section-trap_zone>.lesson-block-list {
+    width: min(100%, var(--trap-content-width));
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.lesson-section-trap_zone .lesson-items,
+.lesson-section-trap_zone .lesson-block-list {
+    display: grid;
+    gap: 22px;
+}
+
+/* Shared trap cards */
+.lesson-section-trap_zone .lesson-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 22px;
+    transition:
+        transform 180ms ease,
+        box-shadow 180ms ease,
+        border-color 180ms ease;
+}
+
+.lesson-section-trap_zone .lesson-item:hover {
+    transform: translateY(-2px);
+}
+
+/* Wrong examples */
+.lesson-section-trap_zone .lesson-item-danger {
+    background:
+        radial-gradient(circle at top right, rgba(248, 113, 113, 0.18), transparent 34%),
+        linear-gradient(135deg, rgba(255, 241, 242, 0.94), rgba(255, 228, 230, 0.72));
+    border: 1px solid rgba(244, 63, 94, 0.72);
+    box-shadow: 0 14px 32px rgba(127, 29, 29, 0.08);
+}
+
+.lesson-section-trap_zone .lesson-item-danger:hover {
+    border-color: rgba(225, 29, 72, 0.9);
+    box-shadow: 0 18px 40px rgba(127, 29, 29, 0.11);
+}
+
+.lesson-section-trap_zone .lesson-item-danger::before {
+    content: "!";
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: rgba(225, 29, 72, 0.12);
+    color: #be123c;
+    font-size: 16px;
+    font-weight: 950;
+}
+
+/* Correct model */
+.lesson-section-trap_zone .lesson-item-success {
+    background:
+        radial-gradient(circle at top right, rgba(74, 222, 128, 0.2), transparent 34%),
+        linear-gradient(135deg, rgba(220, 252, 231, 0.92), rgba(240, 253, 244, 0.76));
+    border: 1px solid rgba(34, 197, 94, 0.68);
+    box-shadow: 0 14px 32px rgba(22, 101, 52, 0.08);
+}
+
+.lesson-section-trap_zone .lesson-item-success:hover {
+    border-color: rgba(22, 163, 74, 0.88);
+    box-shadow: 0 18px 40px rgba(22, 101, 52, 0.11);
+}
+
+.lesson-section-trap_zone .lesson-item-success::before {
+    content: "✓";
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: rgba(22, 163, 74, 0.14);
+    color: #15803d;
+    font-size: 16px;
+    font-weight: 950;
+}
+
+/* Trap titles */
+.lesson-section-trap_zone .lesson-item h3 {
+    max-width: calc(100% - 48px);
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-size: 18px;
+    line-height: 1.25;
+    font-weight: 950;
+}
+
+.lesson-section-trap_zone .lesson-item-danger h3 {
+    color: #be123c;
+}
+
+.lesson-section-trap_zone .lesson-item-success h3 {
+    color: #15803d;
+}
+
+/* Code cards inside traps */
+.lesson-section-trap_zone .lesson-code-card {
+    margin-top: 14px;
+    margin-bottom: 22px;
+    box-shadow: 0 16px 34px rgba(36, 31, 28, 0.13);
+}
+
+/* Explanation text */
+.lesson-section-trap_zone .lesson-item p {
+    max-width: 800px;
+    font-size: 16px;
+    line-height: 1.68;
+}
+
+.lesson-section-trap_zone .lesson-item-danger p {
+    color: #9f1239;
+}
+
+.lesson-section-trap_zone .lesson-item-success p {
+    color: #14532d;
+}
+
+.lesson-section-trap_zone .lesson-item strong {
+    font-weight: 950;
+}
+
+/* Inline code as little labels */
+.lesson-section-trap_zone :not(pre)>code {
+    padding: 2px 6px;
+    border-radius: 7px;
+    background: rgba(255, 226, 173, 0.68);
+    color: #7c2d12;
+    font-size: 0.92em;
+    font-weight: 800;
+}
+
+/* Final trap takeaway */
+.lesson-section-trap_zone .lesson-item:last-child {
+    background:
+        radial-gradient(circle at top right, rgba(246, 180, 75, 0.22), transparent 34%),
+        linear-gradient(135deg, #fff7d8 0%, #fffdf8 100%);
+    border: 1px solid rgba(246, 180, 75, 0.78);
+    box-shadow: 0 16px 38px rgba(120, 72, 24, 0.1);
+}
+
+.lesson-section-trap_zone .lesson-item:last-child::before {
+    content: "🧠";
+    background: #241f1c;
+    color: #fff8ed;
+    font-size: 16px;
+}
+
+.lesson-section-trap_zone .lesson-item:last-child h3 {
+    color: #7c2d12;
+}
+
+.lesson-section-trap_zone .lesson-item:last-child p,
+.lesson-section-trap_zone .lesson-item:last-child li {
+    color: #7c2d12;
+    font-weight: 650;
+}
+
+.lesson-section-trap_zone .lesson-item:last-child ul {
+    margin-bottom: 0;
+    padding-left: 22px;
+}
+
+.lesson-section-trap_zone .lesson-item:last-child li+li {
+    margin-top: 8px;
+}
+
+/* Mobile */
+@media (max-width: 720px) {
+    .lesson-section-trap_zone {
+        --trap-content-width: 100%;
+    }
+
+    .lesson-section-trap_zone .lesson-items,
+    .lesson-section-trap_zone .lesson-block-list {
+        gap: 20px;
+    }
+
+    .lesson-section-trap_zone .lesson-item h3 {
+        font-size: 17px;
+    }
+
+    .lesson-section-trap_zone .lesson-item-danger::before,
+    .lesson-section-trap_zone .lesson-item-success::before,
+    .lesson-section-trap_zone .lesson-item:last-child::before {
+        top: 18px;
+        right: 18px;
+        width: 28px;
+        height: 28px;
+        font-size: 15px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lesson-section-trap_zone .lesson-item {
+        transition: none;
+    }
+
+    .lesson-section-trap_zone .lesson-item:hover {
+        transform: none;
+    }
 }

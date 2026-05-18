@@ -25,6 +25,10 @@ function getBlockData<T>(block: LessonBlock): T {
   return block.data as T;
 }
 
+function normalizeText(value?: string) {
+  return value?.trim().toLowerCase() ?? "";
+}
+
 function MarkdownContent({ markdown }: { markdown?: string }) {
   if (!markdown?.trim()) {
     return null;
@@ -72,15 +76,29 @@ function CalloutBlock({ block }: LessonBlockRendererProps) {
   const codeLanguage = data.codeLanguage || "python";
   const codeTitle = data.codeTitle || codeLanguage.toUpperCase();
 
-  const isMemoryHook =
-    data.title?.trim().toLowerCase() === "memory hook";
+  const normalizedTitle = normalizeText(data.title);
+  const normalizedMarkdown = normalizeText(data.markdown);
+
+  const isMemoryHook = normalizedTitle === "memory hook";
+
+  const isMetaphorHook =
+    !isMemoryHook &&
+    (normalizedTitle === "metaphor hook" ||
+      normalizedTitle === "visual hook" ||
+      normalizedMarkdown.includes("imagine a kitchen full of jars"));
+
+  const calloutClassName = [
+    "lesson-block",
+    "lesson-callout",
+    `lesson-callout-${tone}`,
+    isMemoryHook ? "lesson-callout-memory-hook" : "",
+    isMetaphorHook ? "lesson-callout-metaphor-hook" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
-    <aside
-      className={`lesson-block lesson-callout lesson-callout-${tone} ${
-        isMemoryHook ? "lesson-callout-memory-hook" : ""
-      }`}
-    >
+    <aside className={calloutClassName}>
       {data.title && (
         <h3 className="lesson-callout-title">
           {isMemoryHook && (
@@ -331,7 +349,9 @@ function PracticeMultiBlock({ block }: LessonBlockRendererProps) {
   function handleToggleAnswer(answer: string) {
     setSelectedAnswers((currentAnswers) => {
       if (currentAnswers.includes(answer)) {
-        return currentAnswers.filter((currentAnswer) => currentAnswer !== answer);
+        return currentAnswers.filter(
+          (currentAnswer) => currentAnswer !== answer
+        );
       }
 
       return [...currentAnswers, answer];

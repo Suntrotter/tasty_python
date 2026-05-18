@@ -28,3 +28,58 @@
     margin-top: 16px;
     margin-bottom: 28px;
 }
+
+/* =========================================================
+   SECTION-SPECIFIC IMAGE OVERRIDES
+   Keep this at the bottom of the inline images file.
+   ========================================================= */
+
+/* Tasty Metaphor image */
+.lesson-section-metaphor .lesson-inline-image {
+    width: min(100%, 880px);
+    margin-top: 20px;
+    margin-bottom: 28px;
+    border-radius: 26px;
+    box-shadow: 0 18px 50px rgba(120, 72, 24, 0.1);
+}
+
+.lesson-section-metaphor .lesson-inline-image img {
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Main Code Example visual image */
+.lesson-section-code_example .lesson-inline-image {
+    width: min(100%, 820px);
+    margin-top: 24px;
+    margin-bottom: 30px;
+    border-radius: 26px;
+    box-shadow: 0 18px 46px rgba(120, 72, 24, 0.12);
+}
+
+.lesson-section-code_example .lesson-inline-image img {
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Coding task image can stay slightly narrower */
+.lesson-practice-exercise .lesson-inline-image-coding,
+.lesson-practice-exercise .lesson-inline-image {
+    width: min(100%, 820px);
+}
+
+/* Mobile: make lesson images taller and easier to read */
+@media (max-width: 720px) {
+
+    .lesson-section-metaphor .lesson-inline-image img,
+    .lesson-section-code_example .lesson-inline-image img {
+        aspect-ratio: 4 / 3;
+    }
+
+    .lesson-section-metaphor .lesson-inline-image,
+    .lesson-section-code_example .lesson-inline-image {
+        border-radius: 22px;
+    }
+}

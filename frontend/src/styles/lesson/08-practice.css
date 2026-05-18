@@ -155,3 +155,332 @@
 .lesson-explanation-box p:last-child {
     margin-bottom: 0;
 }
+
+/* =========================================================
+   PRACTICE — FINAL POLISH
+   ========================================================= */
+
+.lesson-section-practice {
+    --practice-content-width: 900px;
+
+    background:
+        radial-gradient(circle at top left, rgba(220, 252, 231, 0.78), transparent 36%),
+        radial-gradient(circle at bottom right, rgba(219, 234, 254, 0.42), transparent 38%),
+        var(--lesson-card-bg);
+}
+
+.lesson-section-practice .lesson-section-header,
+.lesson-section-practice>.lesson-practice-list,
+.lesson-section-practice>.lesson-block-list {
+    width: min(100%, var(--practice-content-width));
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.lesson-section-practice .lesson-practice-list,
+.lesson-section-practice .lesson-block-list {
+    display: grid;
+    gap: 30px;
+}
+
+/* Exercise cards */
+
+.lesson-section-practice .lesson-practice-exercise {
+    position: relative;
+    overflow: hidden;
+    padding: 34px;
+    border-radius: 28px;
+    background:
+        radial-gradient(circle at top right, rgba(255, 242, 212, 0.52), transparent 34%),
+        linear-gradient(135deg, rgba(255, 253, 248, 0.96), rgba(255, 255, 255, 0.9));
+    border: 1px solid rgba(240, 201, 142, 0.78);
+    box-shadow: 0 18px 44px rgba(120, 72, 24, 0.08);
+}
+
+.lesson-section-practice .lesson-practice-exercise+.lesson-practice-exercise {
+    margin-top: 0;
+}
+
+/* Question box */
+
+.lesson-section-practice .lesson-question-box {
+    margin: 0 0 24px;
+    padding: 22px 24px;
+    border-radius: 22px;
+    background:
+        radial-gradient(circle at top right, rgba(255, 226, 173, 0.42), transparent 36%),
+        #fff8ed;
+    border: 1px solid rgba(240, 201, 142, 0.9);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.58);
+}
+
+.lesson-section-practice .lesson-question-label {
+    margin-bottom: 8px;
+    color: #c85b00;
+    font-size: 12px;
+    font-weight: 950;
+    letter-spacing: 0.12em;
+}
+
+.lesson-section-practice .lesson-question-box h3,
+.lesson-section-practice .lesson-question-box h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: clamp(28px, 3.4vw, 38px);
+    line-height: 1;
+    letter-spacing: -0.045em;
+}
+
+.lesson-section-practice .lesson-question-box p {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 16px;
+    line-height: 1.65;
+}
+
+/* Code inside practice */
+
+.lesson-section-practice .lesson-code-card {
+    margin-top: 0;
+    margin-bottom: 24px;
+    box-shadow: 0 18px 42px rgba(36, 31, 28, 0.14);
+}
+
+.lesson-section-practice .lesson-code-card pre {
+    min-height: auto;
+}
+
+/* Choice list */
+
+.lesson-section-practice .lesson-choice-list {
+    display: grid;
+    gap: 13px;
+    margin-top: 22px;
+}
+
+.lesson-section-practice .lesson-choice-button {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 14px;
+    align-items: center;
+
+    min-height: 58px;
+    padding: 14px 18px;
+
+    border-radius: 18px;
+    border: 1px solid rgba(240, 201, 142, 0.82);
+    background: rgba(255, 253, 248, 0.92);
+    color: var(--lesson-text);
+
+    font-size: 16px;
+    line-height: 1.45;
+    cursor: pointer;
+
+    transition:
+        transform 160ms ease,
+        box-shadow 160ms ease,
+        border-color 160ms ease,
+        background-color 160ms ease;
+}
+
+.lesson-section-practice .lesson-choice-button:hover {
+    transform: translateY(-1px);
+    border-color: rgba(200, 91, 0, 0.62);
+    background: #fffaf1;
+    box-shadow: 0 12px 26px rgba(120, 72, 24, 0.09);
+}
+
+.lesson-section-practice .lesson-choice-key {
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 999px;
+    background: #241f1c;
+    color: #fff8ed;
+
+    font-size: 13px;
+    font-weight: 950;
+}
+
+/* Selected before checking */
+
+.lesson-section-practice .lesson-choice-button-selected {
+    border-color: rgba(200, 91, 0, 0.86);
+    background:
+        linear-gradient(135deg, rgba(255, 242, 212, 0.88), rgba(255, 253, 248, 0.96));
+    box-shadow: 0 12px 28px rgba(200, 91, 0, 0.12);
+}
+
+.lesson-section-practice .lesson-choice-button-selected .lesson-choice-key {
+    background: #c85b00;
+}
+
+/* Correct / wrong states */
+
+.lesson-section-practice .lesson-choice-button-correct {
+    border-color: rgba(34, 197, 94, 0.86);
+    background:
+        linear-gradient(135deg, rgba(220, 252, 231, 0.9), rgba(255, 253, 248, 0.96));
+}
+
+.lesson-section-practice .lesson-choice-button-correct .lesson-choice-key {
+    background: #15803d;
+}
+
+.lesson-section-practice .lesson-choice-button-wrong {
+    border-color: rgba(244, 63, 94, 0.86);
+    background:
+        linear-gradient(135deg, rgba(255, 228, 230, 0.9), rgba(255, 253, 248, 0.96));
+}
+
+.lesson-section-practice .lesson-choice-button-wrong .lesson-choice-key {
+    background: #be123c;
+}
+
+/* Feedback */
+
+.lesson-section-practice .lesson-choice-feedback {
+    margin: 18px 0 0;
+    padding: 16px 18px;
+    border-radius: 18px;
+    font-size: 16px;
+    line-height: 1.55;
+    font-weight: 850;
+}
+
+.lesson-section-practice .lesson-choice-feedback-correct {
+    background: rgba(220, 252, 231, 0.9);
+    border: 1px solid rgba(34, 197, 94, 0.82);
+    color: #14532d;
+}
+
+.lesson-section-practice .lesson-choice-feedback-correct::before {
+    content: "✓ ";
+    font-weight: 950;
+}
+
+.lesson-section-practice .lesson-choice-feedback-wrong {
+    background: rgba(255, 228, 230, 0.88);
+    border: 1px solid rgba(244, 63, 94, 0.72);
+    color: #9f1239;
+}
+
+.lesson-section-practice .lesson-choice-feedback-wrong::before {
+    content: "Try again: ";
+    font-weight: 950;
+}
+
+/* Check answers / explanation buttons inside practice */
+
+.lesson-section-practice .lesson-practice-exercise .button,
+.lesson-section-practice .lesson-practice-exercise button.button {
+    margin-top: 18px;
+}
+
+.lesson-section-practice .lesson-explanation-control {
+    margin-top: 18px;
+}
+
+.lesson-section-practice .lesson-explanation-box {
+    margin-top: 14px;
+    padding: 18px 20px;
+    border-radius: 20px;
+    background: rgba(239, 246, 255, 0.72);
+    border: 1px solid rgba(147, 197, 253, 0.48);
+    color: #17365d;
+}
+
+/* Coding task variant */
+
+.lesson-section-practice .lesson-practice-coding-task {
+    background:
+        radial-gradient(circle at top right, rgba(219, 234, 254, 0.64), transparent 36%),
+        linear-gradient(135deg, rgba(255, 253, 248, 0.98), rgba(239, 246, 255, 0.66));
+    border-color: rgba(147, 197, 253, 0.72);
+}
+
+.lesson-section-practice .lesson-practice-coding-task .lesson-question-box {
+    background:
+        radial-gradient(circle at top right, rgba(255, 226, 173, 0.42), transparent 36%),
+        #fff8ed;
+}
+
+/* Python runner inside practice */
+
+.lesson-section-practice .python-runner {
+    margin-top: 24px;
+    border-radius: 26px;
+    box-shadow: 0 22px 54px rgba(15, 23, 42, 0.24);
+}
+
+/* Practice image after coding task */
+
+.lesson-section-practice .lesson-inline-image,
+.lesson-section-practice .lesson-inline-image-coding {
+    width: min(100%, 860px);
+    margin-top: 28px;
+    margin-bottom: 0;
+    border-radius: 28px;
+    box-shadow: 0 18px 46px rgba(120, 72, 24, 0.12);
+}
+
+.lesson-section-practice .lesson-inline-image img,
+.lesson-section-practice .lesson-inline-image-coding img {
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Mobile */
+
+@media (max-width: 720px) {
+    .lesson-section-practice {
+        --practice-content-width: 100%;
+    }
+
+    .lesson-section-practice .lesson-practice-list,
+    .lesson-section-practice .lesson-block-list {
+        gap: 24px;
+    }
+
+    .lesson-section-practice .lesson-practice-exercise {
+        padding: 22px;
+        border-radius: 24px;
+    }
+
+    .lesson-section-practice .lesson-question-box {
+        padding: 18px;
+        border-radius: 20px;
+    }
+
+    .lesson-section-practice .lesson-choice-button {
+        grid-template-columns: 30px minmax(0, 1fr);
+        gap: 12px;
+        min-height: 54px;
+        padding: 13px 14px;
+        font-size: 15.5px;
+    }
+
+    .lesson-section-practice .lesson-choice-key {
+        width: 28px;
+        height: 28px;
+    }
+
+    .lesson-section-practice .lesson-inline-image img,
+    .lesson-section-practice .lesson-inline-image-coding img {
+        aspect-ratio: 4 / 3;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lesson-section-practice .lesson-choice-button {
+        transition: none;
+    }
+
+    .lesson-section-practice .lesson-choice-button:hover {
+        transform: none;
+    }
+}

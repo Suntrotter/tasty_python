@@ -8,13 +8,15 @@ type LessonHeroProps = {
   goal: string;
   errorMessage?: string;
   visual?: HeroVisual;
+  conceptLabel?: string;
+  interviewFocus?: string;
 };
 
 const defaultHeroVisual: HeroVisual = {
-  variant: "code-card",
+  variant: "recipe-card",
   tone: "warm",
   kicker: "Today's recipe",
-  title: "Variable jar",
+  title: "Label board",
   lines: ['flavor = "mango"', "level = 1", 'flavor = "berry"'],
   chips: ["names", "values", "reassignment"],
 };
@@ -49,9 +51,10 @@ function LessonHero({
   goal,
   errorMessage,
   visual = defaultHeroVisual,
+  conceptLabel = "interview mental model",
+  interviewFocus = "What really happens when a variable is reassigned?",
 }: LessonHeroProps) {
   const visualTone = visual.tone ?? "warm";
-  const conceptLabel = visual.chips?.[0] || "interview mental model";
 
   return (
     <section className="lesson-hero">
@@ -77,6 +80,21 @@ function LessonHero({
 
           <p className="lesson-hero__goal">{goal}</p>
 
+          <div className="lesson-hero__focus" aria-label="Interview focus">
+            <span className="lesson-hero__focus-label">Interview focus</span>
+            <p>{interviewFocus}</p>
+          </div>
+
+          <div className="lesson-hero__actions">
+            <a className="lesson-hero__button lesson-hero__button--primary" href="#lesson-start">
+              Start lesson
+            </a>
+
+            <a className="lesson-hero__button lesson-hero__button--ghost" href="#lesson-practice">
+              Jump to practice
+            </a>
+          </div>
+
           {errorMessage && <p className="api-notice">{errorMessage}</p>}
         </div>
 
@@ -84,7 +102,7 @@ function LessonHero({
           className={`lesson-hero__visual lesson-hero__visual--${visual.variant} lesson-hero__visual--${visualTone}`}
           aria-label="Lesson visual summary"
         >
-          <div className="lesson-hero__visual-top">
+          <div className="lesson-hero__visual-top" aria-hidden="true">
             <span></span>
             <span></span>
             <span></span>
@@ -113,7 +131,14 @@ function HeroVisualContent({ visual }: HeroVisualContentProps) {
       <>
         <div className="lesson-hero__recipe-card">
           {visual.lines.map((line, index) => (
-            <div className="lesson-hero__recipe-row" key={`${line}-${index}`}>
+            <div
+              className={`lesson-hero__recipe-row ${
+                index === visual.lines.length - 1
+                  ? "lesson-hero__recipe-row--active"
+                  : ""
+              }`}
+              key={`${line}-${index}`}
+            >
               <span>{index + 1}</span>
               <code>{line}</code>
             </div>
@@ -164,7 +189,16 @@ function HeroVisualContent({ visual }: HeroVisualContentProps) {
     <>
       <div className="lesson-hero__code-card">
         {visual.lines.map((line, index) => (
-          <code key={`${line}-${index}`}>{line}</code>
+          <code
+            className={`lesson-hero__code-line ${
+              index === visual.lines.length - 1
+                ? "lesson-hero__code-line--active"
+                : ""
+            }`}
+            key={`${line}-${index}`}
+          >
+            {line}
+          </code>
         ))}
       </div>
 
@@ -180,8 +214,13 @@ type HeroChipsProps = {
 function HeroChips({ chips }: HeroChipsProps) {
   return (
     <div className="lesson-hero__chips">
-      {chips.map((chip) => (
-        <span key={chip}>{chip}</span>
+      {chips.map((chip, index) => (
+        <span
+          key={`${chip}-${index}`}
+          style={{ animationDelay: `${index * 90}ms` }}
+        >
+          {chip}
+        </span>
       ))}
     </div>
   );

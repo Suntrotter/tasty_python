@@ -384,3 +384,265 @@
     border: 1px solid rgba(157, 94, 189, 0.3);
     color: #66327d;
 }
+
+/* =========================================================
+   LESSON HERO POLISH + MICRO-INTERACTIONS
+   ========================================================= */
+
+.lesson-hero::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 34px;
+    right: 34px;
+    height: 5px;
+    border-radius: 0 0 999px 999px;
+    background: linear-gradient(90deg,
+            #d65f00 0%,
+            #f6b44b 48%,
+            #8aa35f 100%);
+    opacity: 0.95;
+    pointer-events: none;
+}
+
+.lesson-hero__goal {
+    margin-bottom: 18px;
+}
+
+.lesson-hero__focus {
+    max-width: 680px;
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: 18px;
+    background:
+        linear-gradient(135deg, rgba(219, 234, 254, 0.82), rgba(255, 248, 237, 0.9));
+    border: 1px solid rgba(96, 165, 250, 0.42);
+    color: #17365d;
+    box-shadow: 0 12px 26px rgba(36, 31, 28, 0.06);
+}
+
+.lesson-hero__focus-label {
+    display: block;
+    margin-bottom: 6px;
+    color: #1d4f91;
+    font-size: 12px;
+    font-weight: 950;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.lesson-hero__focus p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.55;
+    font-weight: 750;
+}
+
+.lesson-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.lesson-hero__button {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 18px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 950;
+    text-decoration: none;
+    transition:
+        transform 180ms ease,
+        box-shadow 180ms ease,
+        background-color 180ms ease,
+        color 180ms ease,
+        border-color 180ms ease;
+}
+
+.lesson-hero__button--primary {
+    background: #d65f00;
+    border: 1px solid #b84f00;
+    color: #fffaf1;
+    box-shadow: 0 10px 22px rgba(214, 95, 0, 0.22);
+}
+
+.lesson-hero__button--ghost {
+    background: rgba(255, 248, 237, 0.72);
+    border: 1px solid rgba(214, 132, 34, 0.28);
+    color: #7c2d12;
+}
+
+.lesson-hero__button:hover {
+    transform: translateY(-2px);
+}
+
+.lesson-hero__button--primary:hover {
+    box-shadow: 0 16px 30px rgba(214, 95, 0, 0.28);
+}
+
+.lesson-hero__button--ghost:hover {
+    background: #fff2d4;
+    border-color: rgba(214, 132, 34, 0.48);
+}
+
+/* Meta pills: a little more alive */
+
+.lesson-hero__meta-list .lesson-meta-pill {
+    transition:
+        transform 160ms ease,
+        box-shadow 160ms ease,
+        background-color 160ms ease;
+}
+
+.lesson-hero__meta-list .lesson-meta-pill:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 16px rgba(36, 31, 28, 0.08);
+}
+
+/* Right visual card interaction */
+
+.lesson-hero__visual {
+    transition:
+        transform 220ms ease,
+        box-shadow 220ms ease,
+        border-color 220ms ease;
+    will-change: transform;
+}
+
+.lesson-hero__visual:hover {
+    transform: rotate(0deg) translateY(-5px);
+    border-color: rgba(255, 226, 173, 0.34);
+    box-shadow: 0 30px 66px rgba(36, 31, 28, 0.24);
+}
+
+.lesson-hero__visual-top span {
+    transition: transform 180ms ease, opacity 180ms ease;
+}
+
+.lesson-hero__visual:hover .lesson-hero__visual-top span {
+    transform: scale(1.08);
+    opacity: 0.95;
+}
+
+/* Code-card visual rows */
+
+.lesson-hero__code-card code,
+.lesson-hero__recipe-row code {
+    position: relative;
+    transition:
+        transform 180ms ease,
+        border-color 180ms ease,
+        background-color 180ms ease,
+        box-shadow 180ms ease;
+}
+
+.lesson-hero__code-card code:hover,
+.lesson-hero__recipe-row:hover code {
+    transform: translateX(3px);
+    background: rgba(255, 248, 237, 0.13);
+    border-color: rgba(255, 248, 237, 0.28);
+}
+
+.lesson-hero__code-line--active,
+.lesson-hero__recipe-row--active code {
+    background: rgba(255, 242, 212, 0.16);
+    border-color: rgba(246, 180, 75, 0.5);
+    box-shadow: 0 0 0 1px rgba(246, 180, 75, 0.12);
+}
+
+
+/* Recipe row number movement */
+
+.lesson-hero__recipe-row span {
+    transition:
+        transform 180ms ease,
+        background-color 180ms ease,
+        color 180ms ease;
+}
+
+.lesson-hero__recipe-row:hover span {
+    transform: scale(1.05);
+    background: #f6b44b;
+    color: #241f1c;
+}
+
+/* Chips: soft entrance + hover */
+
+.lesson-hero__chips span {
+    animation: lessonHeroChipIn 420ms ease both;
+    transition:
+        transform 160ms ease,
+        box-shadow 160ms ease,
+        background-color 160ms ease;
+}
+
+.lesson-hero__chips span:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 14px rgba(36, 31, 28, 0.12);
+}
+
+@keyframes lessonHeroChipIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Respect reduced motion settings */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .lesson-hero__button,
+    .lesson-hero__visual,
+    .lesson-hero__visual-top span,
+    .lesson-hero__code-card code,
+    .lesson-hero__recipe-row code,
+    .lesson-hero__recipe-row span,
+    .lesson-hero__chips span,
+    .lesson-hero__meta-list .lesson-meta-pill {
+        animation: none;
+        transition: none;
+    }
+
+    .lesson-hero__button:hover,
+    .lesson-hero__visual:hover,
+    .lesson-hero__code-card code:hover,
+    .lesson-hero__recipe-row:hover code,
+    .lesson-hero__recipe-row:hover span,
+    .lesson-hero__chips span:hover,
+    .lesson-hero__meta-list .lesson-meta-pill:hover {
+        transform: none;
+    }
+}
+
+/* Responsive hero buttons and focus card */
+
+@media (max-width: 720px) {
+    .lesson-hero__focus {
+        padding: 13px 14px;
+    }
+
+    .lesson-hero__actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .lesson-hero__button {
+        width: 100%;
+    }
+
+
+}
+
+.lesson-section {
+    scroll-margin-top: 140px;
+}

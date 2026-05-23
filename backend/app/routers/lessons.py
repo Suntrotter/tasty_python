@@ -45,6 +45,8 @@ def lesson_content_to_response(lesson_content: LessonContentModel) -> dict:
         "goal": lesson_content.goal,
         "image_prompts": lesson_content.image_prompts,
         "hero_visual": lesson_content.hero_visual,
+        "concept_label": lesson_content.concept_label,
+        "interview_focus": lesson_content.interview_focus,
         "completion_image_url": lesson_content.completion_image_url,
         "completion_image_alt": lesson_content.completion_image_alt,
         "completion_kicker": lesson_content.completion_kicker,

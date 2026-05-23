@@ -84,6 +84,8 @@ def lesson_content_to_response(lesson_content: LessonContentModel) -> dict:
         "goal": lesson_content.goal,
         "image_prompts": lesson_content.image_prompts,
         "hero_visual": lesson_content.hero_visual,
+        "concept_label": lesson_content.concept_label,
+        "interview_focus": lesson_content.interview_focus,
         "completion_image_url": lesson_content.completion_image_url,
         "completion_image_alt": lesson_content.completion_image_alt,
         "completion_kicker": lesson_content.completion_kicker,
@@ -772,6 +774,8 @@ def upsert_lesson_content_basics(
             hero_visual=jsonable_encoder(payload.hero_visual)
             if payload.hero_visual
             else None,
+            concept_label=payload.concept_label,
+            interview_focus=payload.interview_focus,
             completion_image_url=payload.completion_image_url,
             completion_image_alt=payload.completion_image_alt,
             completion_kicker=payload.completion_kicker,
@@ -787,6 +791,8 @@ def upsert_lesson_content_basics(
     lesson_content.hero_visual = (
         jsonable_encoder(payload.hero_visual) if payload.hero_visual else None
     )
+    lesson_content.concept_label = payload.concept_label
+    lesson_content.interview_focus = payload.interview_focus
     lesson_content.completion_image_url = payload.completion_image_url
     lesson_content.completion_image_alt = payload.completion_image_alt
     lesson_content.completion_kicker = payload.completion_kicker

@@ -18,6 +18,15 @@ class LessonContentModel(Base):
     goal: Mapped[str] = mapped_column(Text)
     image_prompts: Mapped[list[str] | None] = mapped_column(JSON, nullable=True)
     hero_visual: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    concept_label: Mapped[str | None] = mapped_column(
+    String(120),
+    nullable=True,
+)
+
+    interview_focus: Mapped[str | None] = mapped_column(
+    String(500),
+    nullable=True,
+)
 
     completion_image_url: Mapped[str | None] = mapped_column(
         String(500),

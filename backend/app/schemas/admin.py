@@ -61,6 +61,8 @@ class LessonContentBasicsUpdate(BaseModel):
     goal: str
     image_prompts: list[str] = []
     hero_visual: HeroVisual | None = None
+    concept_label: str | None = None
+    interview_focus: str | None = None
     completion_image_url: str | None = None
     completion_image_alt: str | None = None
     completion_kicker: str | None = None

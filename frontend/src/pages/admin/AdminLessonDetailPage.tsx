@@ -109,6 +109,8 @@ function AdminLessonDetailPage() {
     heroVisualTitle: "",
     heroVisualLinesText: "",
     heroVisualChipsText: "",
+    conceptLabel: "",
+    interviewFocus: "",
     completionImageUrl: "",
     completionImageAlt: "",
     completionKicker: "",
@@ -244,6 +246,8 @@ function AdminLessonDetailPage() {
         heroVisualTitle: lessonContent.heroVisual?.title ?? "",
         heroVisualLinesText: lessonContent.heroVisual?.lines?.join("\n") ?? "",
         heroVisualChipsText: lessonContent.heroVisual?.chips?.join("\n") ?? "",
+        conceptLabel: lessonContent.conceptLabel ?? "",
+        interviewFocus: lessonContent.interviewFocus ?? "",
         completionImageUrl: lessonContent.completionImageUrl ?? "",
         completionImageAlt: lessonContent.completionImageAlt ?? "",
         completionKicker: lessonContent.completionKicker ?? "",
@@ -265,6 +269,8 @@ function AdminLessonDetailPage() {
         heroVisualTitle: "",
         heroVisualLinesText: "",
         heroVisualChipsText: "",
+        conceptLabel: "",
+        interviewFocus: "",
         completionImageUrl: "",
         completionImageAlt: "",
         completionKicker: "",
@@ -490,6 +496,8 @@ function AdminLessonDetailPage() {
         goal: contentForm.goal,
         imagePrompts,
         heroVisual,
+        conceptLabel: contentForm.conceptLabel.trim() || undefined,
+        interviewFocus: contentForm.interviewFocus.trim() || undefined,
         completionImageUrl: contentForm.completionImageUrl.trim() || undefined,
         completionImageAlt: contentForm.completionImageAlt.trim() || undefined,
         completionKicker: contentForm.completionKicker.trim() || undefined,
@@ -1128,6 +1136,16 @@ function AdminLessonDetailPage() {
               </div>
 
               <div>
+                <dt>Concept label</dt>
+                <dd>{lessonContent.conceptLabel || "not set"}</dd>
+              </div>
+
+              <div>
+                <dt>Interview focus</dt>
+                <dd>{lessonContent.interviewFocus || "not set"}</dd>
+              </div>
+
+              <div>
                 <dt>Completion title</dt>
                 <dd>{lessonContent.completionTitle || "not set"}</dd>
               </div>
@@ -1487,6 +1505,27 @@ print(snacks)`}
                 placeholder={`mutable
 lists
 references`}
+              />
+            </label>
+
+            <label>
+              Hero concept label
+              <input
+                name="conceptLabel"
+                value={contentForm.conceptLabel}
+                onChange={handleContentInputChange}
+                placeholder="interview mental model"
+              />
+            </label>
+
+            <label>
+              Interview focus
+              <textarea
+                name="interviewFocus"
+                value={contentForm.interviewFocus}
+                onChange={handleContentInputChange}
+                rows={3}
+                placeholder="How does Python decide whether a value is truthy or falsy?"
               />
             </label>
           </div>

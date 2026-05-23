@@ -52,7 +52,7 @@ function LessonHero({
   errorMessage,
   visual = defaultHeroVisual,
   conceptLabel = "interview mental model",
-  interviewFocus = "What really happens when a variable is reassigned?",
+  interviewFocus,
 }: LessonHeroProps) {
   const visualTone = visual.tone ?? "warm";
 
@@ -80,17 +80,25 @@ function LessonHero({
 
           <p className="lesson-hero__goal">{goal}</p>
 
-          <div className="lesson-hero__focus" aria-label="Interview focus">
-            <span className="lesson-hero__focus-label">Interview focus</span>
-            <p>{interviewFocus}</p>
-          </div>
+          {interviewFocus && (
+            <div className="lesson-hero__focus" aria-label="Interview focus">
+              <span className="lesson-hero__focus-label">Interview focus</span>
+              <p>{interviewFocus}</p>
+            </div>
+          )}
 
           <div className="lesson-hero__actions">
-            <a className="lesson-hero__button lesson-hero__button--primary" href="#lesson-start">
+            <a
+              className="lesson-hero__button lesson-hero__button--primary"
+              href="#lesson-start"
+            >
               Start lesson
             </a>
 
-            <a className="lesson-hero__button lesson-hero__button--ghost" href="#lesson-practice">
+            <a
+              className="lesson-hero__button lesson-hero__button--ghost"
+              href="#lesson-practice"
+            >
               Jump to practice
             </a>
           </div>

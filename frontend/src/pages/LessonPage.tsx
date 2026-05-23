@@ -331,6 +331,8 @@ function LessonPage() {
         visual={
           lessonContent.heroVisual ?? getHeroVisualByLessonSlug(lesson.slug)
         }
+        conceptLabel={lessonContent.conceptLabel}
+        interviewFocus={lessonContent.interviewFocus}
       />
 
       {lessonContent.sections.map((section) => (

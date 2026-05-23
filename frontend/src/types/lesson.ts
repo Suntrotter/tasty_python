@@ -50,6 +50,8 @@ export interface LessonContent {
   goal: string;
   imagePrompts?: string[];
   heroVisual?: HeroVisual;
+  conceptLabel?: string;
+  interviewFocus?: string;
   completionImageUrl?: string;
   completionImageAlt?: string;
   completionKicker?: string;

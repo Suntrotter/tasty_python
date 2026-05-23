@@ -55,6 +55,8 @@ interface BackendLessonContent {
   goal: string;
   image_prompts?: string[] | null;
   hero_visual?: HeroVisual | null;
+  concept_label?: string | null;
+  interview_focus?: string | null;
   completion_image_url?: string | null;
   completion_image_alt?: string | null;
   completion_kicker?: string | null;
@@ -117,6 +119,8 @@ function mapLessonContent(content: BackendLessonContent): LessonContent {
     goal: content.goal,
     imagePrompts: content.image_prompts ?? undefined,
     heroVisual: content.hero_visual ?? undefined,
+    conceptLabel: content.concept_label ?? undefined,
+    interviewFocus: content.interview_focus ?? undefined,
     completionImageUrl: content.completion_image_url ?? undefined,
     completionImageAlt: content.completion_image_alt ?? undefined,
     completionKicker: content.completion_kicker ?? undefined,

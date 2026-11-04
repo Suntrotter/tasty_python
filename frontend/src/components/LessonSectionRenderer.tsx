@@ -8,6 +8,7 @@ import {
 } from "../features/practice/practiceProgress";
 import type { LessonSection } from "../types/lesson";
 import LessonBlockRenderer from "./LessonBlockRenderer";
+import ReactMarkdown from "react-markdown";
 
 interface LessonSectionRendererProps {
   section: LessonSection;
@@ -354,9 +355,9 @@ function InterviewAccordionItem({
 
         {item.content
           ? renderTextBlocks(
-              item.content,
-              `${sectionId}-interview-answer-${index}`
-            )
+            item.content,
+            `${sectionId}-interview-answer-${index}`
+          )
           : null}
 
         {item.code && (
@@ -374,9 +375,9 @@ function InterviewAccordionItem({
 
         {item.afterText
           ? renderTextBlocks(
-              item.afterText,
-              `${sectionId}-interview-after-text-${index}`
-            )
+            item.afterText,
+            `${sectionId}-interview-after-text-${index}`
+          )
           : null}
       </div>
     </details>
@@ -480,11 +481,10 @@ function MultipleChoiceExercise({
 
       {hasAnswered && (
         <p
-          className={`lesson-choice-feedback ${
-            isCorrect
+          className={`lesson-choice-feedback ${isCorrect
               ? "lesson-choice-feedback-correct"
               : "lesson-choice-feedback-wrong"
-          }`}
+            }`}
         >
           {isCorrect
             ? "Correct. Nice — the concept landed."
@@ -647,17 +647,16 @@ function MultiSelectExercise({
 
       {hasSubmitted && (
         <p
-          className={`lesson-choice-feedback ${
-            lastResultCorrect
+          className={`lesson-choice-feedback ${lastResultCorrect
               ? "lesson-choice-feedback-correct"
               : "lesson-choice-feedback-wrong"
-          }`}
+            }`}
         >
           {lastResultCorrect
             ? "Correct. All the right ingredients are in the bowl."
             : `Not quite. Correct answers: ${normalizeAnswerList(
-                correctAnswers
-              ).join(", ")}.`}
+              correctAnswers
+            ).join(", ")}.`}
         </p>
       )}
 
@@ -743,9 +742,9 @@ function CodingTaskExercise({
 
       {item.afterText
         ? renderTextBlocks(
-            item.afterText,
-            `${sectionId}-coding-after-text-${index}`
-          )
+          item.afterText,
+          `${sectionId}-coding-after-text-${index}`
+        )
         : null}
     </article>
   );
@@ -841,7 +840,9 @@ function LessonSectionRenderer({
           )}
 
           {section.paragraphs?.map((paragraph, index) => (
-            <p key={`${section.id}-paragraph-${index}`}>{paragraph}</p>
+            <ReactMarkdown key={`${section.id}-paragraph-${index}`}>
+              {paragraph}
+            </ReactMarkdown>
           ))}
 
           {!isMainCodeExample && section.code && (
@@ -933,9 +934,9 @@ function LessonSectionRenderer({
 
                     {item.content
                       ? renderTextBlocks(
-                          item.content,
-                          `${section.id}-item-${index}`
-                        )
+                        item.content,
+                        `${section.id}-item-${index}`
+                      )
                       : null}
 
                     {item.code && (
@@ -957,9 +958,9 @@ function LessonSectionRenderer({
 
                     {item.afterText
                       ? renderTextBlocks(
-                          item.afterText,
-                          `${section.id}-after-text-${index}`
-                        )
+                        item.afterText,
+                        `${section.id}-after-text-${index}`
+                      )
                       : null}
                   </article>
                 );

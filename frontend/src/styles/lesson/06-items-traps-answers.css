@@ -45,3 +45,174 @@
 .lesson-item-success h3 {
     color: var(--lesson-success-text);
 }
+
+/* =========================================================
+   TRAP ZONE — CARD POLISH
+   All Trap Zone styling is here, not split across other CSS files.
+   ========================================================= */
+
+.lesson-section-trap_zone .lesson-items {
+    gap: 20px;
+}
+
+/* Red and green within the same trap stay visually connected. */
+.lesson-section-trap_zone .lesson-item-danger+.lesson-item-success {
+    margin-top: -4px;
+}
+
+.lesson-section-trap_zone .lesson-item-danger,
+.lesson-section-trap_zone .lesson-item-success {
+    padding: 30px;
+    border-radius: 26px;
+}
+
+.lesson-section-trap_zone .lesson-item-danger h3,
+.lesson-section-trap_zone .lesson-item-success h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+    font-size: 23px;
+}
+
+.lesson-section-trap_zone .lesson-item-danger h3::before {
+    content: "✕";
+    display: inline-flex;
+    width: 26px;
+    height: 26px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: var(--lesson-danger-text);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 950;
+}
+
+.lesson-section-trap_zone .lesson-item-success h3::before {
+    content: "✓";
+    display: inline-flex;
+    width: 26px;
+    height: 26px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: var(--lesson-success-text);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 950;
+}
+
+.lesson-section-trap_zone .lesson-code-card {
+    margin-top: 18px;
+    margin-bottom: 22px;
+}
+
+.lesson-section-trap_zone .lesson-item p {
+    max-width: none;
+    color: var(--lesson-text);
+}
+
+.lesson-section-trap_zone .lesson-item p:last-child {
+    margin-bottom: 0;
+}
+
+.lesson-section-trap_zone .lesson-item-danger h3 {
+    color: var(--lesson-danger-text);
+}
+
+.lesson-section-trap_zone .lesson-item-success h3 {
+    color: var(--lesson-success-text);
+}
+
+/* An independent final warning/takeaway can keep its yellow tone. */
+.lesson-section-trap_zone .lesson-callout-warning {
+    margin-top: 28px;
+    background:
+        radial-gradient(circle at top right, rgba(246, 180, 75, 0.22), transparent 34%),
+        #fff7d8;
+    border-color: #f0c98e;
+    box-shadow: 0 16px 42px rgba(120, 72, 24, 0.1);
+}
+
+.lesson-section-trap_zone .lesson-callout-warning h3 {
+    color: #7c2d12;
+}
+
+.lesson-section-trap_zone .lesson-section-icon {
+    font-size: 0;
+}
+
+.lesson-section-trap_zone .lesson-section-icon::before {
+    content: "⚠";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    color: #c85b00;
+    font-size: 27px;
+    line-height: 1;
+    font-family: Arial, sans-serif;
+    transform: translateY(-1px);
+}
+
+/* =========================================================
+   TRAP ZONE — DIAMOND DIVIDER
+   Inserted only BEFORE Trap 2, Trap 3, etc. by the renderer.
+   This means it works for red-only and red+green trap groups.
+   ========================================================= */
+
+.lesson-section-trap_zone .lesson-trap-divider {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    height: 22px;
+    margin: 5px 0;
+    pointer-events: none;
+}
+
+.lesson-section-trap_zone .lesson-trap-divider::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    right: 5%;
+    height: 1.5px;
+    transform: translateY(-50%);
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(194, 132, 69, 0.66) 20%,
+            rgba(194, 132, 69, 0.66) 80%,
+            transparent);
+}
+
+.lesson-section-trap_zone .lesson-trap-divider::after {
+    content: "";
+    position: relative;
+    z-index: 1;
+    width: 12px;
+    height: 12px;
+    border: 1.5px solid #c68b4c;
+    border-radius: 2px;
+    background: #ffe8bd;
+    transform: rotate(45deg);
+    box-shadow: 0 0 0 8px #ffffff;
+}
+
+@media (max-width: 560px) {
+
+    .lesson-section-trap_zone .lesson-item-danger,
+    .lesson-section-trap_zone .lesson-item-success {
+        padding: 18px;
+        border-radius: 20px;
+    }
+
+    .lesson-section-trap_zone .lesson-trap-divider {
+        height: 18px;
+        margin: 2px 0;
+    }
+}

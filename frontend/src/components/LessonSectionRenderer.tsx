@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import CodeBlock from "./CodeBlock";
 import PythonCodeRunner from "./PythonCodeRunner";
 import type { PythonRunResult } from "./PythonCodeRunner";
@@ -94,11 +94,48 @@ function renderTextBlocks(text: string, baseKey: string) {
     .map((part, index) => <p key={`${baseKey}-${index}`}>{part}</p>);
 }
 
+/* A new trap begins at a numbered Trap heading, regardless of whether
+   the previous trap contains a green Correct mental model card. */
+function isTrapStartTitle(value: unknown): boolean {
+  return typeof value === "string" && /^\s*trap\s*#?\s*\d+\b/i.test(value);
+}
+
+function isTrapStartBlock(block: unknown): boolean {
+  if (!block || typeof block !== "object") {
+    return false;
+  }
+
+  const record = block as Record<string, unknown>;
+  if (record.type !== "callout") {
+    return false;
+  }
+
+  if (isTrapStartTitle(record.title)) {
+    return true;
+  }
+
+  // Support the most common shapes for admin-created callout content.
+  for (const property of ["data", "payload", "content", "config"]) {
+    const nested = record[property];
+    if (nested && typeof nested === "object") {
+      const fields = nested as Record<string, unknown>;
+      if (isTrapStartTitle(fields.title)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 function getItemTone(sectionType: string, itemTitle?: string) {
   const normalizedTitle = (itemTitle ?? "").toLowerCase();
 
   if (sectionType === "trap_zone") {
-    if (normalizedTitle.includes("correct version")) {
+    if (
+      normalizedTitle.includes("correct version") ||
+      normalizedTitle.includes("correct mental model")
+    ) {
       return "success";
     }
 
@@ -482,8 +519,8 @@ function MultipleChoiceExercise({
       {hasAnswered && (
         <p
           className={`lesson-choice-feedback ${isCorrect
-              ? "lesson-choice-feedback-correct"
-              : "lesson-choice-feedback-wrong"
+            ? "lesson-choice-feedback-correct"
+            : "lesson-choice-feedback-wrong"
             }`}
         >
           {isCorrect
@@ -648,8 +685,8 @@ function MultiSelectExercise({
       {hasSubmitted && (
         <p
           className={`lesson-choice-feedback ${lastResultCorrect
-              ? "lesson-choice-feedback-correct"
-              : "lesson-choice-feedback-wrong"
+            ? "lesson-choice-feedback-correct"
+            : "lesson-choice-feedback-wrong"
             }`}
         >
           {lastResultCorrect
@@ -792,8 +829,12 @@ function LessonSectionRenderer({
             {section.blocks
               ?.slice()
               .sort((firstBlock, secondBlock) => firstBlock.order - secondBlock.order)
-              .map((block, index) => {
+              .map((block, index, sortedBlocks) => {
                 const blockAnchor = `block-${block.id ?? block.key}`;
+                const showTrapDivider =
+                  section.type === "trap_zone" &&
+                  isTrapStartBlock(block) &&
+                  sortedBlocks.slice(0, index).some(isTrapStartBlock);
 
                 const blockAnchorClassName = [
                   "lesson-block-anchor",
@@ -802,16 +843,20 @@ function LessonSectionRenderer({
                 ].join(" ");
 
                 return (
-                  <div
-                    className={blockAnchorClassName}
-                    id={`lesson-${blockAnchor}`}
-                    data-lesson-scroll-anchor={blockAnchor}
-                    data-lesson-block-type={block.type}
-                    data-lesson-block-position={index + 1}
-                    key={block.id ?? block.key}
-                  >
-                    <LessonBlockRenderer block={block} />
-                  </div>
+                  <Fragment key={block.id ?? block.key}>
+                    {showTrapDivider && (
+                      <div className="lesson-trap-divider" aria-hidden="true" />
+                    )}
+                    <div
+                      className={blockAnchorClassName}
+                      id={`lesson-${blockAnchor}`}
+                      data-lesson-scroll-anchor={blockAnchor}
+                      data-lesson-block-type={block.type}
+                      data-lesson-block-position={index + 1}
+                    >
+                      <LessonBlockRenderer block={block} />
+                    </div>
+                  </Fragment>
                 );
               })}
           </div>
@@ -916,53 +961,61 @@ function LessonSectionRenderer({
               {section.items.map((item, index) => {
                 const tone = getItemTone(section.type, item.title);
                 const itemImage = getItemImage(item, lessonSlug);
+                const showTrapDivider =
+                  section.type === "trap_zone" &&
+                  isTrapStartTitle(item.title) &&
+                  section.items!.slice(0, index).some((earlierItem) =>
+                    isTrapStartTitle(earlierItem.title)
+                  );
 
                 return (
-                  <article
-                    className={`lesson-item lesson-item-${tone}`}
-                    key={`${section.id}-${index}`}
-                  >
-                    {item.title && <h3>{item.title}</h3>}
-
-                    {itemImage && (
-                      <InlineLessonImage
-                        src={itemImage.src}
-                        alt={itemImage.alt}
-                        variant="coding"
-                      />
+                  <Fragment key={`${section.id}-${index}`}>
+                    {showTrapDivider && (
+                      <div className="lesson-trap-divider" aria-hidden="true" />
                     )}
+                    <article className={`lesson-item lesson-item-${tone}`}>
+                      {item.title && <h3>{item.title}</h3>}
 
-                    {item.content
-                      ? renderTextBlocks(
-                        item.content,
-                        `${section.id}-item-${index}`
-                      )
-                      : null}
+                      {itemImage && (
+                        <InlineLessonImage
+                          src={itemImage.src}
+                          alt={itemImage.alt}
+                          variant="coding"
+                        />
+                      )}
 
-                    {item.code && (
-                      <CodeBlock
-                        code={item.code}
-                        language="python"
-                        title="Python"
-                      />
-                    )}
+                      {item.content
+                        ? renderTextBlocks(
+                          item.content,
+                          `${section.id}-item-${index}`
+                        )
+                        : null}
 
-                    {item.output && (
-                      <CodeBlock
-                        code={item.output}
-                        language="plaintext"
-                        title="Output"
-                        variant="output"
-                      />
-                    )}
+                      {item.code && (
+                        <CodeBlock
+                          code={item.code}
+                          language="python"
+                          title="Python"
+                        />
+                      )}
 
-                    {item.afterText
-                      ? renderTextBlocks(
-                        item.afterText,
-                        `${section.id}-after-text-${index}`
-                      )
-                      : null}
-                  </article>
+                      {item.output && (
+                        <CodeBlock
+                          code={item.output}
+                          language="plaintext"
+                          title="Output"
+                          variant="output"
+                        />
+                      )}
+
+                      {item.afterText
+                        ? renderTextBlocks(
+                          item.afterText,
+                          `${section.id}-after-text-${index}`
+                        )
+                        : null}
+                    </article>
+                  </Fragment>
                 );
               })}
             </div>

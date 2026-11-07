@@ -50,11 +50,8 @@ function LessonCompletionButton({
 }: LessonCompletionButtonProps) {
   const { currentUser, isAuthLoading } = useAuth();
 
-  const {
-    isLessonCompleted,
-    isProgressLoading,
-    toggleLessonCompletion,
-  } = useLessonProgress();
+  const { isLessonCompleted, isProgressLoading, toggleLessonCompletion } =
+    useLessonProgress();
 
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -79,9 +76,8 @@ function LessonCompletionButton({
 
   return (
     <section
-      className={`completion-box completion-celebration ${
-        completed ? "completion-box-done" : ""
-      }`}
+      className={`completion-box completion-celebration ${completed ? "completion-box-done" : ""
+        }`}
     >
       <div className="completion-image-wrap">
         <img src={imageSrc} alt={imageAlt} />
@@ -112,21 +108,20 @@ function LessonCompletionButton({
             {isUpdating
               ? "Saving..."
               : completed
-              ? "Completed ✓"
-              : "Mark as completed"}
+                ? "Completed ✓"
+                : "Mark as completed"}
           </button>
 
-          {nextLesson ? (
+          {nextLesson && (
             <Link to={`/lessons/${nextLesson.slug}`} className="button">
               Continue to next lesson
             </Link>
-          ) : (
-            <Link to={`/tracks/${trackSlug}`} className="button">
-              Back to track
-            </Link>
           )}
 
-          <Link to={`/tracks/${trackSlug}`} className="completion-small-link">
+          <Link
+            to={`/tracks/${trackSlug}`}
+            className={nextLesson ? "completion-small-link" : "button"}
+          >
             Back to track
           </Link>
         </div>

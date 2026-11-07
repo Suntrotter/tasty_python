@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { fetchLessonContentBySlug } from "../api/lessonContentApi";
-import { fetchLessonBySlug } from "../api/lessonsApi";
+import { fetchLessonBySlug, fetchLessonsByTrackSlug } from "../api/lessonsApi";
 import LessonCompletionButton from "../components/LessonCompletionButton";
 import LessonHero from "../components/LessonHero";
 import LessonNavigation from "../components/LessonNavigation";
@@ -16,6 +16,36 @@ interface SavedScrollPosition {
   anchor?: string;
   offset?: number;
   y?: number;
+}
+
+interface LessonNavigationState {
+  previousLesson?: LessonPreview;
+  nextLesson?: LessonPreview;
+}
+
+function getTrackNavigation(
+  currentSlug: string,
+  trackLessons: LessonPreview[]
+): LessonNavigationState | undefined {
+  const orderedLessons = [...trackLessons].sort((a, b) => a.order - b.order);
+  const currentIndex = orderedLessons.findIndex(
+    (candidate) => candidate.slug === currentSlug
+  );
+
+  if (currentIndex === -1) {
+    return undefined;
+  }
+
+  const previousCandidate = orderedLessons[currentIndex - 1];
+  const nextCandidate = orderedLessons[currentIndex + 1];
+
+  const isAvailable = (candidate?: LessonPreview) =>
+    candidate?.status === "published" && candidate.hasContent !== false;
+
+  return {
+    previousLesson: isAvailable(previousCandidate) ? previousCandidate : undefined,
+    nextLesson: isAvailable(nextCandidate) ? nextCandidate : undefined,
+  };
 }
 
 function LessonPage() {
@@ -34,9 +64,8 @@ function LessonPage() {
     ? `tasty-python-scroll-anchor-${lessonSlug}`
     : "tasty-python-scroll-anchor";
 
-  const { previousLesson, nextLesson } = lessonSlug
-    ? getLessonNavigation(lessonSlug)
-    : { previousLesson: undefined, nextLesson: undefined };
+  const [navigation, setNavigation] = useState<LessonNavigationState>({});
+  const { previousLesson, nextLesson } = navigation;
 
   useEffect(() => {
     async function loadLesson() {
@@ -46,6 +75,9 @@ function LessonPage() {
       }
 
       setIsLoading(true);
+      setLesson(undefined);
+      setLessonContent(undefined);
+      setNavigation({});
       hasRestoredScrollRef.current = false;
 
       try {
@@ -53,6 +85,18 @@ function LessonPage() {
 
         setLesson(lessonFromApi);
         setErrorMessage("");
+
+        // Navigation follows live track data, not a potentially stale local list.
+        // If the track request fails, retain the existing local fallback.
+        try {
+          const trackLessons = await fetchLessonsByTrackSlug(lessonFromApi.trackSlug);
+          setNavigation(
+            getTrackNavigation(lessonSlug, trackLessons) ??
+            getLessonNavigation(lessonSlug)
+          );
+        } catch {
+          setNavigation(getLessonNavigation(lessonSlug));
+        }
 
         if (lessonFromApi.status === "published" && lessonFromApi.hasContent) {
           const lessonContentFromApi = await fetchLessonContentBySlug(
@@ -69,6 +113,7 @@ function LessonPage() {
 
         setLesson(localLesson);
         setLessonContent(localLessonContent);
+        setNavigation(getLessonNavigation(lessonSlug));
         setErrorMessage(
           "Backend is not available right now. Showing local demo data."
         );

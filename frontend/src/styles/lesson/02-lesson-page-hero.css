@@ -298,13 +298,16 @@
 }
 
 .lesson-hero__ingredient-board {
+
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
     gap: 10px;
     margin: 18px 0;
 }
 
 .lesson-hero__ingredient-note {
+    min-width: 0;
+    width: 100%;
     min-height: 72px;
     padding: 13px;
     border-radius: 16px;
@@ -313,11 +316,19 @@
     font-size: 13px;
     font-weight: 900;
     line-height: 1.35;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: normal;
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
 }
 
 .lesson-hero__ingredient-note:nth-child(3) {
-    grid-column: 1 / -1;
+    grid-column: auto;
+}
+
+.lesson-hero__ingredient-note * {
+    white-space: normal;
+    overflow-wrap: anywhere;
 }
 
 .lesson-hero__terminal-card {
@@ -676,14 +687,4 @@
     white-space: pre-wrap;
     overflow-wrap: anywhere;
     word-break: normal;
-}
-
-/* Give ingredient-board examples enough horizontal room */
-
-.lesson-hero__ingredient-board {
-    grid-template-columns: minmax(0, 1fr);
-}
-
-.lesson-hero__ingredient-note:nth-child(3) {
-    grid-column: auto;
 }

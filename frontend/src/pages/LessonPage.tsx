@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { fetchLessonContentBySlug } from "../api/lessonContentApi";
 import { fetchLessonBySlug, fetchLessonsByTrackSlug } from "../api/lessonsApi";
 import LessonCompletionButton from "../components/LessonCompletionButton";
@@ -50,6 +50,9 @@ function getTrackNavigation(
 
 function LessonPage() {
   const { lessonSlug } = useParams();
+  const location = useLocation();
+
+  const shouldScrollToTop = location.state?.scrollToTop === true;
 
   const [lesson, setLesson] = useState<LessonPreview | undefined>(undefined);
   const [lessonContent, setLessonContent] = useState<
@@ -230,6 +233,17 @@ function LessonPage() {
       return;
     }
 
+    if (shouldScrollToTop) {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "instant",
+      });
+
+      hasRestoredScrollRef.current = true;
+      return;
+    }
+
     const rawSavedPosition = localStorage.getItem(lessonScrollStorageKey);
 
     if (!rawSavedPosition) {
@@ -286,7 +300,13 @@ function LessonPage() {
       restoreTimers.forEach((timer) => window.clearTimeout(timer));
       window.clearTimeout(unlockSavingTimer);
     };
-  }, [isLoading, lessonSlug, lessonContent, lessonScrollStorageKey]);
+  }, [
+    isLoading,
+    lessonSlug,
+    lessonContent,
+    lessonScrollStorageKey,
+    shouldScrollToTop,
+  ]);
 
   if (isLoading) {
     return (

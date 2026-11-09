@@ -113,7 +113,11 @@ function LessonCompletionButton({
           </button>
 
           {nextLesson && (
-            <Link to={`/lessons/${nextLesson.slug}`} className="button">
+            <Link
+              to={`/lessons/${nextLesson.slug}`}
+              state={{ scrollToTop: true }}
+              className="button"
+            >
               Continue to next lesson
             </Link>
           )}

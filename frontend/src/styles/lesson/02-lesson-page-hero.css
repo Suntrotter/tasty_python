@@ -652,3 +652,38 @@
 .lesson-section {
     scroll-margin-top: 140px;
 }
+
+/* =========================================================
+   HERO VISUAL — PREVENT CODE FROM BEING CROPPED
+   ========================================================= */
+
+.lesson-hero__visual,
+.lesson-hero__visual-body,
+.lesson-hero__ingredient-board,
+.lesson-hero__ingredient-note,
+.lesson-hero__code-card,
+.lesson-hero__recipe-row,
+.lesson-hero__terminal-card {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.lesson-hero__ingredient-note,
+.lesson-hero__ingredient-note code,
+.lesson-hero__code-card code,
+.lesson-hero__recipe-row code,
+.lesson-hero__terminal-card code {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+/* Give ingredient-board examples enough horizontal room */
+
+.lesson-hero__ingredient-board {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.lesson-hero__ingredient-note:nth-child(3) {
+    grid-column: auto;
+}

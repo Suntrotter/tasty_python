@@ -389,18 +389,24 @@
    LESSON HERO POLISH + MICRO-INTERACTIONS
    ========================================================= */
 
+/* Decorative gradient stripe — lesson hero */
+
 .lesson-hero::after {
     content: "";
     position: absolute;
-    top: 0;
-    left: 34px;
-    right: 34px;
-    height: 5px;
-    border-radius: 0 0 999px 999px;
+
+    top: 12px;
+    left: clamp(16px, 3vw, 34px);
+    right: clamp(16px, 3vw, 34px);
+
+    height: 6px;
+    border-radius: 999px;
+
     background: linear-gradient(90deg,
             #d65f00 0%,
             #f6b44b 48%,
             #8aa35f 100%);
+
     opacity: 0.95;
     pointer-events: none;
 }

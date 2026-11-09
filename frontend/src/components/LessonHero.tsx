@@ -1,3 +1,4 @@
+
 import type { HeroVisual } from "../types/heroVisual";
 
 type LessonHeroProps = {
@@ -82,7 +83,9 @@ function LessonHero({
 
           {interviewFocus && (
             <div className="lesson-hero__focus" aria-label="Interview focus">
-              <span className="lesson-hero__focus-label">Interview focus</span>
+              <span className="lesson-hero__focus-label">
+                Interview focus
+              </span>
               <p>{interviewFocus}</p>
             </div>
           )}
@@ -140,11 +143,10 @@ function HeroVisualContent({ visual }: HeroVisualContentProps) {
         <div className="lesson-hero__recipe-card">
           {visual.lines.map((line, index) => (
             <div
-              className={`lesson-hero__recipe-row ${
-                index === visual.lines.length - 1
-                  ? "lesson-hero__recipe-row--active"
-                  : ""
-              }`}
+              className={`lesson-hero__recipe-row ${index === visual.lines.length - 1
+                ? "lesson-hero__recipe-row--active"
+                : ""
+                }`}
               key={`${line}-${index}`}
             >
               <span>{index + 1}</span>
@@ -161,11 +163,26 @@ function HeroVisualContent({ visual }: HeroVisualContentProps) {
   if (visual.variant === "ingredient-board") {
     return (
       <>
-        <div className="lesson-hero__ingredient-board">
+        <div
+          className="lesson-hero__ingredient-board"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1fr)",
+            gap: "10px",
+          }}
+        >
           {visual.lines.map((line, index) => (
             <div
               className="lesson-hero__ingredient-note"
               key={`${line}-${index}`}
+              style={{
+                gridColumn: "1 / -1",
+                minWidth: 0,
+                maxWidth: "100%",
+                whiteSpace: "pre-wrap",
+                overflowWrap: "anywhere",
+                wordBreak: "break-word",
+              }}
             >
               {line}
             </div>
@@ -198,11 +215,10 @@ function HeroVisualContent({ visual }: HeroVisualContentProps) {
       <div className="lesson-hero__code-card">
         {visual.lines.map((line, index) => (
           <code
-            className={`lesson-hero__code-line ${
-              index === visual.lines.length - 1
-                ? "lesson-hero__code-line--active"
-                : ""
-            }`}
+            className={`lesson-hero__code-line ${index === visual.lines.length - 1
+              ? "lesson-hero__code-line--active"
+              : ""
+              }`}
             key={`${line}-${index}`}
           >
             {line}

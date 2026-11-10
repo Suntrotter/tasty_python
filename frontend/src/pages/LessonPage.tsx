@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { fetchLessonContentBySlug } from "../api/lessonContentApi";
 import { fetchLessonBySlug, fetchLessonsByTrackSlug } from "../api/lessonsApi";
 import LessonCompletionButton from "../components/LessonCompletionButton";
@@ -50,10 +50,6 @@ function getTrackNavigation(
 
 function LessonPage() {
   const { lessonSlug } = useParams();
-  const location = useLocation();
-
-  const shouldScrollToTop = location.state?.scrollToTop === true;
-
   const [lesson, setLesson] = useState<LessonPreview | undefined>(undefined);
   const [lessonContent, setLessonContent] = useState<
     LessonContent | undefined
@@ -62,6 +58,8 @@ function LessonPage() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const hasRestoredScrollRef = useRef(false);
+  const shouldStartAtTopRef = useRef(false);
+  const navigationHandledSlugRef = useRef<string | undefined>(undefined);
 
   const lessonScrollStorageKey = lessonSlug
     ? `tasty-python-scroll-anchor-${lessonSlug}`
@@ -75,6 +73,18 @@ function LessonPage() {
       if (!lessonSlug) {
         setIsLoading(false);
         return;
+      }
+
+      // Consume the one-shot navigation instruction once per lesson URL.
+      // The guard also keeps it intact under React StrictMode's effect replay.
+      if (navigationHandledSlugRef.current !== lessonSlug) {
+        navigationHandledSlugRef.current = lessonSlug;
+        const nextLessonKey = "tasty-python-start-next-lesson-at-top";
+        shouldStartAtTopRef.current =
+          sessionStorage.getItem(nextLessonKey) === lessonSlug;
+        if (shouldStartAtTopRef.current) {
+          sessionStorage.removeItem(nextLessonKey);
+        }
       }
 
       setIsLoading(true);
@@ -219,7 +229,8 @@ function LessonPage() {
 
     return () => {
       cancelAnimationFrame(animationFrameId);
-      saveScrollPosition();
+      // Do NOT save on route cleanup: React may already have rendered
+      // the destination page, which would overwrite the old reading position.
 
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("beforeunload", saveScrollPosition);
@@ -229,15 +240,21 @@ function LessonPage() {
   }, [lessonSlug, lessonScrollStorageKey]);
 
   useEffect(() => {
-    if (isLoading || !lessonSlug || !lessonContent) {
+    if (
+      isLoading ||
+      !lessonSlug ||
+      !lessonContent ||
+      lesson?.slug !== lessonSlug ||
+      lessonContent.slug !== lessonSlug
+    ) {
       return;
     }
 
-    if (shouldScrollToTop) {
+    if (shouldStartAtTopRef.current) {
       window.scrollTo({
         top: 0,
         left: 0,
-        behavior: "instant",
+        behavior: "auto",
       });
 
       hasRestoredScrollRef.current = true;
@@ -247,6 +264,7 @@ function LessonPage() {
     const rawSavedPosition = localStorage.getItem(lessonScrollStorageKey);
 
     if (!rawSavedPosition) {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
       hasRestoredScrollRef.current = true;
       return;
     }
@@ -300,13 +318,7 @@ function LessonPage() {
       restoreTimers.forEach((timer) => window.clearTimeout(timer));
       window.clearTimeout(unlockSavingTimer);
     };
-  }, [
-    isLoading,
-    lessonSlug,
-    lessonContent,
-    lessonScrollStorageKey,
-    shouldScrollToTop,
-  ]);
+  }, [isLoading, lessonSlug, lessonContent, lesson, lessonScrollStorageKey]);
 
   if (isLoading) {
     return (

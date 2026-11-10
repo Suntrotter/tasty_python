@@ -115,8 +115,13 @@ function LessonCompletionButton({
           {nextLesson && (
             <Link
               to={`/lessons/${nextLesson.slug}`}
-              state={{ scrollToTop: true }}
               className="button"
+              onClick={() => {
+                sessionStorage.setItem(
+                  "tasty-python-start-next-lesson-at-top",
+                  nextLesson.slug
+                );
+              }}
             >
               Continue to next lesson
             </Link>

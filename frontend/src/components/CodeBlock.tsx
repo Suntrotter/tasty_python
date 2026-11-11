@@ -29,11 +29,10 @@ function CodeBlock({
     const lineHeight = 24;
     const verticalPadding = isCompact ? 34 : 56;
     const minHeight = isCompact ? 64 : 110;
-    const maxHeight = 420;
 
     const calculatedHeight = lineCount * lineHeight + verticalPadding;
 
-    return Math.min(Math.max(calculatedHeight, minHeight), maxHeight);
+    return Math.max(calculatedHeight, minHeight);
   }, [lineCount, isCompact]);
 
   async function handleCopy() {
@@ -59,9 +58,8 @@ function CodeBlock({
 
   return (
     <div
-      className={`lesson-code-card lesson-code-card-${variant} ${
-        isCompact ? "lesson-code-card-compact" : ""
-      }`}
+      className={`lesson-code-card lesson-code-card-${variant} ${isCompact ? "lesson-code-card-compact" : ""
+        }`}
     >
       <div className="lesson-code-toolbar">
         <div className="lesson-code-toolbar-left">
